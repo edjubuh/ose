@@ -1,0 +1,9 @@
+#ifndef MOTORDEFINITIONS_H_
+#define MOTORDEFINITIONS_H_
+
+#define FRONT_LEFT_MOTOR	2
+#define FRONT_RIGHT_MOTOR	4
+#define REAR_LEFT_MOTOR		3
+#define REAR_RIGHT_MOTOR	5
+
+#endif

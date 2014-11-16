@@ -12,6 +12,6 @@
 
 #include "sml/SmartMotorLibrary.h"
 
-void ThreadedPIDControllerTask(PIDController *controller);
+void ThreadedPIDControllerTask();
 
 #endif

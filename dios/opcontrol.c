@@ -13,13 +13,9 @@
 
 void operatorControl()
 {
-	double chassisHeading;
-	int speed;
 	while (true)
 	{
-		speed = (joystickGetAnalog(1,3) + joystickGetAnalog(1,2))/2;
-		chassisHeading = atan(speed / joystickGetAnalog(1,1));
-		ChassisSetMecanum(chassisHeading, speed, joystickGetAnalog(1,2) - joystickGetAnalog(1,3), false);
+		ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
 		
 		if (joystickGetDigital(1, 6, JOY_UP))
 			LiftSet(127, false);
@@ -27,5 +23,7 @@ void operatorControl()
 			LiftSet(-127, false);
 		else
 			LiftSet(0, false);
+		
+		delay(20);
 	}
 }

@@ -20,8 +20,10 @@
 */
 void LiftSet(int value, bool immediate)
 {
-	MotorSet(MOTOR_LIFT_TOPLEFT, value, immediate);
-	MotorSet(MOTOR_LIFT_TOPRIGHT, value, immediate);
+	MotorSet(MOTOR_LIFT_FRONTLEFT, value, immediate);
+	MotorSet(MOTOR_LIFT_FRONTRIGHT, value, immediate);
+	MotorSet(MOTOR_LIFT_REARLEFT, value, immediate);
+	MotorSet(MOTOR_LIFT_REARRIGHT, value, immediate);
 }
 
 /**
@@ -29,6 +31,8 @@ void LiftSet(int value, bool immediate)
 */
 void LiftInitialize()
 {
-	MotorConfigure(MOTOR_LIFT_TOPLEFT, false, DEFAULT_SKEW);
-	MotorConfigure(MOTOR_LIFT_TOPRIGHT, true, DEFAULT_SKEW);
+	MotorConfigure(MOTOR_LIFT_FRONTLEFT, true, DEFAULT_SKEW);
+	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, true, DEFAULT_SKEW);
+	MotorConfigure(MOTOR_LIFT_REARLEFT, false, DEFAULT_SKEW);
+	MotorConfigure(MOTOR_LIFT_REARRIGHT, true, DEFAULT_SKEW);
 }

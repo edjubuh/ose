@@ -1,4 +1,4 @@
-/************************************************************************/
+/******************* *****************************************************/
 /* @file opcontrol.c													*/
 /* @brief Source file for operator control.								*/
 /* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
@@ -9,25 +9,23 @@
 #include "main.h"
 #include "dios/Chassis.h"
 #include "dios/Lift.h"
-#include "dios/ScoringMechanism.h"
+#include <math.h>
 
 void operatorControl()
 {
+	double chassisHeading;
+	int speed;
 	while (true)
 	{
-		ChassisSet(joystickGetAnalog(1, 3), joystickGetAnalog(1, 2), false);
+		speed = (joystickGetAnalog(1,3) + joystickGetAnalog(1,2))/2;
+		chassisHeading = atan(speed / joystickGetAnalog(1,1));
+		ChassisSetMecanum(chassisHeading, speed, joystickGetAnalog(1,2) - joystickGetAnalog(1,3), false);
+		
 		if (joystickGetDigital(1, 6, JOY_UP))
 			LiftSet(127, false);
 		else if (joystickGetDigital(1, 6, JOY_DOWN))
-			LiftSet(-50, false);
+			LiftSet(-127, false);
 		else
 			LiftSet(0, false);
-
-		if (joystickGetDigital(1, 5, JOY_DOWN))
-			ScoringMechSet(-127, false);
-		else if (joystickGetDigital(1, 5, JOY_UP))
-			ScoringMechSet(127, false);
-		else
-			ScoringMechSet(0, false);
 	}
 }

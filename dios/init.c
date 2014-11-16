@@ -11,7 +11,6 @@
 #include "sml/SmartMotorLibrary.h"
 #include "dios/Chassis.h"
 #include "dios/Lift.h"
-#include "dios/ScoringMechanism.h"
 
 void initializeIO() {
 	setTeamName("7702");
@@ -31,7 +30,6 @@ void initialize()
 	lcdSetText(uart1, 2, ".......OSE");
 	LiftInitialize();
 	lcdSetText(uart1, 2, ".............");
-	ScoringMechInitialize();
 	lcdSetText(uart1, 2, "........OSE......");
 	delay(250);
 	lcdClear(uart1);

@@ -35,7 +35,6 @@ typedef struct
 	unsigned long prevTime;
 } PIDController;
 
-typedef double(*SkewFunc)();
 typedef struct
 {
 	unsigned char channel;
@@ -49,6 +48,8 @@ typedef struct
 } Motor;
 
 void InitializeMotorManager();
+
+void StopMotorManager();
 
 void MotorManagerTask(void *none);
 

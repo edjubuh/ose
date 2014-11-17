@@ -14,6 +14,7 @@
 
 static Motor Motors[10];
 static Mutex Mutexes[10];
+static TaskHandle MotorManagerTaskHandle;
 
 /**
 * Initializes the Motor Manager Task by creating the Motor Mutexes and starting the task.
@@ -22,7 +23,16 @@ void InitializeMotorManager()
 {
 	for (int i = 0; i < 10; i++)
 		Mutexes[i] = mutexCreate();
-	taskCreate(MotorManagerTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT+1);
+	MotorManagerTaskHandle = taskCreate(MotorManagerTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT+1);
+}
+
+/**
+* Kills the motor manager task, if it exists
+*/
+void StopMotorManager()
+{
+	if(MotorManagerTaskHandle != NULL) // passing NULL kills current thread, so don't allow that to happen
+		taskDelete(MotorManagerTaskHandle);
 }
 
 /**

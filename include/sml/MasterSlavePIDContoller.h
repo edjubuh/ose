@@ -10,7 +10,7 @@
 #ifndef MASTER_SLAVE_PID_CONTROLLER_H_
 #define MASTER_SLAVE_PID_CONTROLLER_H_
 
-#includ "main.h"
+#include "main.h"
 #include "sml/SmartMotorLibrary.h"
 
 typedef struct

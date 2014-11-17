@@ -8,8 +8,8 @@
 /************************************************************************/
 
 #include "main.h"
-#include "sml/"
-#include "sml/MasterSlavePIDController.h"
+//#include "sml/"
+#include "sml/MasterSlavePIDContoller.h"
 
 /**
 * Creates a MasterSlavePIDController struct based off of the parameters.

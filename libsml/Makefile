@@ -19,7 +19,7 @@ $(ARCHIVE): $(OBJECTS)
 	$(ARCHIVER) $(ARCHFLAGS) $(ARCHIVE) $(OBJECTS)
 
 .c.o:
-	@$(CC) $(CFLAGS) $(INCLUDE) $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDE) $< -o $@
 
 copy:
 	cp $(SML)/$(ARCHIVE) $(FIRMWARE)/

@@ -23,12 +23,12 @@ int recorderInit(char mode, const unsigned long time)
 	fdelete("trial.csv"); //delete the previous file and start with fresh slate
 
 	FILE *data_stream = fopen("trial.csv", "w"); //points to file to "w"rite
-	bool *record_mode = NULL; //initialize to NULL
+	bool (*record_mode)() = NULL; //initialize to NULL
 
 	if (mode == 'a')
-		record_mode = &isAutonomous();
+		record_mode = &isAutonomous;
 	else if (mode == 'e')
-		record_mode = &isEnabled();
+		record_mode = &isEnabled;
 	else
 	{
 		lcdSetText(uart1, 1, "Recorder Failed ");
@@ -44,7 +44,7 @@ int recorderInit(char mode, const unsigned long time)
 	
 	fprintf( data_stream, "curr_time,imeCount[0],imeVelocity[0],imeCount[1],imeVelocity[1],imeCount[2],imeVelocity[2],imeCount[3],imeVelocity[3],imeCount[4],imeVelocity[4],imeCount[5],imeVelocity[5],imeCount[6],imeVelocity[6],imeCount[7],imeVelocity[7],imeCount[8],imeVelocity[8],imeCount[9],imeVelocity[9]\n");
 
-	while (*record_mode) //usage of pointers will hopefully retrieve the right input
+	while (*record_mode) //usage of pointers will retrieve the right input
 	{
 		for (i = 0, i < 10; i++)
 		{

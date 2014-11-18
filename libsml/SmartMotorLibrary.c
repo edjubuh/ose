@@ -9,7 +9,6 @@
 #include "main.h"
 #include "sml/SmartMotorLibrary.h"
 
-#define MUTEX_TAKE_TIMEOUT	2000
 #define MOTOR_SKEWER_DELTAT	26
 
 static Motor Motors[10];

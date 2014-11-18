@@ -57,14 +57,13 @@ void PIDControllerReset(PIDController *controller)
 }
 
 /**
-* Computes and executes one pass of the PID Controller
+* Computes and returns the output of one pass of the PID Controller
 * @param controller
 *		A pointer to the PIDController struct
-* @return True or false if the input parameter is within the acceptable tolerance of the goal
 */
-bool PIDControllerExecuteContinuous(PIDController *controller)
+int PIDControllerCompute(PIDController *controller)
 {
-	int currError = controller->Goal -controller->Call();
+	int currError = controller->Goal - controller->Call();
 
 	controller->integral += currError;
 	if (controller->integral < controller->MinIntegral)
@@ -77,15 +76,23 @@ bool PIDControllerExecuteContinuous(PIDController *controller)
 		((micros() - controller->prevTime) * 1000000); // get true estimated instantaneous change in ticks/sec
 
 	int out = (int)((controller->Kp * currError) + (controller->Ki * controller->integral) + (controller->Kd * derivative));
-
-	// printf("%d,%d\n", currError, (micros()-controller->prevTime)); // Debugging print to terminal
-
-	controller->Execute(out, false);
-
+	
 	controller->prevTime = micros();
 	controller->prevError = currError;
+	
+	return out;
+}
 
-	if (abs(currError) < controller->AcceptableTolerance)
+/**
+* Computes and executes one pass of the PID Controller
+* @param controller
+*		A pointer to the PIDController struct
+* @return True or false if the input parameter is within the acceptable tolerance of the goal
+*/
+bool PIDControllerExecuteContinuous(PIDController *controller)
+{
+	controller->Execute(PIDControllerCompute(controller), false);
+	if (abs(controller->Goal - controller->Call()) < controller->AcceptableTolerance)
 		return true;
 	else return false;
 }

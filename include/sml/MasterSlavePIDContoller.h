@@ -24,6 +24,6 @@ MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PI
 
 void InitializeMasterSlaveController(MasterSlavePIDController *controller, int masterGoal);
 
-void MasterSlavePIDControllerTask(MasterSlavePIDController *controller);
+void MasterSlavePIDControllerTask(void *controller);
 
 #endif

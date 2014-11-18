@@ -8,8 +8,9 @@
 /************************************************************************/
 
 #include "main.h"
-//#include "sml/"
+#include "sml/SingleThreadPIDController.h"
 #include "sml/MasterSlavePIDContoller.h"
+#include "sml/SmartMotorLibrary.h"
 
 /**
 * Creates a MasterSlavePIDController struct based off of the parameters.
@@ -36,15 +37,19 @@ void InitializeMasterSlaveController(MasterSlavePIDController *controller, int m
 	controller->slave.Goal = 0;
 	controller->master.Goal = masterGoal;
 	mutexGive(controller->mutex);
-	taskCreate(MasterSlavePIDControllerTask, TASK_DEFAULT_TASK_SIZE, controller, TASK_PRIORITY_DEFAULT);
+	taskCreate(MasterSlavePIDControllerTask, TASK_DEFAULT_STACK_SIZE, controller, TASK_PRIORITY_DEFAULT);
 }
 
-void MasterSlavePIDControllerTask(MasterSlavePIDController *controller)
+void MasterSlavePIDControllerTask(void *c)
 {
+	MasterSlavePIDController* controller = c;
+	int masterOutput, slaveOutput;
 	while(true)
 	{
 		// Can't take mutex this round. Skip loop and try again.
 		if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT)) continue;
+		
+		masterOutput = PIDControllerCompute(&controller->master);
 		
 		
 		

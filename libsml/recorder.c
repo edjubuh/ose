@@ -46,12 +46,12 @@ int recorderInit(char mode, const unsigned long time)
 
 	while (*record_mode) //usage of pointers will retrieve the right input
 	{
-		for (i = 0, i < 10; i++)
+		for (i = 0; i < 10; i++)
 		{
 			imeGetVelocity( i, &imeVelocity[i]);
 			imeGet( i, &imeCount[i]);
 		}
-		fprintf( data_stream, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",curr_time,imeCount[0],imeVelocity[0],imeCount[1],imeVelocity[1],imeCount[2],imeVelocity[2],imeCount[3],imeVelocity[3],imeCount[4],imeVelocity[4],imeCount[5],imeVelocity[5],imeCount[6],imeVelocity[6],imeCount[7],imeVelocity[7],imeCount[8],imeVelocity[8],imeCount[9],imeVelocity[9]);
+		fprintf( data_stream, "%lu,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",curr_time,imeCount[0],imeVelocity[0],imeCount[1],imeVelocity[1],imeCount[2],imeVelocity[2],imeCount[3],imeVelocity[3],imeCount[4],imeVelocity[4],imeCount[5],imeVelocity[5],imeCount[6],imeVelocity[6],imeCount[7],imeVelocity[7],imeCount[8],imeVelocity[8],imeCount[9],imeVelocity[9]);
 		delay(time);
 		curr_time += time;
 	}

@@ -10,6 +10,7 @@
 #define SMARTPIDLIBRARY_H_
 
 #define DEFAULT_SKEW 0.5 // default SkewPerMsec
+#define MUTEX_TAKE_TIMEOUT	2000 // default timeout when attempting to take a mutex
 
 typedef struct
 {

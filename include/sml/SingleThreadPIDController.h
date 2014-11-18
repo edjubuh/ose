@@ -20,6 +20,9 @@ PIDController PIDControllerCreate(void(*Execute)(int, bool), int(*Call)(void), d
 // Cleanses internal variables in a PID Controller 
 void PIDControllerReset(PIDController *controller);
 
+// Computes and returns a PID Controller
+int PIDControllerCompute(PIDController *controller);
+
 // Executes a PID Controller once, for use when running multiple PID Controllers at once on the same level
 bool PIDControllerExecuteContinuous(PIDController *controller);
 

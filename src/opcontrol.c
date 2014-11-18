@@ -55,9 +55,12 @@ void operatorControl() {
 
 	while (true) 
 	{
-		for(int i = 1; i < 11; i++)
-			motorSet(i, joystickGetAnalog(1,2));
-			
+		motorSet(1,   joystickGetAnalog(1,2));
+		motorSet(6,  -joystickGetAnalog(1,2));
+		motorSet(7,  -joystickGetAnalog(1,2));
+		motorSet(8,   joystickGetAnalog(1,2));
+		motorSet(9,  -joystickGetAnalog(1,2));
+		motorSet(10,  joystickGetAnalog(1,2));
 		delay(20);
 	}
 }

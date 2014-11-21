@@ -62,8 +62,7 @@ int LiftGetEncoderLeft()
 }
 
 /**
-* Initializes the lif
-t motors and PID controllers
+* Initializes the lift motors and PID controllers
 */
 void LiftInitialize()
 {

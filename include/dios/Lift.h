@@ -17,8 +17,12 @@
 /// <param name='value'>The PWM value. Will be checked for bounds</param>
 /// <param name='immediate'>Indicates if PWM change needs to happen immediately. Usually false, will ramp speeds</param>
 void LiftSet(int value, bool immediate);
-void LiftUp(int, unsigned int, bool);
 
+//void LiftSetLeft(int, bool);
+
+//void LiftSetRight(int, bool);
+
+void LiftSetHeight(int value);
 
 void LiftInitialize();
 

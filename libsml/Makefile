@@ -12,7 +12,7 @@ ARCHFLAGS=rvs
 
 .PHONY: all copy clean
 
-all: $(SOURCES) $(ARCHIVE) copy
+all: $(SOURCES) $(ARCHIVE) copy clean
 	
 
 $(ARCHIVE): $(OBJECTS)

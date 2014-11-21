@@ -1,10 +1,11 @@
-/************************************************************************/
-/* @file init.c															*/
-/* @brief Source file for initialize functions.							*/
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file init.c
+ * @brief Source file for initialize functions.
+ *
+ * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
+ * Portions of this file may contain elements from the PROS API.
+ * See include/API.h for additional notice.
+ ************************************************************************/
 
 #include "main.h"
 #include "dios/CortexDefinitions.h"
@@ -12,11 +13,19 @@
 #include "dios/Chassis.h"
 #include "dios/Lift.h"
 
+
+/**
+ * @brief Runs pre-initialization functions.
+ */
 void initializeIO() {
 	setTeamName("7702");
 }
 
 
+/**
+ * @brief Initializes the robot. Displays graphics depicting process in initialization
+ *        sequence.
+ */
 void initialize()
 {
 	lcdInit(uart1);

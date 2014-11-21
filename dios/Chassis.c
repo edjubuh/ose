@@ -1,10 +1,11 @@
-/************************************************************************/
-/* @file Chassis.c														*/
-/* @brief Source file for chassis functions.							*/
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file Chassis.c
+ * @brief Source file for chassis functions.
+ *
+ * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
+ * Portions of this file may contain elements from the PROS API.
+ * See include/API.h for additional notice.
+ ************************************************************************/
 
 #include "main.h"
 #include "dios/Chassis.h"
@@ -30,10 +31,10 @@
 void ChassisSet(int left, int right, bool immediate)
 {
 	//statements below catch speeds out of range
+
 	//catches left
 	if (abs(left) > 127)
 		left = signbit(left) ? -127 : 127;
-
 	//catches right
 	if (abs(right) > 127)
 		right = signbit(right) ? -127 : 127;
@@ -95,7 +96,8 @@ void ChassisSetMecanum(double heading, int speed, int rotation, bool immediate)
 }
 
 /**
-* Initializes the chassis motors with the SML and creates the PID controllers for the chassis
+* @brief Initializes the chassis motors with the SML and creates the PID controllers for the
+*        chassis.
 */
 void ChassisInitialize()
 {

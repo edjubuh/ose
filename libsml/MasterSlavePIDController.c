@@ -9,8 +9,9 @@
 
 #include "main.h"
 #include "sml/SingleThreadPIDController.h"
-#include "sml/MasterSlavePIDContoller.h"
+#include "sml/MasterSlavePIDController.h"
 #include "sml/SmartMotorLibrary.h"
+#include <main.h>
 
 /**
 * Creates a MasterSlavePIDController struct based off of the parameters.
@@ -45,7 +46,7 @@ void MasterSlavePIDControllerTask(void *c)
 	MasterSlavePIDController *controller = c;
 	PIDController *master = &controller->master;
 	PIDController *slave = &controller->slave;
-	int masterOutput, slaveOutput;
+	int masterOutput, slaveOutput, masterExecute, slaveExecute;
 	while(true)
 	{
 		// Can't take mutex this round. Skip loop and try again.
@@ -69,10 +70,26 @@ void MasterSlavePIDControllerTask(void *c)
 		slave->prevTime = micros();
 		slave->prevError = slaveErr;
 		
-		slave->Execute(masterOutput + slaveOutput, false);
-		master->Execute(masterOutput - slaveOutput, false);
+		masterExecute = masterOutput - slaveOutput;
+		slaveExecute = masterOutput + slaveOutput;
+
+		if (abs(masterExecute) > 127 && abs(masterExecute) >= abs(slaveExecute))
+		{
+			masterExecute = 127 * (masterExecute / abs(masterExecute));
+			slaveExecute = (127 / abs(masterExecute)) * slaveExecute;
+		}
+		else if (abs(slaveExecute) > 127)
+		{
+			masterExecute = (127 / abs(slaveExecute)) * slaveExecute;
+			slaveExecute = 127 * (slaveExecute / abs(slaveExecute));
+		}
+
+		master->Execute(masterExecute, false);
+		slave->Execute(slaveExecute, false);
 		
-		delay(20);
+		mutexGive(controller->mutex);
+
+		delay(35);
 	}
 }
 
@@ -84,4 +101,12 @@ void MasterSlavePIDChangeGoal(MasterSlavePIDController *controller, int masterGo
 	controller->master.Goal = masterGoal;
 	
 	mutexGive(controller->mutex);
+}
+
+static void VivaLaRevolucion(MasterSlavePIDController *controller)
+{
+	// Judges, please talk to us about VIVA LA REVOLUCIÓN!
+	PIDController temp = controller->master;
+	controller->master = controller->slave;
+	controller->slave = temp;
 }

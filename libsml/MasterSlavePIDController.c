@@ -30,29 +30,58 @@ MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PI
 /**
 * Initializes the 
 */
-void InitializeMasterSlaveController(MasterSlavePIDController *controller, int masterGoal)
+TaskHandle InitializeMasterSlaveController(MasterSlavePIDController *controller, int masterGoal)
 {
 	controller->mutex = mutexCreate();
 	mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT);
 	controller->slave.Goal = 0;
 	controller->master.Goal = masterGoal;
 	mutexGive(controller->mutex);
-	taskCreate(MasterSlavePIDControllerTask, TASK_DEFAULT_STACK_SIZE, controller, TASK_PRIORITY_DEFAULT);
+	return taskCreate(MasterSlavePIDControllerTask, TASK_DEFAULT_STACK_SIZE, controller, TASK_PRIORITY_DEFAULT);
 }
 
 void MasterSlavePIDControllerTask(void *c)
 {
-	MasterSlavePIDController* controller = c;
+	MasterSlavePIDController *controller = c;
+	PIDController *master = &controller->master;
+	PIDController *slave = &controller->slave;
 	int masterOutput, slaveOutput;
 	while(true)
 	{
 		// Can't take mutex this round. Skip loop and try again.
 		if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT)) continue;
 		
-		masterOutput = PIDControllerCompute(&controller->master);
+		masterOutput = PIDControllerCompute(master);
 		
+		int slaveErr = master->Call() - slave->Call();
 		
+		slave->integral += slaveErr;
+		
+		if(slave->integral < slave->MinIntegral)
+			slave->integral = slave->MinIntegral;
+		else if(slave->integral > slave->MaxIntegral)
+			slave->integral = slave->MaxIntegral;
+			
+		long derivative = (slaveErr - slave->prevError) / ((micros() - slave->prevTime) * 1000000);
+		
+		slaveOutput = (int)((slave->Kp * slaveErr) + (slave->Ki * slave->integral) +  (slave->Kd * derivative));
+		
+		slave->prevTime = micros();
+		slave->prevError = slaveErr;
+		
+		slave->Execute(masterOutput + slaveOutput, false);
+		master->Execute(masterOutput - slaveOutput, false);
 		
 		delay(20);
 	}
+}
+
+void MasterSlavePIDChangeGoal(MasterSlavePIDController *controller, int masterGoal)
+{
+	if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
+		return;
+	
+	controller->master.Goal = masterGoal;
+	
+	mutexGive(controller->mutex);
 }

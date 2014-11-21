@@ -22,8 +22,10 @@ typedef struct
 
 MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave);
 
-void InitializeMasterSlaveController(MasterSlavePIDController *controller, int masterGoal);
+TaskHandle InitializeMasterSlaveController(MasterSlavePIDController *controller, int masterGoal);
 
 void MasterSlavePIDControllerTask(void *controller);
+
+void MasterSlavePIDChangeGoal(MasterSlavePIDController *controller, int masterGoal);
 
 #endif

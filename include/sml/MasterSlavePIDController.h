@@ -18,14 +18,18 @@ typedef struct
 	PIDController master;
 	PIDController slave;
 	Mutex mutex;
+	bool enabledMasterPID;
+	int manualMasterOutput;
 } MasterSlavePIDController;
 
-MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave);
+MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave, bool enabledMasterPID);
 
 TaskHandle InitializeMasterSlaveController(MasterSlavePIDController *controller, int masterGoal);
 
 void MasterSlavePIDControllerTask(void *controller);
 
 void MasterSlavePIDChangeGoal(MasterSlavePIDController *controller, int masterGoal);
+
+void MasterSlavePIDSetOutput(MasterSlavePIDController *controller, int output);
 
 #endif

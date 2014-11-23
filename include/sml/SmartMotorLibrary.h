@@ -58,5 +58,7 @@ void MotorConfigure(int channel, bool inverted, double skewPerMsec);
 
 bool MotorSet(int channel, int set, bool immediate);
 
+int MotorGet(int channel);
+
 
 #endif

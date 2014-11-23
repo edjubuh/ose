@@ -96,6 +96,21 @@ bool MotorSet(int channel, int set, bool immediate)
 	return true;
 }
 
+int MotorGet(int channel)
+{
+	if(channel > 10 || channel < 1)
+		return 0;
+	channel--;
+	
+	if(!mutexTake(Mutexes[channel], MUTEX_TAKE_TIMEOUT))
+		return 0;
+	
+	int ret = Motors[channel].commanded * (Motors[channel].inverted ? 1 : -1);
+	
+	mutexGive(Mutexes[channel]);
+	return ret;
+}
+
 /**
 * Configures a motor port with inversion and skew
 * @param channel

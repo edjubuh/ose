@@ -72,8 +72,8 @@ void MasterSlavePIDControllerTask(void *c)
 		slave->prevTime = micros();
 		slave->prevError = slaveErr;
 		
-		masterExecute = masterOutput - slaveOutput;
-		slaveExecute = masterOutput + slaveOutput;
+		masterExecute = masterOutput - (slaveOutput/2);
+		slaveExecute = masterOutput + (slaveOutput/2);
 
 		int max = 127;
 		if(abs(masterExecute) > max)
@@ -87,15 +87,15 @@ void MasterSlavePIDControllerTask(void *c)
 		slaveExecute  = (int)(slaveExecute * scale);
 		
 		
-		lcdPrint(uart1, 1, "m: %d, s: %d", masterExecute, slaveExecute);
-		lcdPrint(uart1, 2, "m: %d, s: %d", master->Call(), slave->Call());
+		//lcdPrint(uart1, 1, "m: %d, s: %d", masterExecute, slaveExecute);
+		//lcdPrint(uart1, 2, "m: %d, s: %d", master->Call(), slave->Call());
 		
 		master->Execute(masterExecute, false);
 		slave->Execute(slaveExecute, false);
 		
 		mutexGive(controller->mutex);
 
-		delay(35);
+		delay(40);
 	}
 }
 

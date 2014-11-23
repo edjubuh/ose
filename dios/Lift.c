@@ -78,15 +78,15 @@ void LiftSet(int value)
 */
 void LiftInitialize()
 {
-	MotorConfigure(MOTOR_LIFT_FRONTLEFT, true, DEFAULT_SKEW);
-	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, true, DEFAULT_SKEW);
-	MotorConfigure(MOTOR_LIFT_REARLEFT, true, DEFAULT_SKEW);
-	MotorConfigure(MOTOR_LIFT_REARRIGHT, true, DEFAULT_SKEW);
-	MotorConfigure(MOTOR_LIFT_THLEFT, true, DEFAULT_SKEW);
-	MotorConfigure(MOTOR_LIFT_THRIGHT, true, DEFAULT_SKEW);
+	MotorConfigure(MOTOR_LIFT_FRONTLEFT, true, 1);
+	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, true, 1);
+	MotorConfigure(MOTOR_LIFT_REARLEFT, true, 1);
+	MotorConfigure(MOTOR_LIFT_REARRIGHT, true, 1);
+	MotorConfigure(MOTOR_LIFT_THLEFT, true, 1);
+	MotorConfigure(MOTOR_LIFT_THRIGHT, true, 1);
 	
 	PIDController master = PIDControllerCreate(&LiftSetRight, &LiftGetEncoderRight, 1.00, 0.1, 0.001, 100, -100, 2);
-	PIDController slave = PIDControllerCreate(&LiftSetLeft, &LiftGetEncoderLeft, 0.5, 0, 0, 40, -40, 2);
+	PIDController slave = PIDControllerCreate(&LiftSetLeft, &LiftGetEncoderLeft, 0.5, 0, 0.2, 40, -40, 2);
 	
 	Controller = CreateMasterSlavePIDController(master, slave, false);
 	

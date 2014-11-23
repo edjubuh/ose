@@ -11,6 +11,7 @@
 #include "dios/Chassis.h"
 #include "dios/Lift.h"
 #include "dios/CortexDefinitions.h"
+#include "sml/SmartMotorLibrary.h"
 #include <math.h>
 
 /**
@@ -21,6 +22,12 @@ void operatorControl()
 	int left = 0, right = 0;
 	while (true)
 	{
+		imeGet(I2C_MOTOR_LIFT_LEFT, &left);
+		imeGet(I2C_MOTOR_LIFT_RIGHT, &right);
+		
+		lcdPrint(uart1, 1, "l: %+3d, r: %+3d", MotorGet(MOTOR_LIFT_REARLEFT), -MotorGet(MOTOR_LIFT_REARRIGHT));
+		lcdPrint(uart1, 2, "l: %4d, r: %4d", left, -right);
+	
 		ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
 		
 		if (joystickGetDigital(1, 6, JOY_UP))

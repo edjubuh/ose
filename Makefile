@@ -24,12 +24,17 @@ OUT:=$(BINDIR)/$(OUTNAME)
 .PHONY: all clean upload _force_look
 
 # By default, compile program
-all: $(BINDIR) $(OUT)
+all: clean $(BINDIR) $(OUT)
+
+# compile the dios project
+# dios:
+#	cd $(ROOT)/dios/
+#	$(MAKE) -C make
 
 # Remove all intermediate object files (remove the binary directory)
 clean:
 	-rm -f $(OUT)
-	-rm -rf $(BINDIR)
+	-rm -f $(BINDIR)/*.o $(BINDIR)/*.bin
 
 # Uploads program to device
 upload: all
@@ -49,8 +54,8 @@ $(BINDIR):
 
 # Compile program
 $(OUT): $(SUBDIRS) $(ASMOBJ) $(COBJ) $(CPPOBJ)
-	@echo LN $(BINDIR)/*.o $(LIBRARIES) to $@
-	@$(CC) $(LDFLAGS) $(BINDIR)/*.o $(LIBRARIES) -o $@
+	@echo LN $(BINDIR)/*.o $(LIBRARIES) $(LIBSML) to $@
+	@$(CC) $(LDFLAGS) $(BINDIR)/*.o $(LIBRARIES) $(LIBSML) -o $@
 	@$(MCUPREFIX)size $(SIZEFLAGS) $(OUT)
 	$(MCUPREPARE)
 

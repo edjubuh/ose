@@ -1441,7 +1441,7 @@ bool semaphoreGive(Semaphore semaphore);
  * will wait for the semaphore to be signaled. Other tasks can run during this time.
  *
  * @param semaphore the semaphore to wait
- * @param blockTime the maximum time to wait for the semaphore to be given, where MAX_DELAY
+ * @param blockTime the maximum time to wait for the semaphore to be given, where -1
  * specifies an infinite timeout
  * @return true if the semaphore was successfully taken, or false if the timeout expired
  */
@@ -1482,7 +1482,7 @@ bool mutexGive(Mutex mutex);
  * during this time.
  *
  * @param mutex the mutex to request
- * @param blockTime the maximum time to wait for the mutex to be available, where MAX_DELAY
+ * @param blockTime the maximum time to wait for the mutex to be available, where -1
  * specifies an infinite timeout
  * @return true if the mutex was successfully taken, or false if the timeout expired
  */

@@ -7,8 +7,8 @@
 /************************************************************************/
 
 #include "main.h"
-#include "icarus/ScoringMechanism.h"
-#include "icarus/CortexDefinitions.h"
+#include "vulcan/ScoringMechanism.h"
+#include "vulcan/CortexDefinitions.h"
 
 /**
  * Sets the scoring mechanism to the desired state 

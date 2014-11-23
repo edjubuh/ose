@@ -7,8 +7,8 @@
 /************************************************************************/
 
 #include "main.h"
-#include "icarus/CortexDefinitions.h"
-#include "icarus/Chassis.h"
+#include "vulcan/CortexDefinitions.h"
+#include "vulcan/Chassis.h"
 #include "sml/SmartMotorLibrary.h"
 #include <math.h>
 

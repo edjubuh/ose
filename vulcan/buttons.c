@@ -7,8 +7,8 @@
 /************************************************************************/
 
 #include "main.h"
-#include "icarus/CortexDefinitions.h"
-#include "icarus/buttons.h"
+#include "vulcan/CortexDefinitions.h"
+#include "vulcan/buttons.h"
 
 bool buttonPressed[27];
 

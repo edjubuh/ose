@@ -26,15 +26,10 @@ OUT:=$(BINDIR)/$(OUTNAME)
 # By default, compile program
 all: $(BINDIR) $(OUT)
 
-# compile the dios project
-# dios:
-#	cd $(ROOT)/dios/
-#	$(MAKE) -C make
-
 # Remove all intermediate object files (remove the binary directory)
 clean:
 	-rm -f $(OUT)
-	-rm -f $(BINDIR)/*.o $(BINDIR)/*.bin
+	-rm -rf $(BINDIR)
 
 # Uploads program to device
 upload: all
@@ -54,8 +49,8 @@ $(BINDIR):
 
 # Compile program
 $(OUT): $(SUBDIRS) $(ASMOBJ) $(COBJ) $(CPPOBJ)
-	@echo LN $(BINDIR)/*.o $(LIBRARIES) $(LIBSML) to $@
-	@$(CC) $(LDFLAGS) $(BINDIR)/*.o $(LIBRARIES) $(LIBSML) -o $@
+	@echo LN $(BINDIR)/*.o $(LIBRARIES) to $@
+	@$(CC) $(LDFLAGS) $(BINDIR)/*.o $(LIBRARIES) -o $@
 	@$(MCUPREFIX)size $(SIZEFLAGS) $(OUT)
 	$(MCUPREPARE)
 

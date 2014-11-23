@@ -7,10 +7,10 @@
 /************************************************************************/
 
 #include "main.h"
-#include "icarus/Chassis.h"
-#include "icarus/Lift.h"
-#include "icarus/ScoringMechanism.h"
-#include "icarus/buttons.h"
+#include "vulcan/Chassis.h"
+#include "vulcan/Lift.h"
+#include "vulcan/ScoringMechanism.h"
+#include "vulcan/buttons.h"
 
 void operatorControl()
 {

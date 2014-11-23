@@ -7,12 +7,12 @@
 /************************************************************************/
 
 #include "main.h"
-#include "icarus/CortexDefinitions.h"
+#include "vulcan/CortexDefinitions.h"
 #include "sml/SmartMotorLibrary.h"
-#include "icarus/Chassis.h"
-#include "icarus/Lift.h"
-#include "icarus/ScoringMechanism.h"
-#include "icarus/buttons.h"
+#include "vulcan/Chassis.h"
+#include "vulcan/Lift.h"
+#include "vulcan/ScoringMechanism.h"
+#include "vulcan/buttons.h"
 
 /**
  * Initializes IO pins and sets team name
@@ -32,7 +32,7 @@ void initialize()
 	lcdClear(UART_LCDDISPLAY);
 	lcdSetBacklight(UART_LCDDISPLAY, true);
 
-	lcdSetText(UART_LCDDISPLAY, 1, " Booting Icarus ");
+	lcdSetText(UART_LCDDISPLAY, 1, " Booting Vulcan ");
 	lcdSetText(UART_LCDDISPLAY, 2, "..");
 	imeInitializeAll();
 	lcdSetText(UART_LCDDISPLAY, 2, ".....");
@@ -47,6 +47,6 @@ void initialize()
 	delay(250);
 	lcdClear(UART_LCDDISPLAY);
 	lcdSetText(UART_LCDDISPLAY, 1, "  Boot Complete  ");
-	lcdSetText(UART_LCDDISPLAY, 1, " Icarus|7701|OSE ");
+	lcdSetText(UART_LCDDISPLAY, 1, " Vulcan|7701|OSE ");
 	delay(500);
 }

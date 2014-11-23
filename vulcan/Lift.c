@@ -6,10 +6,10 @@
 /* See include/API.h for additional notice.								*/
 /************************************************************************/
 
-#include "icarus/CortexDefinitions.h"
+#include "vulcan/CortexDefinitions.h"
 #include "sml/SmartMotorLibrary.h"
 #include "main.h"
-#include "icarus/Lift.h"
+#include "vulcan/Lift.h"
 
 /**
  * Sets the lift to the desired speed

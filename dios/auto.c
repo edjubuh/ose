@@ -17,9 +17,5 @@
  */
 void autonomous()
 {
-	ChassisSet(-127, -127, false);
-	delay(4000);
-	ChassisSet(127, 127, false);
-	delay(2000);
-	ChassisSet(0, 0, false);
+	
 }

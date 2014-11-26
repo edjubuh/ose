@@ -20,12 +20,13 @@
 * @param PIDController slave
 *			The controller for the slave process.
 */
-MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave, bool enabledMasterPID)
+MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave, bool enabledMasterPID, bool enabled)
 {
 	MasterSlavePIDController controller;
 	controller.master = master;
 	controller.slave = slave;
 	controller.enabledMasterPID = enabledMasterPID;
+	controller.enabled = enabled;
 	return controller;
 }
 
@@ -86,12 +87,20 @@ void MasterSlavePIDControllerTask(void *c)
 		masterExecute = (int)(masterExecute * scale);
 		slaveExecute  = (int)(slaveExecute * scale);
 		
-		
-		//lcdPrint(uart1, 1, "m: %d, s: %d", masterExecute, slaveExecute);
-		//lcdPrint(uart1, 2, "m: %d, s: %d", master->Call(), slave->Call());
-		
-		master->Execute(masterExecute, false);
-		slave->Execute(slaveExecute, false);
+		if(controller->enabled)
+		{
+			lcdPrint(uart1, 1, "m: %d, s: %d", masterExecute, slaveExecute);
+			lcdPrint(uart1, 2, "m: %d, s: %d", master->Call(), slave->Call());
+			
+			master->Execute(masterExecute, false);
+			slave->Execute(slaveExecute, false);
+		}
+		else
+		{
+			lcdPrint(uart1,1,"disabled");
+			delay(100);
+		}
+			
 		
 		mutexGive(controller->mutex);
 
@@ -123,6 +132,17 @@ void MasterSlavePIDSetOutput(MasterSlavePIDController *controller, int output)
 	mutexGive(controller->mutex);
 }
 
+void MasterSlavePIDSetEnabled(MasterSlavePIDController *controller, bool enabled)
+{
+	if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
+		return;
+	
+	controller->enabled = enabled;
+	lcdPrint(uart1, 2, "enabled");
+	
+	mutexGive(controller->mutex);
+}
+
 static void VivaLaRevolucion(MasterSlavePIDController *controller)
 {
 	// Judges, please talk to us about VIVA LA REVOLUCION!
@@ -130,3 +150,4 @@ static void VivaLaRevolucion(MasterSlavePIDController *controller)
 	controller->master = controller->slave;
 	controller->slave = temp;
 }
+

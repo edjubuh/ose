@@ -34,6 +34,8 @@
 
 #define ANA_GYROSCOPE					1
 #define ANA_POWEREXP					2
+#define ANA_POT_LIFT_LEFT				3
+#define	ANA_POT_LIFT_RIGHT				4
 
 
 /* --- UART DEFINITIONS --- */

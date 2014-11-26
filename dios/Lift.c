@@ -12,6 +12,7 @@
 #include "sml/SmartMotorLibrary.h"
 #include "sml/MasterSlavePIDController.h"
 #include "sml/SingleThreadPIDController.h"
+#include <math.h>
 
 #define IME_RESET_THRESHOLD		100
 #define POT_RESET_THRESHOLD		200
@@ -35,11 +36,29 @@ void LiftSetLeft(int value, bool immediate)
 }
 
 /**
-* Returns the calibrated value of the left potentiometer
+* Returns the calibrated value of the left potentiometer (in-house calibration)
 */
 int LiftGetCalibratedPotentiometerLeft()
 {
-	return -analogReadCalibrated(ANA_POT_LIFT_LEFT);
+	static int zeroValue;
+	static int prevValues[20];
+	for (int i = 0; i < 19; i++)
+		prevValues[i] = prevValues[i+1];
+	prevValues[19] = LiftGetRawPotentiometerLeft() - zeroValue;
+
+	int sum = 0;
+	for (int i = 0; i < 20; i++)
+		sum += prevValues[i];
+
+	int out = (int)(sum / 20.0);
+
+	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW)
+	{
+		zeroValue = LiftGetRawPotentiometerLeft();
+		out = 0;
+	}
+
+	return out;
 }
 
 /**
@@ -47,7 +66,7 @@ int LiftGetCalibratedPotentiometerLeft()
 */
 int LiftGetRawPotentiometerLeft()
 {
-	return -analogRead(ANA_POT_LIFT_LEFT);
+	return analogRead(ANA_POT_LIFT_LEFT);
 }
 
 /**
@@ -86,7 +105,25 @@ void LiftSetRight(int value, bool immediate)
 */
 int LiftGetCalibratedPotentiometerRight()
 {
-	return -analogReadCalibrated(ANA_POT_LIFT_RIGHT);
+	static int zeroValue;
+	static int prevValues[20];
+	for (int i = 0; i < 19; i++)
+		prevValues[i] = prevValues[i+1];
+	prevValues[19] = LiftGetRawPotentiometerRight() - zeroValue;
+
+	int sum = 0;
+	for (int i = 0; i < 20; i++)
+		sum += prevValues[i];
+
+	int out = (int)(sum / 20.0);
+
+	if (digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW)
+	{
+		zeroValue = LiftGetRawPotentiometerRight();
+		out = 0;
+	}
+
+	return out;
 }
 
 /**
@@ -124,9 +161,9 @@ int LiftGetEncoderRight()
 */
 void LiftSet(int value)
 {
-	// MasterSlavePIDSetOutput(&Controller, value);
-	LiftSetLeft(value, false);
-	LiftSetRight(value, false);
+	MasterSlavePIDSetOutput(&Controller, value);
+	//LiftSetLeft(value, false);
+	//LiftSetRight(value, false);
 }
 
 /**
@@ -141,10 +178,17 @@ void LiftInitialize()
 	MotorConfigure(MOTOR_LIFT_THLEFT, true, 1);
 	MotorConfigure(MOTOR_LIFT_THRIGHT, true, 1);
 	
+	unsigned long start = millis();
+	while ((millis() - start) < 500)
+	{ // Calibrate potentiometers at ground level
+		LiftGetCalibratedPotentiometerRight();
+		LiftGetCalibratedPotentiometerLeft();
+	}
+
 	PIDController master = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 1.00, 0.1, 0.001, 100, -100, 2);
-	PIDController slave = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft, 0.75, 0, 0.2, 40, -40, 2);
+	PIDController slave = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft, 2.00, 0.01, 0, 100, -50, 2);
 	
-	Controller = CreateMasterSlavePIDController(master, slave, false, false);
+	Controller = CreateMasterSlavePIDController(master, slave, false);
 	
-	// LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
+	LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
 }

@@ -20,19 +20,16 @@ typedef struct
 	Mutex mutex;
 	bool enabledMasterPID;
 	int manualMasterOutput;
-	bool enabled;
 } MasterSlavePIDController;
 
-MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave, bool enabledMasterPID, bool enabled);
+MasterSlavePIDController CreateMasterSlavePIDController(PIDController, PIDController, bool);
 
-TaskHandle InitializeMasterSlaveController(MasterSlavePIDController *controller, int masterGoal);
+TaskHandle InitializeMasterSlaveController(MasterSlavePIDController*, int);
 
-void MasterSlavePIDControllerTask(void *controller);
+void MasterSlavePIDControllerTask(void*);
 
-void MasterSlavePIDChangeGoal(MasterSlavePIDController *controller, int masterGoal);
+void MasterSlavePIDChangeGoal(MasterSlavePIDController*, int);
 
-void MasterSlavePIDSetOutput(MasterSlavePIDController *controller, int output);
-
-void MasterSlavePIDSetEnabled(MasterSlavePIDController *controller, bool enabled);
+void MasterSlavePIDSetOutput(MasterSlavePIDController*, int);
 
 #endif

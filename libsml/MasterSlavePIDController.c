@@ -20,13 +20,12 @@
 * @param PIDController slave
 *			The controller for the slave process.
 */
-MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave, bool enabledMasterPID, bool enabled)
+MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave, bool enabledMasterPID)
 {
 	MasterSlavePIDController controller;
 	controller.master = master;
 	controller.slave = slave;
 	controller.enabledMasterPID = enabledMasterPID;
-	controller.enabled = enabled;
 	return controller;
 }
 
@@ -73,8 +72,8 @@ void MasterSlavePIDControllerTask(void *c)
 		slave->prevTime = micros();
 		slave->prevError = slaveErr;
 		
-		masterExecute = masterOutput - (slaveOutput/2);
-		slaveExecute = masterOutput + (slaveOutput/2);
+		masterExecute = masterOutput;
+		slaveExecute = masterOutput + slaveOutput;
 
 		int max = 127;
 		if(abs(masterExecute) > max)
@@ -87,19 +86,11 @@ void MasterSlavePIDControllerTask(void *c)
 		masterExecute = (int)(masterExecute * scale);
 		slaveExecute  = (int)(slaveExecute * scale);
 		
-		if(controller->enabled)
-		{
-			lcdPrint(uart1, 1, "m: %d, s: %d", masterExecute, slaveExecute);
-			lcdPrint(uart1, 2, "m: %d, s: %d", master->Call(), slave->Call());
+		//lcdPrint(uart1, 1, "m: %d, s: %d", masterExecute, slaveExecute);
+		//lcdPrint(uart1, 2, "m: %d, s: %d", master->Call(), slave->Call());
 			
-			master->Execute(masterExecute, false);
-			slave->Execute(slaveExecute, false);
-		}
-		else
-		{
-			lcdPrint(uart1,1,"disabled");
-			delay(100);
-		}
+		master->Execute(masterExecute, false);
+		slave->Execute(slaveExecute, false);
 			
 		
 		mutexGive(controller->mutex);
@@ -128,17 +119,6 @@ void MasterSlavePIDSetOutput(MasterSlavePIDController *controller, int output)
 	controller->enabledMasterPID = false;
 	
 	controller->manualMasterOutput = output;
-	
-	mutexGive(controller->mutex);
-}
-
-void MasterSlavePIDSetEnabled(MasterSlavePIDController *controller, bool enabled)
-{
-	if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
-		return;
-	
-	controller->enabled = enabled;
-	lcdPrint(uart1, 2, "enabled");
 	
 	mutexGive(controller->mutex);
 }

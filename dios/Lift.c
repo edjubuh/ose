@@ -14,32 +14,19 @@
 #include "sml/SingleThreadPIDController.h"
 
 #define IME_RESET_THRESHOLD		100
+#define POT_RESET_THRESHOLD		200
 
 static MasterSlavePIDController Controller;
 static TaskHandle LiftControllerTask;
 
-
-
-void LiftSetRight(int value, bool immediate)
-{
-	MotorSet(MOTOR_LIFT_FRONTRIGHT, value, immediate);
-	MotorSet(MOTOR_LIFT_REARRIGHT, value, immediate);
-	MotorSet(MOTOR_LIFT_THRIGHT, value, immediate);
-}
-
-int LiftGetEncoderRight()
-{
-	int value;
-	imeGet(I2C_MOTOR_LIFT_RIGHT, &value);
-	value = (int)((-0.9783 * value) + 55.091);
-	if(value < IME_RESET_THRESHOLD && digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW)
-	{
-		imeReset(I2C_MOTOR_LIFT_RIGHT);
-		value = 0;
-	}
-	return value;
-}
-
+// ---------------- LEFT  SIDE ---------------- //
+/**
+* Sets the speed of the left side of the lift
+* @param value
+*		[-127,127] Desired PWM value of the left side of the lift
+* @param immediate
+*		Determines if speed input change is immediate or ramped according to SML
+*/
 void LiftSetLeft(int value, bool immediate)
 {
 	MotorSet(MOTOR_LIFT_FRONTLEFT, value, immediate);
@@ -47,11 +34,31 @@ void LiftSetLeft(int value, bool immediate)
 	MotorSet(MOTOR_LIFT_THLEFT, value, immediate);
 }
 
+/**
+* Returns the calibrated value of the left potentiometer
+*/
+int LiftGetCalibratedPotentiometerLeft()
+{
+	return -analogReadCalibrated(ANA_POT_LIFT_LEFT);
+}
+
+/**
+* Returns the raw value of the left potentiomter
+*/
+int LiftGetRawPotentiometerLeft()
+{
+	return -analogRead(ANA_POT_LIFT_LEFT);
+}
+
+/**
+* Returns the raw left IME.
+* Retired. Use the potentiometer to get the current height of the lift
+*/
 int LiftGetEncoderLeft()
 {
 	int value;
 	imeGet(I2C_MOTOR_LIFT_LEFT, &value);
-	if(value < IME_RESET_THRESHOLD && digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW)
+	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW)
 	{
 		imeReset(I2C_MOTOR_LIFT_LEFT);
 		value = 0;
@@ -59,8 +66,57 @@ int LiftGetEncoderLeft()
 	return value;
 }
 
+// ---------------- RIGHT SIDE ---------------- //
 /**
-* Sets the lift to the desired speed
+ * Sets the speed of the right side of the lift
+ * @param value
+ *		[-127,127] Desired PWM value of the right side of the lift
+ * @param immediate
+ *		Determines if speed input change is immediate or ramped according to SML
+ */
+void LiftSetRight(int value, bool immediate)
+{
+	MotorSet(MOTOR_LIFT_FRONTRIGHT, value, immediate);
+	MotorSet(MOTOR_LIFT_REARRIGHT, value, immediate);
+	MotorSet(MOTOR_LIFT_THRIGHT, value, immediate);
+}
+
+/**
+* Returns the calibrated value of the right potentiometer
+*/
+int LiftGetCalibratedPotentiometerRight()
+{
+	return -analogReadCalibrated(ANA_POT_LIFT_RIGHT);
+}
+
+/**
+ * Returns the raw value of the right potentiomter
+ */
+int LiftGetRawPotentiometerRight()
+{
+	return -analogRead(ANA_POT_LIFT_RIGHT);
+}
+
+/**
+* Returns the raw right IME.
+* Retired. Use the potentiometer to get the current height of the lift
+*/
+int LiftGetEncoderRight()
+{
+	int value;
+	imeGet(I2C_MOTOR_LIFT_RIGHT, &value);
+	value = -value;
+	if (value < IME_RESET_THRESHOLD && digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW)
+	{
+		imeReset(I2C_MOTOR_LIFT_RIGHT);
+		value = 0;
+	}
+	return value;
+}
+
+// ---------------- MASTER (ALL) ---------------- //
+/**
+* Sets the lift to the desired speed using the MasterSlavePIDController for the lift
 * @param value
 *			[-127,127] Speed of the lift
 * @param immediate
@@ -68,9 +124,9 @@ int LiftGetEncoderLeft()
 */
 void LiftSet(int value)
 {
-	MasterSlavePIDSetOutput(&Controller, value);
-	//LiftSetRight(value, false);
-	//LiftSetLeft(value, false);
+	// MasterSlavePIDSetOutput(&Controller, value);
+	LiftSetLeft(value, false);
+	LiftSetRight(value, false);
 }
 
 /**
@@ -85,15 +141,10 @@ void LiftInitialize()
 	MotorConfigure(MOTOR_LIFT_THLEFT, true, 1);
 	MotorConfigure(MOTOR_LIFT_THRIGHT, true, 1);
 	
-	PIDController master = PIDControllerCreate(&LiftSetRight, &LiftGetEncoderRight, 1.00, 0.1, 0.001, 100, -100, 2);
-	PIDController slave = PIDControllerCreate(&LiftSetLeft, &LiftGetEncoderLeft, 0.5, 0, 0.2, 40, -40, 2);
+	PIDController master = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 1.00, 0.1, 0.001, 100, -100, 2);
+	PIDController slave = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft, 0.75, 0, 0.2, 40, -40, 2);
 	
-	Controller = CreateMasterSlavePIDController(master, slave, false);
+	Controller = CreateMasterSlavePIDController(master, slave, false, false);
 	
-	LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
-}
-
-void LiftSetHeight(int goal)
-{
-	MasterSlavePIDChangeGoal(&Controller, goal);
+	// LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
 }

@@ -11,14 +11,26 @@
 
 #include "sml/SmartMotorLibrary.h"
 
-/// <summary>
-/// Sets the lift PWM output to the value
-/// </summary>
-/// <param name='value'>The PWM value. Will be checked for bounds</param>
-/// <param name='immediate'>Indicates if PWM change needs to happen immediately. Usually false, will ramp speeds</param>
-void LiftSet(int value);
+// ---------------- LEFT  SIDE ---------------- //
+void LiftSetLeft(int, bool);
 
-void LiftSetHeight(int value);
+int LiftGetCalibratedPotentiometerLeft();
+
+int LiftGetRawPotentiometerLeft();
+
+int LiftGetEncoderLeft();
+
+// ---------------- RIGHT SIDE ---------------- //
+void LiftSetRight(int, bool);
+
+int LiftGetCalibratedPotentiometerRight();
+
+int LiftGetRawPotentiometerRight();
+
+int LiftGetEncoderRight();
+
+// ---------------- MASTER (ALL) ---------------- //
+void LiftSet(int);
 
 void LiftInitialize();
 

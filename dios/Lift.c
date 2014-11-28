@@ -19,6 +19,7 @@
 
 static MasterSlavePIDController Controller;
 static TaskHandle LiftControllerTask;
+Gyro gyro;
 
 // ---------------- LEFT  SIDE ---------------- //
 /**
@@ -30,9 +31,18 @@ static TaskHandle LiftControllerTask;
 */
 void LiftSetLeft(int value, bool immediate)
 {
-	MotorSet(MOTOR_LIFT_FRONTLEFT, value, immediate);
-	MotorSet(MOTOR_LIFT_REARLEFT, value, immediate);
-	MotorSet(MOTOR_LIFT_THLEFT, value, immediate);
+	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW && value < 0)
+	{
+		MotorSet(MOTOR_LIFT_FRONTLEFT, 0, immediate);
+		MotorSet(MOTOR_LIFT_REARLEFT, 0, immediate);
+		MotorSet(MOTOR_LIFT_THLEFT, 0, immediate);
+	}
+	else
+	{
+		MotorSet(MOTOR_LIFT_FRONTLEFT, value, immediate);
+		MotorSet(MOTOR_LIFT_REARLEFT, value, immediate);
+		MotorSet(MOTOR_LIFT_THLEFT, value, immediate);
+	}
 }
 
 /**
@@ -45,12 +55,13 @@ int LiftGetCalibratedPotentiometerLeft()
 	for (int i = 0; i < 19; i++)
 		prevValues[i] = prevValues[i+1];
 	prevValues[19] = LiftGetRawPotentiometerLeft() - zeroValue;
-
 	int sum = 0;
 	for (int i = 0; i < 20; i++)
 		sum += prevValues[i];
 
 	int out = (int)(sum / 20.0);
+
+	//out = (int)((pow(10.0, -7.0) * pow((double)out, 3.0)) + (-3 * pow(10, -4.0) * pow((double)out, 2.0)) + (1.1293 * (double)out));
 
 	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW)
 	{
@@ -95,9 +106,18 @@ int LiftGetEncoderLeft()
  */
 void LiftSetRight(int value, bool immediate)
 {
-	MotorSet(MOTOR_LIFT_FRONTRIGHT, value, immediate);
-	MotorSet(MOTOR_LIFT_REARRIGHT, value, immediate);
-	MotorSet(MOTOR_LIFT_THRIGHT, value, immediate);
+	if (digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW && value < 0)
+	{
+		MotorSet(MOTOR_LIFT_FRONTRIGHT, 0, immediate);
+		MotorSet(MOTOR_LIFT_REARRIGHT, 0, immediate);
+		MotorSet(MOTOR_LIFT_THRIGHT, 0, immediate);
+	}
+	else
+	{
+		MotorSet(MOTOR_LIFT_FRONTRIGHT, value, immediate);
+		MotorSet(MOTOR_LIFT_REARRIGHT, value, immediate);
+		MotorSet(MOTOR_LIFT_THRIGHT, value, immediate);
+	}
 }
 
 /**
@@ -161,9 +181,15 @@ int LiftGetEncoderRight()
 */
 void LiftSet(int value)
 {
-	MasterSlavePIDSetOutput(&Controller, value);
+	MasterSlavePIDIncreaseGoal(&Controller, value);
 	//LiftSetLeft(value, false);
 	//LiftSetRight(value, false);
+}
+
+
+int liftComputePotentiometerDifference()
+{
+	return LiftGetCalibratedPotentiometerRight() - LiftGetCalibratedPotentiometerLeft();
 }
 
 /**
@@ -183,12 +209,15 @@ void LiftInitialize()
 	{ // Calibrate potentiometers at ground level
 		LiftGetCalibratedPotentiometerRight();
 		LiftGetCalibratedPotentiometerLeft();
+		delay(5);
 	}
+	delay(100);
 
-	PIDController master = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 1.00, 0.1, 0.001, 100, -100, 2);
-	PIDController slave = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft, 2.00, 0.01, 0, 100, -50, 2);
+	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft, 0.5, 0.04, 0.001, 60, -60, 5);
+	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 0.5, 0.04, 0.001, 60, -60, 5);
+	PIDController equalizer = PIDControllerCreate(NULL, &liftComputePotentiometerDifference, 0.001, 0.00001, 0, 50, -50, 5);
 	
-	Controller = CreateMasterSlavePIDController(master, slave, false);
+	Controller = CreateMasterSlavePIDController(master, slave, equalizer, false);
 	
 	LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
 }

@@ -20,12 +20,13 @@
 * @param PIDController slave
 *			The controller for the slave process.
 */
-MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave, bool enabledMasterPID)
+MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave, PIDController equalizer, bool enabledPrimaryPID)
 {
 	MasterSlavePIDController controller;
 	controller.master = master;
 	controller.slave = slave;
-	controller.enabledMasterPID = enabledMasterPID;
+	controller.equalizer = equalizer;
+	controller.enabledPrimaryPID = enabledPrimaryPID;
 	return controller;
 }
 
@@ -38,7 +39,7 @@ TaskHandle InitializeMasterSlaveController(MasterSlavePIDController *controller,
 	mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT);
 	controller->slave.Goal = 0;
 	controller->master.Goal = masterGoal;
-	controller->manualMasterOutput = 0;
+	controller->manualPrimaryOutput = 0;
 	mutexGive(controller->mutex);
 	return taskCreate(MasterSlavePIDControllerTask, TASK_DEFAULT_STACK_SIZE, controller, TASK_PRIORITY_DEFAULT);
 }
@@ -48,50 +49,34 @@ void MasterSlavePIDControllerTask(void *c)
 	MasterSlavePIDController *controller = c;
 	PIDController *master = &controller->master;
 	PIDController *slave = &controller->slave;
-	int masterOutput, slaveOutput, masterExecute, slaveExecute;
+	PIDController *equalizer = &controller->equalizer;
+	int masterOutput, slaveOutput;
 	while(true)
 	{
 		// Can't take mutex this round. Skip loop and try again.
 		if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT)) continue;
-		
-		masterOutput = controller->enabledMasterPID ? PIDControllerCompute(master) : controller->manualMasterOutput;
-		
-		int slaveErr = master->Call() - slave->Call();
-		
-		slave->integral += slaveErr;
-		
-		if(slave->integral < slave->MinIntegral)
-			slave->integral = slave->MinIntegral;
-		else if(slave->integral > slave->MaxIntegral)
-			slave->integral = slave->MaxIntegral;
-			
-		long derivative = (slaveErr - slave->prevError) / ((micros() - slave->prevTime) * 1000000);
-		
-		slaveOutput = (int)((slave->Kp * slaveErr) + (slave->Ki * slave->integral) +  (slave->Kd * derivative));
-		
-		slave->prevTime = micros();
-		slave->prevError = slaveErr;
-		
-		masterExecute = masterOutput;
-		slaveExecute = masterOutput + slaveOutput;
 
+		masterOutput = controller->enabledPrimaryPID ? PIDControllerCompute(master) : controller->manualPrimaryOutput;
+		slaveOutput = controller->enabledPrimaryPID ? PIDControllerCompute(slave) : controller->manualPrimaryOutput;
+		
+		slaveOutput += PIDControllerCompute(equalizer);
+		
 		int max = 127;
-		if(abs(masterExecute) > max)
-			max = abs(masterExecute);
-		if(abs(slaveExecute) > max)
-			max = abs(slaveExecute);
+		if(abs(masterOutput) > max)
+			max = abs(masterOutput);
+		if(abs(slaveOutput) > max)
+			max = abs(slaveOutput);
 		
 		double scale = 127.0 / max;
 		
-		masterExecute = (int)(masterExecute * scale);
-		slaveExecute  = (int)(slaveExecute * scale);
+		masterOutput = (int)(masterOutput * scale);
+		slaveOutput  = (int)(slaveOutput * scale);
+
+		lcdPrint(uart1, 1, "m: %+3d, s: %+3d", masterOutput, slaveOutput);
+		lcdPrint(uart1, 2, "m: %4d, s: %4d", master->Call(), slave->Call());
 		
-		//lcdPrint(uart1, 1, "m: %d, s: %d", masterExecute, slaveExecute);
-		//lcdPrint(uart1, 2, "m: %d, s: %d", master->Call(), slave->Call());
-			
-		master->Execute(masterExecute, false);
-		slave->Execute(slaveExecute, false);
-			
+		master->Execute(masterOutput, false);
+		slave->Execute(slaveOutput, false);
 		
 		mutexGive(controller->mutex);
 
@@ -99,15 +84,34 @@ void MasterSlavePIDControllerTask(void *c)
 	}
 }
 
-void MasterSlavePIDChangeGoal(MasterSlavePIDController *controller, int masterGoal)
+void MasterSlavePIDChangeGoal(MasterSlavePIDController *controller, int primaryPIDGoal)
 {
 	if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
 		return;
 	
-	controller->enabledMasterPID = true;
+	controller->enabledPrimaryPID = true;
 	
-	controller->master.Goal = masterGoal;
+	controller->master.Goal = primaryPIDGoal;
+	controller->master.Goal = primaryPIDGoal;
 	
+	mutexGive(controller->mutex);
+}
+
+void MasterSlavePIDIncreaseGoal(MasterSlavePIDController *controller, int deltaGoal)
+{
+	if (!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
+		return;
+
+	if (!controller->enabledPrimaryPID)
+	{
+		controller->enabledPrimaryPID = true;
+		controller->master.Goal = controller->master.Call();
+		controller->slave.Goal = controller->master.Call();
+	}
+
+	controller->master.Goal += deltaGoal;
+	controller->slave.Goal += deltaGoal;
+
 	mutexGive(controller->mutex);
 }
 
@@ -116,12 +120,13 @@ void MasterSlavePIDSetOutput(MasterSlavePIDController *controller, int output)
 	if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
 		return;
 		
-	controller->enabledMasterPID = false;
+	controller->enabledPrimaryPID = false;
 	
-	controller->manualMasterOutput = output;
+	controller->manualPrimaryOutput = output;
 	
 	mutexGive(controller->mutex);
 }
+
 
 static void VivaLaRevolucion(MasterSlavePIDController *controller)
 {

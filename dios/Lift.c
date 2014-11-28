@@ -50,7 +50,7 @@ void LiftSetLeft(int value, bool immediate)
 */
 int LiftGetCalibratedPotentiometerLeft()
 {
-	static int zeroValue;
+	static int zeroValue = 1435;
 	static int prevValues[20];
 	for (int i = 0; i < 19; i++)
 		prevValues[i] = prevValues[i+1];
@@ -60,8 +60,6 @@ int LiftGetCalibratedPotentiometerLeft()
 		sum += prevValues[i];
 
 	int out = (int)(sum / 20.0);
-
-	//out = (int)((pow(10.0, -7.0) * pow((double)out, 3.0)) + (-3 * pow(10, -4.0) * pow((double)out, 2.0)) + (1.1293 * (double)out));
 
 	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW)
 	{
@@ -125,7 +123,7 @@ void LiftSetRight(int value, bool immediate)
 */
 int LiftGetCalibratedPotentiometerRight()
 {
-	static int zeroValue;
+	static int zeroValue = -210;
 	static int prevValues[20];
 	for (int i = 0; i < 19; i++)
 		prevValues[i] = prevValues[i+1];
@@ -213,9 +211,9 @@ void LiftInitialize()
 	}
 	delay(100);
 
-	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft, 0.5, 0.04, 0.001, 60, -60, 5);
-	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 0.5, 0.04, 0.001, 60, -60, 5);
-	PIDController equalizer = PIDControllerCreate(NULL, &liftComputePotentiometerDifference, 0.001, 0.00001, 0, 50, -50, 5);
+	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft, 0.4, 0.02, -0.03, 100, -100, 5);
+	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 0.4, 0.02, -0.03, 100, -100, 5);
+	PIDController equalizer = PIDControllerCreate(NULL, &liftComputePotentiometerDifference, 0, 0, 0, 50, -50, 5);
 	
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, false);
 	

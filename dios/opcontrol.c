@@ -24,7 +24,7 @@ void operatorControl()
 	{
 		//lcdPrint(uart1, 1, "l: %d, r: %d", digitalRead(DIG_LIFT_BOTLIM_LEFT), digitalRead(DIG_LIFT_BOTLIM_RIGHT));
 		//lcdPrint(uart1, 1, "l: %+3d, r: %+3d", MotorGet(MOTOR_LIFT_REARLEFT), -MotorGet(MOTOR_LIFT_REARRIGHT));
-		//lcdPrint(uart1, 2, "l: %4d, r: %4d", LiftGetCalibratedPotentiometerLeft(), LiftGetCalibratedPotentiometerRight());
+		//lcdPrint(uart1, 2, "l: %4d, r: %4d", LiftGetRawPotentiometerLeft(), LiftGetRawPotentiometerRight());
 	
 		ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
 		

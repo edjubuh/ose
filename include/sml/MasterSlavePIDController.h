@@ -17,12 +17,13 @@ typedef struct
 {
 	PIDController master;
 	PIDController slave;
+	PIDController equalizer;
 	Mutex mutex;
-	bool enabledMasterPID;
-	int manualMasterOutput;
+	bool enabledPrimaryPID;
+	int manualPrimaryOutput;
 } MasterSlavePIDController;
 
-MasterSlavePIDController CreateMasterSlavePIDController(PIDController, PIDController, bool);
+MasterSlavePIDController CreateMasterSlavePIDController(PIDController, PIDController, PIDController, bool);
 
 TaskHandle InitializeMasterSlaveController(MasterSlavePIDController*, int);
 
@@ -31,5 +32,7 @@ void MasterSlavePIDControllerTask(void*);
 void MasterSlavePIDChangeGoal(MasterSlavePIDController*, int);
 
 void MasterSlavePIDSetOutput(MasterSlavePIDController*, int);
+
+void MasterSlavePIDIncreaseGoal(MasterSlavePIDController*, int);
 
 #endif

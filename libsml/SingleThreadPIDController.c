@@ -8,6 +8,7 @@
 
 #include "main.h"
 #include "sml/SingleThreadPIDController.h"
+#include <math.h>
 
 /**
 * Creates a PIDController struct based off of the parameters
@@ -70,6 +71,8 @@ int PIDControllerCompute(PIDController *controller)
 		controller->integral = controller->MinIntegral;
 	else if (controller->integral > controller->MaxIntegral)
 		controller->integral = controller->MaxIntegral;
+	if (abs(currError) < abs(controller->AcceptableTolerance)) // 
+		controller->integral = 0;
 
 
 	long derivative = (currError - controller->prevError) /

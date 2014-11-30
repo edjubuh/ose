@@ -79,6 +79,10 @@ int PIDControllerCompute(PIDController *controller)
 		((micros() - controller->prevTime) * 1000000); // get true estimated instantaneous change in ticks/sec
 
 	int out = (int)((controller->Kp * currError) + (controller->Ki * controller->integral) + (controller->Kd * derivative));
+
+
+	if (abs(currError) < abs(controller->AcceptableTolerance))
+		out = 0;
 	
 	controller->prevTime = micros();
 	controller->prevError = currError;

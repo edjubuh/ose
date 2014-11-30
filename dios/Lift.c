@@ -211,8 +211,8 @@ void LiftInitialize()
 	}
 	delay(100);
 
-	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft, 0.4, 0.02, -0.03, 100, -100, 5);
-	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 0.4, 0.02, -0.03, 100, -100, 5);
+	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft, 0.335, 0.047, -0.05, 500, -400, 10);
+	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 0.335, 0.051, -0.09, 500, -400, 10);
 	PIDController equalizer = PIDControllerCreate(NULL, &liftComputePotentiometerDifference, 0, 0, 0, 50, -50, 5);
 	
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, false);

@@ -16,11 +16,11 @@
  */
 double toDegrees(double radians)
 {
-	return (radians * (180/M_PI);
+	return (radians * (180/M_PI));
 }
 int toIntDegrees(double radians)
 {
-	return (int)(radians * (180/M_PI);
+	return (int)(radians * (180/M_PI));
 }
 
 
@@ -159,9 +159,9 @@ void JoystickControl()
 		ChassisSet( -aJoy(r1, l4), -aJoy(r1, l4), false);
 	//Left / Right
 	else if (theta1 == 0 && theta2 == 0)
-		ChassisSetMecanum(-PI/2, aJoy(l4, r1), 0, false);
+		ChassisSetMecanum(-M_PI/2, aJoy(l4, r1), 0, false);
 	else if (theta1 == 180 && theta2 == 180)
-		ChassisSetMecanum(PI/2, aJoy(l4, r1), 0, false);
+		ChassisSetMecanum(M_PI/2, aJoy(l4, r1), 0, false);
 	//Tank Drive ^+v or v+^
 	else if (theta1 == 90 && theta2 == -90)
 		ChassisSet( aJoy(r1, l4), -aJoy(r1, l4), false);
@@ -169,16 +169,16 @@ void JoystickControl()
 		ChassisSet( -aJoy(r1, l4), aJoy(r1, l4), false);
 	//northeast
 	else if (theta1 == 45 && theta2 == 45)
-		ChassisSetMecanum(-PI/4, aHypo( cHypo(l4, l3), cHypo(r1, r2) ), 0, false);
+		ChassisSetMecanum(-M_PI/4, aHypo( cHypo(l4, l3), cHypo(r1, r2) ), 0, false);
 	//northwest
 	else if (theta1 == 135 && theta2 == 135)
-		ChassisSetMecanum(PI/4, aHypo( cHypo(l4, l3), cHypo(r1, r2) ), 0, false);
+		ChassisSetMecanum(M_PI/4, aHypo( cHypo(l4, l3), cHypo(r1, r2) ), 0, false);
 	//southeast
 	else if (theta1 == -45 && theta2 == -45)
-		ChassisSetMecanum(-3 * PI/4, aHypo( cHypo(l4, l3), cHypo(r1, r2) ), 0, false);
+		ChassisSetMecanum(-3 * M_PI/4, aHypo( cHypo(l4, l3), cHypo(r1, r2) ), 0, false);
 	//southwest
 	else if (theta1 == -135 && theta2 == -135)
-		ChassisSetMecanum(3 * PI/4, aHypo( cHypo(l4, l3), cHypo(r1, r2) ), 0, false);
+		ChassisSetMecanum(3 * M_PI/4, aHypo( cHypo(l4, l3), cHypo(r1, r2) ), 0, false);
 	//strafe right
 	else if ((theta1 == 90 || theta1 == -90) && theta2 == 0)
 		ChassisSet(l3, (int)(l3 * (1.0 - abs( ((double)r1) / STRAFE_CONST ) ) ), false);

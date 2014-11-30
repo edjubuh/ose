@@ -6,13 +6,15 @@
  * Portions of this file may contain elements from the PROS API.
  * See include/API.h for additional notice.
  ************************************************************************/
+#include <math.h>
 
 #include "main.h"
 #include "dios/Chassis.h"
 #include "dios/Lift.h"
 #include "dios/CortexDefinitions.h"
 #include "sml/SmartMotorLibrary.h"
-#include <math.h>
+#include "dios/mechop.h"
+
 
 /**
  * @brief Sets motors in motion based on user input (from controls).
@@ -26,8 +28,8 @@ void operatorControl()
 		//lcdPrint(uart1, 1, "l: %+3d, r: %+3d", MotorGet(MOTOR_LIFT_REARLEFT), -MotorGet(MOTOR_LIFT_REARRIGHT));
 		//lcdPrint(uart1, 2, "l: %4d, r: %4d", LiftGetRawPotentiometerLeft(), LiftGetRawPotentiometerRight());
 	
-		ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
-		
+		//ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
+		JoystickControl();
 		
 		if (joystickGetDigital(1, 6, JOY_UP))
 			LiftSet(10);

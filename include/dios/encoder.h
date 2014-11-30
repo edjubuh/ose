@@ -5,4 +5,4 @@
 /**
  * @brief Declarations for functions in encoder.c
  */
-void GetAllEncoders(int *clicks[10]);
+void GetAllEncoders(int *clicks, unsigned int size);

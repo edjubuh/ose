@@ -2,27 +2,23 @@
 
 #include "dios/encoder.h"
 
+
 /**
- * @brief Gives an array that contains ime tick counts.
+ * @brief Puts click values of ime motors into an array passed to the function.
  *
  * @param *clicks
- *        A pointer to an array of length 10 to store the tick count values in.
- *
- * @note Obtained by using the & operator.
- * @example GetAllEncoders( &tickCount );
+ *        A pointer to an array to store the tick count values in.
+ *        @note Obtained by using the & operator
+ *        @example GetAllEncoders( &tickCount );
  */
-void GetAllEncoders(int *clicks[10])//not sure if syntax is correct.
+void scanAllEncoders(int *clicks, unsigned int size)
 {
-	int encoderPorts[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}; //all 10
-	int clickValues[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; //array to store click values.
-
 	int i = 0; //incrementor
 	int temp = 0; //temporary value for storing ime click numbers.
 
-	for (i = 0; i < 10; i++)
+	for (i = 0; i < size; i++)
 	{
-		//Gets encoder values, otherwise sets clickValues to zero.
-		clickValues[i] = imeGet(encoderPorts[i], &temp) ? temp : 0;
+		//Gets encoder values, otherwise sets clicks to zero.
+		clicks[i] = imeGet(i, &temp) ? temp : 0;
 	}
-	clicks = &clickValues; //passes location of clickValues to clicks.
 }

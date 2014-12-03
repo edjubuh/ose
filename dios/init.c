@@ -35,7 +35,7 @@ void initialize()
 	lcdClear(uart1);
 	lcdSetText(uart1, 1, "  Booting Dios  ");
 	lcdSetText(uart1, 2, "MotorManager... ");
-	InitializeMotorManager();
+	//InitializeMotorManager();
 	lcdSetText(uart1, 2, "Chassis... ");
 	ChassisInitialize();
 	lcdSetText(uart1, 2, "Lift... ");

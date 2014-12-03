@@ -15,13 +15,21 @@ static Motor Motors[10];
 static Mutex Mutexes[10];
 static TaskHandle MotorManagerTaskHandle;
 
+static int DefaultRecalculate(int in)
+{
+	return in;
+}
+
 /**
 * Initializes the Motor Manager Task by creating the Motor Mutexes and starting the task.
 */
 void InitializeMotorManager()
 {
 	for (int i = 0; i < 10; i++)
+	{
 		Mutexes[i] = mutexCreate();
+		Motors[i].RecalculateCommanded = &DefaultRecalculate;
+	}
 	MotorManagerTaskHandle = taskCreate(MotorManagerTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT+1);
 }
 
@@ -30,7 +38,7 @@ void InitializeMotorManager()
 */
 void StopMotorManager()
 {
-	if(MotorManagerTaskHandle != NULL) // passing NULL kills current thread, so don't allow that to happen
+	if (MotorManagerTaskHandle != NULL) // passing NULL kills current thread, so don't allow that to happen
 		taskDelete(MotorManagerTaskHandle);
 }
 
@@ -47,23 +55,17 @@ void MotorManagerTask(void *none)
 			if (!mutexTake(Mutexes[i], MUTEX_TAKE_TIMEOUT)) // Grab mutex if possible, if it's not available (being changed by MotorSet()), skip the motor check.
 				continue;
 
-
-			if (motorGet(i+1) != Motors[i].commanded) // Motor has not been set to target
+			if (motorGet(i+1) != Motors[i].RecalculateCommanded(Motors[i].commanded)) // Motor has not been set to target
 			{
 				int current = motorGet(i+1);
-				int command = Motors[i].commanded;
+				int command = Motors[i].RecalculateCommanded(Motors[i].commanded);
 				double skew = Motors[i].skewPerMsec;
 
-				if (Motors[i].SkewFunction != NULL)
-					motorSet(i+1, current + Motors[i].SkewFunction(current, command));
-				else
-				{
-					if (abs(command - current) < (skew * (millis() - Motors[i].lastUpdate))) // If skew is less than required delta-PWM, set commanded to output
-						motorSet(i+1, command);
+				if (abs(command - current) < (skew * (millis() - Motors[i].lastUpdate))) // If skew is less than required delta-PWM, set commanded to output
+					motorSet(i+1, command);
 
-					// Add appropriate motor skewing
-					else motorSet(i+1, (current + (int)(skew * (millis() - Motors[i].lastUpdate) * (command - current > 0 ? 1 : -1))));
-				}
+				// Add appropriate motor skewing
+				else motorSet(i+1, (current + (int)(skew * (millis() - Motors[i].lastUpdate) * (command - current > 0 ? 1 : -1))));
 
 			}
 			Motors[i].lastUpdate = millis();
@@ -103,15 +105,15 @@ bool MotorSet(int channel, int set, bool immediate)
 
 int MotorGet(int channel)
 {
-	if(channel > 10 || channel < 1)
+	if (channel > 10 || channel < 1)
 		return 0;
 	channel--;
-	
-	if(!mutexTake(Mutexes[channel], MUTEX_TAKE_TIMEOUT))
+
+	if (!mutexTake(Mutexes[channel], MUTEX_TAKE_TIMEOUT))
 		return 0;
-	
+
 	int ret = Motors[channel].commanded * (Motors[channel].inverted ? 1 : -1);
-	
+
 	mutexGive(Mutexes[channel]);
 	return ret;
 }
@@ -138,12 +140,13 @@ void MotorConfigure(int channel, bool inverted, double skewPerMsec)
 	Motors[channel].channel = channel + 1;
 	Motors[channel].inverted = inverted;
 	Motors[channel].skewPerMsec = skewPerMsec;
+	Motors[channel].RecalculateCommanded = &DefaultRecalculate;
 
 	mutexGive(Mutexes[channel]);
 }
 
 
-void MotorAddSkewFunction(int channel, int(*SkewFunction)(int, int))
+void MotorChangeRecalculateCommanded(int channel, int(*foo)(int))
 {
 	if (channel < 0 || channel > 11)
 		return;
@@ -153,7 +156,7 @@ void MotorAddSkewFunction(int channel, int(*SkewFunction)(int, int))
 	if (!mutexTake(Mutexes[channel], MUTEX_TAKE_TIMEOUT))
 		return;
 
-	Motors[channel].SkewFunction = SkewFunction;
+	Motors[channel].RecalculateCommanded = foo;
 
 	mutexGive(Mutexes[channel]);
 }

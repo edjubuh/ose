@@ -33,6 +33,8 @@
  */
 
 #include "main.h"
+#include "dios/mechop.h"
+#include "additional.h"
 
 /*
  * Runs the user operator control code. This function will be started in its own task with the
@@ -55,10 +57,37 @@ void operatorControl() {
 
 	while (1) 
 	{
-		for (int i = 1; i <= 5; i++)
-			motorSet(i, joystickGetAnalog(1, 2));
-		for (int i = 6; i <= 10; i++)
-			motorSet(i, joystickGetAnalog(1, 3));
+		JoystickControl();
+
+		if (joystickGetDigital(1, 6, JOY_DOWN))
+		{
+			motorSet(MOTOR_LIFT_REARRIGHT, -127);
+			motorSet(MOTOR_LIFT_MIDDLERIGHT, -127);
+			motorSet(MOTOR_LIFT_FRONTRIGHT, -127);
+			motorSet(MOTOR_LIFT_REARLEFT, -127);
+			motorSet(MOTOR_LIFT_MIDDLELEFT, -127);
+			motorSet(MOTOR_LIFT_FRONTLEFT, -127);
+		}
+		else if (joystickGetDigital(1, 6, JOY_UP))
+		{
+			motorSet(MOTOR_LIFT_REARRIGHT, 127);
+			motorSet(MOTOR_LIFT_MIDDLERIGHT, 127);
+			motorSet(MOTOR_LIFT_FRONTRIGHT, 127);
+			motorSet(MOTOR_LIFT_REARLEFT, 127);
+			motorSet(MOTOR_LIFT_MIDDLELEFT, 127);
+			motorSet(MOTOR_LIFT_FRONTLEFT, 127);
+		}
+		else 
+		{
+			motorSet(MOTOR_LIFT_REARRIGHT, 0);
+			motorSet(MOTOR_LIFT_MIDDLERIGHT, 0);
+			motorSet(MOTOR_LIFT_FRONTRIGHT, 0);
+			motorSet(MOTOR_LIFT_REARLEFT, 0);
+			motorSet(MOTOR_LIFT_MIDDLELEFT, 0);
+			motorSet(MOTOR_LIFT_FRONTLEFT, 0);
+		}
+
+
 		delay(20);
 	}
 }

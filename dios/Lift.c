@@ -34,14 +34,14 @@ void LiftSetLeft(int value, bool immediate)
 	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW && value < 0)
 	{
 		MotorSet(MOTOR_LIFT_FRONTLEFT, 0, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLELEFT, 0, immediate);
 		MotorSet(MOTOR_LIFT_REARLEFT, 0, immediate);
-		MotorSet(MOTOR_LIFT_THLEFT, 0, immediate);
 	}
 	else
 	{
 		MotorSet(MOTOR_LIFT_FRONTLEFT, value, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLELEFT, value, immediate);
 		MotorSet(MOTOR_LIFT_REARLEFT, value, immediate);
-		MotorSet(MOTOR_LIFT_THLEFT, value, immediate);
 	}
 }
 
@@ -107,14 +107,14 @@ void LiftSetRight(int value, bool immediate)
 	if (digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW && value < 0)
 	{
 		MotorSet(MOTOR_LIFT_FRONTRIGHT, 0, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLERIGHT, 0, immediate);
 		MotorSet(MOTOR_LIFT_REARRIGHT, 0, immediate);
-		MotorSet(MOTOR_LIFT_THRIGHT, 0, immediate);
 	}
 	else
 	{
 		MotorSet(MOTOR_LIFT_FRONTRIGHT, value, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLERIGHT, value, immediate);
 		MotorSet(MOTOR_LIFT_REARRIGHT, value, immediate);
-		MotorSet(MOTOR_LIFT_THRIGHT, value, immediate);
 	}
 }
 
@@ -207,26 +207,19 @@ void LiftInitialize()
 {
 	MotorConfigure(MOTOR_LIFT_FRONTLEFT, true, 1);
 	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, true, 1);
+	MotorConfigure(MOTOR_LIFT_MIDDLELEFT, true, 1);
+	MotorConfigure(MOTOR_LIFT_MIDDLERIGHT, true, 1);
 	MotorConfigure(MOTOR_LIFT_REARLEFT, true, 1);
 	MotorConfigure(MOTOR_LIFT_REARRIGHT, true, 1);
-	MotorConfigure(MOTOR_LIFT_THLEFT, true, 1);
-	MotorConfigure(MOTOR_LIFT_THRIGHT, true, 1);
-
-	MotorAddSkewFunction(MOTOR_LIFT_FRONTLEFT, &ComputeLiftSpeedChange);
-	MotorAddSkewFunction(MOTOR_LIFT_FRONTRIGHT, &ComputeLiftSpeedChange);
-	MotorAddSkewFunction(MOTOR_LIFT_REARLEFT, &ComputeLiftSpeedChange);
-	MotorAddSkewFunction(MOTOR_LIFT_REARRIGHT, &ComputeLiftSpeedChange);
-	MotorAddSkewFunction(MOTOR_LIFT_THLEFT, &ComputeLiftSpeedChange);
-	MotorAddSkewFunction(MOTOR_LIFT_THRIGHT, &ComputeLiftSpeedChange);
-	
+		
 	unsigned long start = millis();
-	while ((millis() - start) < 500)
+	while ((millis() - start) < 250)
 	{ // Calibrate potentiometers at ground level
 		LiftGetCalibratedPotentiometerRight();
 		LiftGetCalibratedPotentiometerLeft();
 		delay(5);
 	}
-	delay(100);
+	delay(50);
 
 	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft, 0.335, 0.047, -0.05, 500, -400, 10);
 	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 0.335, 0.051, -0.09, 500, -400, 10);

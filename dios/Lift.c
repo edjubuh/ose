@@ -190,6 +190,16 @@ int liftComputePotentiometerDifference()
 	return LiftGetCalibratedPotentiometerRight() - LiftGetCalibratedPotentiometerLeft();
 }
 
+static PIDController LiftSpeedController = { NULL, NULL, 0, 1, 0, 10, -10, 5, 0, 0, 0 };
+int ComputeLiftSpeedChange(int current, int goal)
+{
+	int goalSpeed = 20 * goal; // TODO: Find actual formula to convert PWM to IME velocity
+	int currentSpeed;
+	if (!imeGetVelocity(I2C_MOTOR_LIFT_RIGHT, &currentSpeed))
+		return 0;
+	return PIDControllerComputer(&LiftSpeedController, goalSpeed - currentSpeed);
+}
+
 /**
 * Initializes the lift motors and PID controllers
 */
@@ -201,6 +211,13 @@ void LiftInitialize()
 	MotorConfigure(MOTOR_LIFT_REARRIGHT, true, 1);
 	MotorConfigure(MOTOR_LIFT_THLEFT, true, 1);
 	MotorConfigure(MOTOR_LIFT_THRIGHT, true, 1);
+
+	MotorAddSkewFunction(MOTOR_LIFT_FRONTLEFT, &ComputeLiftSpeedChange);
+	MotorAddSkewFunction(MOTOR_LIFT_FRONTRIGHT, &ComputeLiftSpeedChange);
+	MotorAddSkewFunction(MOTOR_LIFT_REARLEFT, &ComputeLiftSpeedChange);
+	MotorAddSkewFunction(MOTOR_LIFT_REARRIGHT, &ComputeLiftSpeedChange);
+	MotorAddSkewFunction(MOTOR_LIFT_THLEFT, &ComputeLiftSpeedChange);
+	MotorAddSkewFunction(MOTOR_LIFT_THRIGHT, &ComputeLiftSpeedChange);
 	
 	unsigned long start = millis();
 	while ((millis() - start) < 500)

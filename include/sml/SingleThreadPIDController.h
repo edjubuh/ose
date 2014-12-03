@@ -23,6 +23,8 @@ void PIDControllerReset(PIDController *controller);
 // Computes and returns a PID Controller
 int PIDControllerCompute(PIDController *controller);
 
+int PIDControllerComputer(PIDController *controller, int error);
+
 // Executes a PID Controller once, for use when running multiple PID Controllers at once on the same level
 bool PIDControllerExecuteContinuous(PIDController *controller);
 

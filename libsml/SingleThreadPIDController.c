@@ -64,29 +64,32 @@ void PIDControllerReset(PIDController *controller)
 */
 int PIDControllerCompute(PIDController *controller)
 {
-	int currError = controller->Goal - controller->Call();
+	return PIDControllerComputer(controller, controller->Goal - controller->Call());
+}
 
-	controller->integral += currError;
+int PIDControllerComputer(PIDController *controller, int error)
+{
+	controller->integral += error;
 	if (controller->integral < controller->MinIntegral)
 		controller->integral = controller->MinIntegral;
 	else if (controller->integral > controller->MaxIntegral)
 		controller->integral = controller->MaxIntegral;
-	if (abs(currError) < abs(controller->AcceptableTolerance)) // 
+	if (abs(error) < abs(controller->AcceptableTolerance)) // 
 		controller->integral = 0;
 
 
-	long derivative = (currError - controller->prevError) /
+	long derivative = (error - controller->prevError) /
 		((micros() - controller->prevTime) * 1000000); // get true estimated instantaneous change in ticks/sec
 
-	int out = (int)((controller->Kp * currError) + (controller->Ki * controller->integral) + (controller->Kd * derivative));
+	int out = (int)((controller->Kp * error) + (controller->Ki * controller->integral) + (controller->Kd * derivative));
 
 
-	if (abs(currError) < abs(controller->AcceptableTolerance))
+	if (abs(error) < abs(controller->AcceptableTolerance))
 		out = 0;
-	
+
 	controller->prevTime = micros();
-	controller->prevError = currError;
-	
+	controller->prevError = error;
+
 	return out;
 }
 

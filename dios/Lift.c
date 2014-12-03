@@ -190,16 +190,6 @@ int liftComputePotentiometerDifference()
 	return LiftGetCalibratedPotentiometerRight() - LiftGetCalibratedPotentiometerLeft();
 }
 
-static PIDController LiftSpeedController = { NULL, NULL, 0, 1, 0, 10, -10, 5, 0, 0, 0 };
-int ComputeLiftSpeedChange(int current, int goal)
-{
-	int goalSpeed = 20 * goal; // TODO: Find actual formula to convert PWM to IME velocity
-	int currentSpeed;
-	if (!imeGetVelocity(I2C_MOTOR_LIFT_RIGHT, &currentSpeed))
-		return 0;
-	return PIDControllerComputer(&LiftSpeedController, goalSpeed - currentSpeed);
-}
-
 /**
 * Initializes the lift motors and PID controllers
 */

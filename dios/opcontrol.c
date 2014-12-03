@@ -28,8 +28,8 @@ void operatorControl()
 		//lcdPrint(uart1, 1, "l: %+3d, r: %+3d", MotorGet(MOTOR_LIFT_REARLEFT), -MotorGet(MOTOR_LIFT_REARRIGHT));
 		//lcdPrint(uart1, 2, "l: %4d, r: %4d", LiftGetRawPotentiometerLeft(), LiftGetRawPotentiometerRight());
 	
-		//ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
-		JoystickControl();
+		ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
+		//JoystickControl();
 		
 		if (joystickGetDigital(1, 6, JOY_UP))
 			LiftSet(10);

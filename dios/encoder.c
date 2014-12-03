@@ -8,8 +8,12 @@
  *
  * @param *clicks
  *        A pointer to an array to store the tick count values in.
- *        @note Obtained by using the & operator
- *        @example GetAllEncoders( &tickCount );
+ * @param size
+ *        Size of the array. (length)
+ *
+ * @example
+ *         int vars[10] = {0};
+ *         scanAllEncoders( vars, 10 ); //stashes values into vars
  */
 void scanAllEncoders(int *clicks, unsigned int size)
 {

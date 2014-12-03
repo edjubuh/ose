@@ -13,8 +13,7 @@
 #include "dios/CortexDefinitions.h"
 #include <math.h>
 
-
-#define PI 3.141592653589793
+static Gyro gyro;
 
 /**
  * @brief Sets the left and right motors of the chassis as specified by the parameters.
@@ -40,7 +39,7 @@ void ChassisSet(int left, int right, bool immediate)
 		right = signbit(right) ? -127 : 127;
 
 	//set left and right wheel speeds according to parameters above.
-	MotorSet(MOTOR_CHASSIS_FRONTLEFT,  left,  immediate);
+	MotorSet(MOTOR_CHASSIS_FRONTLEFT, left, immediate);
 	MotorSet(MOTOR_CHASSIS_FRONTRIGHT, right, immediate);
 	MotorSet(MOTOR_CHASSIS_REARLEFT,   left,  immediate);
 	MotorSet(MOTOR_CHASSIS_REARRIGHT,  right, immediate);
@@ -69,8 +68,8 @@ void ChassisSetMecanum(double heading, int speed, int rotation, bool immediate)
 	if (abs(rotation) > 127)
 		rotation = signbit(rotation) ? -127 : 127;
 
-	int rightDiag = speed * cos(heading + (PI/4));
-	int leftDiag = speed * cos(heading - (PI/4));
+	int rightDiag = speed * cos(heading + (M_PI/4));
+	int leftDiag = speed * cos(heading - (M_PI/4));
 
 	int frontRight = rightDiag + rotation,
 		rearRight = leftDiag + rotation,
@@ -105,4 +104,6 @@ void ChassisInitialize()
 	MotorConfigure(MOTOR_CHASSIS_FRONTRIGHT, true,  5);
 	MotorConfigure(MOTOR_CHASSIS_REARLEFT,   false, 5);
 	MotorConfigure(MOTOR_CHASSIS_REARRIGHT,  true,  5);
+
+	gyro = gyroInit(ANA_GYROSCOPE, 196);
 }

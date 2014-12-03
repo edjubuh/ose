@@ -38,8 +38,8 @@ typedef struct
 
 typedef struct
 {
-	// A pointer in this struct will use the function pointer to determine the change in the output speed (does not use skewPerMsec)
-	int(*SkewFunction)(int, int);
+	// This pointer (usually NULL) will recalculate the commanded speed
+	int(*RecalculateCommanded)(int);
 	unsigned char channel;
 
 	bool inverted;
@@ -54,14 +54,14 @@ void InitializeMotorManager();
 
 void StopMotorManager();
 
-void MotorManagerTask(void *none);
+void MotorManagerTask(void *);
 
-void MotorConfigure(int channel, bool inverted, double skewPerMsec);
+void MotorConfigure(int, bool, double);
 
-void MotorAddSkewFunction(int channel, int(*SkewFunction)(int, int));
+void MotorChangeRecalculateCommanded(int, int(*foo)(int));
 
-bool MotorSet(int channel, int set, bool immediate);
+bool MotorSet(int, int, bool);
 
-int MotorGet(int channel);
+int MotorGet(int);
 
 #endif

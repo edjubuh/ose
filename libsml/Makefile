@@ -16,7 +16,7 @@ all: $(SOURCES) $(ARCHIVE) copy clean
 	
 
 $(ARCHIVE): $(OBJECTS)
-	$(ARCHIVER) $(ARCHFLAGS) $(ARCHIVE) $(OBJECTS)
+	@$(ARCHIVER) $(ARCHFLAGS) $(ARCHIVE) $(OBJECTS)
 
 .c.o:
 	$(CC) $(CFLAGS) $(INCLUDE) $< -o $@

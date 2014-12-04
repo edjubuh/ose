@@ -34,16 +34,18 @@ void initialize()
 	lcdSetBacklight(uart1, true);
 	lcdClear(uart1);
 	lcdSetText(uart1, 1, "  Booting Dios  ");
+	lcdSetText(uart1, 2, "IMEs... "); // IMES must be first, followed by MotorManager. Chassis and Lift are not order dependent
+	imeInitializeAll();
+	delay(100);
 	lcdSetText(uart1, 2, "MotorManager... ");
 	InitializeMotorManager();
+	delay(100);
 	lcdSetText(uart1, 2, "Chassis... ");
 	ChassisInitialize();
+	delay(100);
 	lcdSetText(uart1, 2, "Lift... ");
 	LiftInitialize();
-	lcdSetText(uart1, 2, "IMEs... ");
-	imeInitializeAll();
-
-	delay(100);
+	delay(200);
 	lcdSetText(uart1, 2, "");
 	delay(100);
 	lcdSetText(uart1, 2, "       pl       ");

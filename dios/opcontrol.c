@@ -21,7 +21,7 @@
  */
 void operatorControl()
 {
-	Gyro gyro = gyroInit(5, 0);
+	//Gyro gyro = gyroInit(5, 0);
 	while (true)
 	{
 		//lcdPrint(uart1, 1, "l: %d, r: %d", digitalRead(DIG_LIFT_BOTLIM_LEFT), digitalRead(DIG_LIFT_BOTLIM_RIGHT));

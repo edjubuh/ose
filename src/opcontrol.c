@@ -33,7 +33,6 @@
  */
 
 #include "main.h"
-#include "dios/mechop.h"
 #include "additional.h"
 
 /*
@@ -57,16 +56,25 @@ void operatorControl() {
 
 	while (1) 
 	{
-		JoystickControl();
+		//JoystickControl();
 
+		motorSet(MOTOR_LIFT_REARRIGHT,	joystickGetAnalog(1,2));
+		motorSet(MOTOR_LIFT_MIDDLERIGHT,joystickGetAnalog(1,2));
+		motorSet(MOTOR_LIFT_FRONTRIGHT, joystickGetAnalog(1,2));
+		motorSet(MOTOR_LIFT_REARLEFT,  -joystickGetAnalog(1,3));
+		motorSet(MOTOR_LIFT_MIDDLELEFT, joystickGetAnalog(1,3));
+		motorSet(MOTOR_LIFT_FRONTLEFT,	joystickGetAnalog(1,3));
+
+
+		/*
 		if (joystickGetDigital(1, 6, JOY_DOWN))
 		{
-			motorSet(MOTOR_LIFT_REARRIGHT, -127);
-			motorSet(MOTOR_LIFT_MIDDLERIGHT, -127);
-			motorSet(MOTOR_LIFT_FRONTRIGHT, -127);
-			motorSet(MOTOR_LIFT_REARLEFT, -127);
-			motorSet(MOTOR_LIFT_MIDDLELEFT, -127);
-			motorSet(MOTOR_LIFT_FRONTLEFT, -127);
+			motorSet(MOTOR_LIFT_REARRIGHT, -60);
+			motorSet(MOTOR_LIFT_MIDDLERIGHT, -60);
+			motorSet(MOTOR_LIFT_FRONTRIGHT, -60);
+			motorSet(MOTOR_LIFT_REARLEFT, 60);
+			motorSet(MOTOR_LIFT_MIDDLELEFT,-60);
+			motorSet(MOTOR_LIFT_FRONTLEFT, -60);
 		}
 		else if (joystickGetDigital(1, 6, JOY_UP))
 		{
@@ -86,7 +94,7 @@ void operatorControl() {
 			motorSet(MOTOR_LIFT_MIDDLELEFT, 0);
 			motorSet(MOTOR_LIFT_FRONTLEFT, 0);
 		}
-
+		*/
 
 		delay(20);
 	}

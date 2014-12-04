@@ -173,7 +173,7 @@ int LiftGetEncoderRight()
 /**
 * Sets the lift to the desired speed using the MasterSlavePIDController for the lift
 * @param value
-*			[-127,127] Speed of the lift
+*			[-127g,127] Speed of the lift
 * @param immediate
 *			Determines if speed input change is immediate or ramped according to SML
 */
@@ -199,7 +199,7 @@ void LiftInitialize()
 	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, true, 1);
 	MotorConfigure(MOTOR_LIFT_MIDDLELEFT, true, 1);
 	MotorConfigure(MOTOR_LIFT_MIDDLERIGHT, true, 1);
-	MotorConfigure(MOTOR_LIFT_REARLEFT, true, 1);
+	MotorConfigure(MOTOR_LIFT_REARLEFT, false, 1);
 	MotorConfigure(MOTOR_LIFT_REARRIGHT, true, 1);
 		
 	unsigned long start = millis();

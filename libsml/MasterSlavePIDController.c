@@ -1,11 +1,13 @@
-/************************************************************************/
-/* @file MasterSlavePIDController.c										*/
-/* @brief Extension of SingleThreadPIDController to implement 			*/
-/*		  a multitasked Master/Slave PID Controller						*/
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file MasterSlavePIDController.c
+ * @brief Extension of SingleThreadPIDController to implement 
+ *        a multitasked Master/Slave PID Controller.
+ *        See addendum documentation for more details.
+ *
+ * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
+ * Portions of this file may contain elements from the PROS API.
+ * See include/API.h for additional notice.
+ **********************************************************************/
 
 #include "main.h"
 #include "sml/SingleThreadPIDController.h"
@@ -14,37 +16,12 @@
 #include <main.h>
 
 /**
-* Creates a MasterSlavePIDController struct based off of the parameters.
-* @param PIDController master
-*			The controller for the master process. The call/execute methods should only affect the master. (i.e. the execute should not set the output for both slave and master)
-* @param PIDController slave
-*			The controller for the slave process.
-*/
-MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave, PIDController equalizer, bool enabledPrimaryPID)
-{
-	MasterSlavePIDController controller;
-	controller.master = master;
-	controller.slave = slave;
-	controller.equalizer = equalizer;
-	controller.enabledPrimaryPID = enabledPrimaryPID;
-	return controller;
-}
-
-/**
-* Initializes the 
-*/
-TaskHandle InitializeMasterSlaveController(MasterSlavePIDController *controller, int masterGoal)
-{
-	controller->mutex = mutexCreate();
-	mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT);
-	controller->slave.Goal = 0;
-	controller->master.Goal = masterGoal;
-	controller->manualPrimaryOutput = 0;
-	mutexGive(controller->mutex);
-	return taskCreate(MasterSlavePIDControllerTask, TASK_DEFAULT_STACK_SIZE, controller, TASK_PRIORITY_DEFAULT);
-}
-
-void MasterSlavePIDControllerTask(void *c)
+ * @brief The task keeping the MasterSlavePIDController on target
+ *
+ * @param c
+ *        A pointer to a MasterSlavePIDController
+ */
+static void MasterSlavePIDControllerTask(void *c)
 {
 	MasterSlavePIDController *controller = c;
 	PIDController *master = &controller->master;
@@ -84,6 +61,56 @@ void MasterSlavePIDControllerTask(void *c)
 	}
 }
 
+/**
+* @brief Creates a MasterSlavePIDController struct based off of the parameters.
+*
+* @param PIDController master
+*			The controller for the master process. The call/execute methods should only affect the master. (i.e. the execute should not set the output for both slave and master)
+*
+* @param PIDController slave
+*			The controller for the slave process.
+*/
+MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave, PIDController equalizer, bool enabledPrimaryPID)
+{
+	MasterSlavePIDController controller;
+	controller.master = master;
+	controller.slave = slave;
+	controller.equalizer = equalizer;
+	controller.enabledPrimaryPID = enabledPrimaryPID;
+	return controller;
+}
+
+/**
+* @brief Initializes a Master/Slave PID Controller and creates the task for the controller
+*
+* @param controller
+*        Point to a MasterSlavePIDController struct containing information for the controller
+*
+* @param primaryGoal
+*        The primary PID controller goal height
+*
+* @return A TaskHandle of the created task (so the task may be stopped)
+*/
+TaskHandle InitializeMasterSlaveController(MasterSlavePIDController *controller, int primaryGoal)
+{
+	controller->mutex = mutexCreate();
+	mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT);
+	controller->slave.Goal = primaryGoal;
+	controller->master.Goal = primaryGoal;
+	controller->manualPrimaryOutput = 0;
+	mutexGive(controller->mutex);
+	return taskCreate(MasterSlavePIDControllerTask, TASK_DEFAULT_STACK_SIZE, controller, TASK_PRIORITY_DEFAULT);
+}
+
+/**
+ * @brief Changes the Primary PID Goal to the desired speed.
+ *
+ * @param controller
+ *        Point to a MasterSlavePIDController struct containing information for the controller
+ *
+ * @param primaryPIDGoal
+ *        The new goal height
+ */
 void MasterSlavePIDChangeGoal(MasterSlavePIDController *controller, int primaryPIDGoal)
 {
 	if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
@@ -97,6 +124,16 @@ void MasterSlavePIDChangeGoal(MasterSlavePIDController *controller, int primaryP
 	mutexGive(controller->mutex);
 }
 
+/**
+ * @brief Increments the MSPID primary controller by an integer value
+ *        If the controller was previously in direct-to-output mode, the current height will be taken and then deltaGoal applied
+ *
+ * @param controller
+ *        Point to a MasterSlavePIDController struct containing information for the controller
+ *
+ * @param deltaGoal
+ *        The delta of the goal
+ */
 void MasterSlavePIDIncreaseGoal(MasterSlavePIDController *controller, int deltaGoal)
 {
 	if (!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
@@ -119,6 +156,15 @@ void MasterSlavePIDIncreaseGoal(MasterSlavePIDController *controller, int deltaG
 	mutexGive(controller->mutex);
 }
 
+/**
+ * @brief Sets the direct-to-output value and begins direct-to-output mode, if not already in it
+ *
+ * @param controller
+ *        Point to a MasterSlavePIDController struct containing information for the controller
+ *
+ * @param output
+ *        The desired output value. [-127,127]
+ */
 void MasterSlavePIDSetOutput(MasterSlavePIDController *controller, int output)
 {
 	if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
@@ -131,7 +177,9 @@ void MasterSlavePIDSetOutput(MasterSlavePIDController *controller, int output)
 	mutexGive(controller->mutex);
 }
 
-
+/**
+ * @brief Useless function is useless
+ */
 static void VivaLaRevolucion(MasterSlavePIDController *controller)
 {
 	// Judges, please talk to us about VIVA LA REVOLUCION!

@@ -1,10 +1,11 @@
-/************************************************************************/
-/* @file SmartMotorLibrary.c	@brief Source file SML functions.		*/
-/*														                */
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file SmartMotorLibrary.c
+ * @brief Source file for SML functions.
+ *
+ * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
+ * Portions of this file may contain elements from the PROS API.
+ * See include/API.h for additional notice.
+ ********************************************************************/
 
 #include "main.h"
 #include "sml/SmartMotorLibrary.h"
@@ -15,14 +16,20 @@ static Motor Motors[10];
 static Mutex Mutexes[10];
 static TaskHandle MotorManagerTaskHandle;
 
+/**
+ * @brief The default recalculate function for RecalculateCommanded (takes input and returns it)
+ *        This method is only accessible to this file for organizational purposes and may be opened to other files.
+ * @param in
+ *        Input value
+ */
 static int DefaultRecalculate(int in)
 {
 	return in;
 }
 
 /**
-* Initializes the Motor Manager Task by creating the Motor Mutexes and starting the task.
-*/
+ * @brief Initializes the Motor Manager Task by creating the Motor Mutexes and starting the task.
+ */
 void InitializeMotorManager()
 {
 	for (int i = 0; i < 10; i++)
@@ -34,8 +41,8 @@ void InitializeMotorManager()
 }
 
 /**
-* Kills the motor manager task, if it exists
-*/
+ * @brief Kills the motor manager task, if it exists
+ */
 void StopMotorManager()
 {
 	if (MotorManagerTaskHandle != NULL) // passing NULL kills current thread, so don't allow that to happen
@@ -43,9 +50,9 @@ void StopMotorManager()
 }
 
 /**
-* The motor manager task processes all the motors and determines if a change needs to be made to the motor speed and executes the change if necessary
-*		 This task is initialized by the InitializeMotorManager method. Do not manually create this task.
-*/
+ * @brief The motor manager task processes all the motors and determines if a change needs to be made to the motor speed and executes the change if necessary
+ *        This task is initialized by the InitializeMotorManager method. Do not manually create this task.
+ */
 void MotorManagerTask(void *none)
 {
 	while (true)
@@ -66,8 +73,9 @@ void MotorManagerTask(void *none)
 
 				if (i == 0) lcdPrint(uart1, 1, "o: %+3d u: %+3d", command, current);
 
-				// Add appropriate motor skewing
-				else motorSet(i+1, (current + (int)(skew * (millis() - Motors[i].lastUpdate) * (command - current > 0 ? 1 : -1))));
+				// Add appropriate motor skew value to current speed
+				else
+					motorSet(i+1, (current + (int)(skew * (millis() - Motors[i].lastUpdate) * (command - current > 0 ? 1 : -1))));
 
 			}
 			Motors[i].lastUpdate = millis();
@@ -79,14 +87,17 @@ void MotorManagerTask(void *none)
 }
 
 /**
-* Change the motor speed
-* @param channel
-*		The port of the motor (1-10)
-* @param set
-*		The PWM value of the motor to set it to. Will be checked and forced back into the bounds [-127,127]
-* @param immediate
-*		Will change the speed of the motor immediately, bypassing the motor manager ramping if set to true.
-*/
+ * @brief Change the motor speed
+ *
+ * @param channel
+ *        The port of the motor (1-10)
+ *
+ * @param set
+ *        The PWM value of the motor to set it to. Will be checked and forced back into the bounds [-127,127]
+ *
+ * @param immediate
+ *        Will change the speed of the motor immediately, bypassing the motor manager ramping if set to true.
+ */
 bool MotorSet(int channel, int set, bool immediate)
 {
 	if (channel > 10 || channel < 1)
@@ -106,6 +117,12 @@ bool MotorSet(int channel, int set, bool immediate)
 	return true;
 }
 
+/**
+ * @brief Returns the normalized commanded speed of the motor
+ *
+ * @param channel
+ *			The port of the motor [1,10]
+ */
 int MotorGet(int channel)
 {
 	if (channel > 10 || channel < 1)
@@ -122,14 +139,17 @@ int MotorGet(int channel)
 }
 
 /**
-* Configures a motor port with inversion and skew
-* @param channel
-*		The port of the motor [1,10]
-* @param inverted
-*		If the motor port is inverted, set to true (127 will become -127 and vice versa)
-* @param skewPerMsec
-*		The acceleration of the motor in dPWM/millisecond
-*/
+ * @brief Configures a motor port with inversion and skew
+ *
+ * @param channel
+ *        The port of the motor [1,10]
+ *
+ * @param inverted
+ *        If the motor port is inverted, set to true (127 will become -127 and vice versa)
+ *
+ * @param skewPerMsec
+ *        The acceleration of the motor in dPWM/millisecond
+ */
 void MotorConfigure(int channel, bool inverted, double skewPerMsec)
 {
 	if (channel < 0 || channel > 11)
@@ -148,8 +168,18 @@ void MotorConfigure(int channel, bool inverted, double skewPerMsec)
 	mutexGive(Mutexes[channel]);
 }
 
-
-void MotorChangeRecalculateCommanded(int channel, int(*foo)(int))
+/**
+ * @brief Sets the recalculate commanded to the provided function pointer.
+ *        Raw input values will be recalculated using the function.
+ *        Example usage: convert raw speed to tune to a speed of an encoder (i.e. consistent speed)
+ *
+ * @param channel
+ *        The port of the motor [1,10]
+ *
+ * @param func
+ *        A pointer to a function taking an integer input (the raw input) and returning the corrected output as an int
+ */
+void MotorChangeRecalculateCommanded(int channel, int(*func)(int))
 {
 	if (channel < 0 || channel > 11)
 		return;
@@ -159,7 +189,7 @@ void MotorChangeRecalculateCommanded(int channel, int(*foo)(int))
 	if (!mutexTake(Mutexes[channel], MUTEX_TAKE_TIMEOUT))
 		return;
 
-	Motors[channel].RecalculateCommanded = foo;
+	Motors[channel].RecalculateCommanded = func;
 
 	mutexGive(Mutexes[channel]);
 }

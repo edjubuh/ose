@@ -1,10 +1,11 @@
-/************************************************************************/
-/* @file lift.c															*/
-/* @brief Source file for lift functions.								*/
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file lift.c
+ * @brief Source file for lift functions.
+ *
+ * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
+ * Portions of this file may contain elements from the PROS API.
+ * See include/API.h for additional notice.
+ ***********************************************************************/
 
 #include "main.h"
 #include "dios/Lift.h"
@@ -23,12 +24,14 @@ Gyro gyro;
 
 // ---------------- LEFT  SIDE ---------------- //
 /**
-* Sets the speed of the left side of the lift
-* @param value
-*		[-127,127] Desired PWM value of the left side of the lift
-* @param immediate
-*		Determines if speed input change is immediate or ramped according to SML
-*/
+ * @brief Sets the speed of the left side of the lift
+ *
+ * @param value
+ *		[-127,127] Desired PWM value of the left side of the lift
+ *
+ * @param immediate
+ *		Determines if speed input change is immediate or ramped according to SML
+ */
 void LiftSetLeft(int value, bool immediate)
 {
 	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW && value < 0)
@@ -46,8 +49,10 @@ void LiftSetLeft(int value, bool immediate)
 }
 
 /**
-* Returns the calibrated value of the left potentiometer (in-house calibration)
-*/
+ * @brief Returns the calibrated value of the left potentiometer.
+ *		  Calibrated by taking the average of the last twenty calls.
+ *		  A zero point is taken whenever the the bottom limit switch is pressed.
+ */
 int LiftGetCalibratedPotentiometerLeft()
 {
 	static int zeroValue = 1435;
@@ -71,17 +76,17 @@ int LiftGetCalibratedPotentiometerLeft()
 }
 
 /**
-* Returns the raw value of the left potentiomter
-*/
+ * @brief Returns the raw value of the left potentiomter
+ */
 int LiftGetRawPotentiometerLeft()
 {
 	return analogRead(ANA_POT_LIFT_LEFT);
 }
 
 /**
-* Returns the raw left IME.
-* Retired. Use the potentiometer to get the current height of the lift
-*/
+ * @brief Returns the raw left IME.
+ *	     Retired. Use the potentiometer to get the current height of the lift
+ */
 int LiftGetEncoderLeft()
 {
 	int value;
@@ -96,9 +101,11 @@ int LiftGetEncoderLeft()
 
 // ---------------- RIGHT SIDE ---------------- //
 /**
- * Sets the speed of the right side of the lift
+ * @brief Sets the speed of the right side of the lift
+ *
  * @param value
  *		[-127,127] Desired PWM value of the right side of the lift
+ *
  * @param immediate
  *		Determines if speed input change is immediate or ramped according to SML
  */
@@ -119,8 +126,8 @@ void LiftSetRight(int value, bool immediate)
 }
 
 /**
-* Returns the calibrated value of the right potentiometer
-*/
+ * @brief Returns the calibrated value of the right potentiometer
+ */
 int LiftGetCalibratedPotentiometerRight()
 {
 	static int zeroValue = -210;
@@ -145,7 +152,7 @@ int LiftGetCalibratedPotentiometerRight()
 }
 
 /**
- * Returns the raw value of the right potentiomter
+ * @brief Returns the raw value of the right potentiomter
  */
 int LiftGetRawPotentiometerRight()
 {
@@ -153,9 +160,9 @@ int LiftGetRawPotentiometerRight()
 }
 
 /**
-* Returns the raw right IME.
-* Retired. Use the potentiometer to get the current height of the lift
-*/
+ * @brief Returns the raw right IME.
+ * 		  Retired. Use the potentiometer to get the current height of the lift
+ */
 int LiftGetEncoderRight()
 {
 	int value;
@@ -171,12 +178,14 @@ int LiftGetEncoderRight()
 
 // ---------------- MASTER (ALL) ---------------- //
 /**
-* Sets the lift to the desired speed using the MasterSlavePIDController for the lift
-* @param value
-*			[-127g,127] Speed of the lift
-* @param immediate
-*			Determines if speed input change is immediate or ramped according to SML
-*/
+ * @brief Sets the lift to the desired speed using the MasterSlavePIDController for the lift
+ *
+ * @param value
+ *			[-127g,127] Speed of the lift
+ *
+ * @param immediate
+ *			Determines if speed input change is immediate or ramped according to SML
+ */
 void LiftSet(int value)
 {
 	MasterSlavePIDIncreaseGoal(&Controller, value);
@@ -184,15 +193,18 @@ void LiftSet(int value)
 	//LiftSetRight(value, false);
 }
 
-
+/**
+ * @brief Returns the difference between the potentiometers (right - left)
+ *        Used in the equalizer controller in the MasterSlavePIDController for the lift
+ */
 int liftComputePotentiometerDifference()
 {
 	return LiftGetCalibratedPotentiometerRight() - LiftGetCalibratedPotentiometerLeft();
 }
 
 /**
-* Initializes the lift motors and PID controllers
-*/
+ * @brief Initializes the lift motors and PID controllers
+ */
 void LiftInitialize()
 {
 	MotorConfigure(MOTOR_LIFT_FRONTLEFT, true, 1);
@@ -201,10 +213,10 @@ void LiftInitialize()
 	MotorConfigure(MOTOR_LIFT_MIDDLERIGHT, true, 1);
 	MotorConfigure(MOTOR_LIFT_REARLEFT, false, 1);
 	MotorConfigure(MOTOR_LIFT_REARRIGHT, true, 1);
-		
+
 	unsigned long start = millis();
 	while ((millis() - start) < 250)
-	{ // Calibrate potentiometers at ground level
+	{ // Calibrate potentiometers
 		LiftGetCalibratedPotentiometerRight();
 		LiftGetCalibratedPotentiometerLeft();
 		delay(5);
@@ -214,8 +226,8 @@ void LiftInitialize()
 	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft, 0.335, 0.047, -0.05, 500, -400, 10);
 	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 0.335, 0.051, -0.09, 500, -400, 10);
 	PIDController equalizer = PIDControllerCreate(NULL, &liftComputePotentiometerDifference, 0, 0, 0, 50, -50, 5);
-	
+
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, false);
-	
+
 	LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
 }

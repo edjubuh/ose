@@ -1,36 +1,45 @@
-/************************************************************************/
-/* @file SingleThreadPIDController.c									*/
-/* @brief Source file initialize functions.								*/
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file SingleThreadPIDController.c
+ * @brief Source file for single-threaded PIDController functions.	
+ *
+ * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
+ * Portions of this file may contain elements from the PROS API.
+ * See include/API.h for additional notice.
+ *********************************************************************/
 
 #include "main.h"
 #include "sml/SingleThreadPIDController.h"
 #include <math.h>
 
 /**
-* Creates a PIDController struct based off of the parameters
-* @param void(*Execute)(int,bool)
-*		A function pointer to the output function. Takes a parameter int, the output, and a bool, the immediate value
-*		Ex. void ChassisSet(int val, bool immediate); PIDControllerCreate(&ChassisSet, ...);
-* @param int(*Call)(void)
-*		A function pointer to the input function. Takes no parameters and returns the input
-*		See ex. for void(*Execute)(int, bool)
-* @param Kp
-*		The proportional constant
-* @param Ki
-*		The integral constant
-* @param Kd
-*		The derivative constant
-* @param MaxIntegral
-*		Maximum value of the integral to prevent integral windup
-* @param MinIntegral
-*		Minimum value of the integral to prevent integral windup, usually the same magnitude as MinIntegral
-* @param AcceptableTolerance
-*		Tolerance of the controller
-*/
+ * @brief Creates a PIDController struct based off of the parameters
+ *
+ * @param Execute
+ *        A function pointer to the output function of type void (*func)(int,bool). Takes a parameter int, the output, and a bool, the immediate value
+ *        Ex. void ChassisSet(int val, bool immediate); PIDControllerCreate(&ChassisSet, ...);
+ *
+ * @param Call
+ *        A function pointer to the input function of type int (*func)(void). Takes no parameters and returns the input
+ *        See ex. for void(*Execute)(int, bool)
+ *
+ * @param Kp
+ *        The proportional constant
+ *
+ * @param Ki
+ *        The integral constant
+ *
+ * @param Kd
+ *        The derivative constant
+ *
+ * @param MaxIntegral
+ *        Maximum value of the integral to prevent integral windup
+ *
+ * @param MinIntegral
+ *        Minimum value of the integral to prevent integral windup, usually the same magnitude as MinIntegral
+ *
+ * @param AcceptableTolerance
+ *        Tolerance of the controller
+ */
 PIDController PIDControllerCreate(void(*Execute)(int, bool), int(*Call)(void), double Kp, double Ki, double Kd, int MaxIntegral, int MinIntegral, int AcceptableTolerance)
 {
 	PIDController controller;
@@ -46,10 +55,11 @@ PIDController PIDControllerCreate(void(*Execute)(int, bool), int(*Call)(void), d
 }
 
 /**
-* Resets the PIDController by setting the goal, integral, and prevError to 0
-* @param controller
-*		A pointer to the PIDController struct
-*/
+ * @brief Resets the PIDController by setting the goal, integral, and prevError to 0
+ *
+ * @param controller
+ *		A pointer to a PIDController struct containing the necessary constants and container values
+ */
 void PIDControllerReset(PIDController *controller)
 {
 	controller->Goal = 0;
@@ -58,15 +68,26 @@ void PIDControllerReset(PIDController *controller)
 }
 
 /**
-* Computes and returns the output of one pass of the PID Controller
-* @param controller
-*		A pointer to the PIDController struct
-*/
+ * @brief Computes and returns the output of one pass of the PID Controller using the controller.Goal and controller.Call()
+ *
+ * @param controller
+ *		A pointer to a PIDController struct containing the necessary constants and container values
+ */
 int PIDControllerCompute(PIDController *controller)
 {
 	return PIDControllerComputer(controller, controller->Goal - controller->Call());
 }
 
+/**
+ * @brief Computes and returns the PID controller with the given error. Will not use controller.Call()
+ *        Integral, prevError, and prevTime will continue to pass through each iteration.
+ *
+ * @param controller
+ *        A pointer to a PIDController struct containing the necessary constants and container values
+ *
+ * @param error
+ *        Provided error usually Input - Goal
+ */
 int PIDControllerComputer(PIDController *controller, int error)
 {
 	controller->integral += error;
@@ -94,11 +115,13 @@ int PIDControllerComputer(PIDController *controller, int error)
 }
 
 /**
-* Computes and executes one pass of the PID Controller
-* @param controller
-*		A pointer to the PIDController struct
-* @return True or false if the input parameter is within the acceptable tolerance of the goal
-*/
+ * @brief Computes and executes one pass of the PID Controller
+ *
+ * @param controller
+ *        A pointer to a PIDController struct containing the necessary constants and container values
+ *
+ * @return True or false if the input parameter is within the acceptable tolerance of the goal
+ */
 bool PIDControllerExecuteContinuous(PIDController *controller)
 {
 	controller->Execute(PIDControllerCompute(controller), false);
@@ -108,10 +131,11 @@ bool PIDControllerExecuteContinuous(PIDController *controller)
 }
 
 /**
-* Computes and executes the PIDController to completion
-* @param controller
-*		A pointer to the PIDController struct
-*/
+ * @brief Computes and executes the PIDController to completion
+ *
+ * @param controller
+ *        A pointer to a PIDController struct containing the necessary constants and container values
+ */
 void PIDControllerExecuteCompletion(PIDController *controller)
 {
 	while (PIDControllerExecuteContinuous(controller))
@@ -119,12 +143,14 @@ void PIDControllerExecuteCompletion(PIDController *controller)
 }
 
 /**
-* Resets the PIDController and sets the goal to parameter
-* @param controller
-*		A pointer to the PIDController struct
-* @param goal
-*		The goal value
-*/
+ * @brief Resets the PIDController and sets the goal to parameter
+ *
+ * @param controller
+ *         A pointer to a PIDController struct containing the necessary constants and container values
+ *
+ * @param goal
+ *        The goal value
+ */
 void PIDControllerSetGoal(PIDController *controller, int goal)
 {
 	PIDControllerReset(controller);

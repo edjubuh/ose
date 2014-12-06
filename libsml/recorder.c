@@ -1,12 +1,12 @@
-#include "main.h"
-//#include "stdlib.h" //necessary for file r/w; may already be included in main.h
-#include "sml/recorder.h"
-
 /**
  * @file recorder.c
  *
  * @brief Records data about motor speeds, sensor data, etc. for analysis.
  */
+
+#include "main.h"
+//#include "stdlib.h" //necessary for file r/w; may already be included in main.h
+#include "sml/recorder.h"
 
 /**
  * @brief Initializes and begins recording of the run of the robot.

@@ -27,8 +27,6 @@ MasterSlavePIDController CreateMasterSlavePIDController(PIDController, PIDContro
 
 TaskHandle InitializeMasterSlaveController(MasterSlavePIDController*, int);
 
-void MasterSlavePIDControllerTask(void*);
-
 void MasterSlavePIDChangeGoal(MasterSlavePIDController*, int);
 
 void MasterSlavePIDSetOutput(MasterSlavePIDController*, int);

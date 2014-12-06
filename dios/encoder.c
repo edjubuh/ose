@@ -1,5 +1,4 @@
 #include "main.h"
-
 #include "dios/encoder.h"
 
 

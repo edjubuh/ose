@@ -33,8 +33,7 @@
  */
 
 #include "main.h"
-#include "additional.h"
-
+#include "lcd/lcdFunctions.h"
 /*
  * Runs the user operator control code. This function will be started in its own task with the
  * default priority and stack size whenever the robot is enabled via the Field Management System
@@ -52,50 +51,13 @@
  *
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
-void operatorControl() {
+void operatorControl() 
+{
 
-	while (1) 
-	{
-		//JoystickControl();
-
-		motorSet(MOTOR_LIFT_REARRIGHT,	joystickGetAnalog(1,2));
-		motorSet(MOTOR_LIFT_MIDDLERIGHT,joystickGetAnalog(1,2));
-		motorSet(MOTOR_LIFT_FRONTRIGHT, joystickGetAnalog(1,2));
-		motorSet(MOTOR_LIFT_REARLEFT,  -joystickGetAnalog(1,3));
-		motorSet(MOTOR_LIFT_MIDDLELEFT, joystickGetAnalog(1,3));
-		motorSet(MOTOR_LIFT_FRONTLEFT,	joystickGetAnalog(1,3));
-
-
-		/*
-		if (joystickGetDigital(1, 6, JOY_DOWN))
-		{
-			motorSet(MOTOR_LIFT_REARRIGHT, -60);
-			motorSet(MOTOR_LIFT_MIDDLERIGHT, -60);
-			motorSet(MOTOR_LIFT_FRONTRIGHT, -60);
-			motorSet(MOTOR_LIFT_REARLEFT, 60);
-			motorSet(MOTOR_LIFT_MIDDLELEFT,-60);
-			motorSet(MOTOR_LIFT_FRONTLEFT, -60);
-		}
-		else if (joystickGetDigital(1, 6, JOY_UP))
-		{
-			motorSet(MOTOR_LIFT_REARRIGHT, 127);
-			motorSet(MOTOR_LIFT_MIDDLERIGHT, 127);
-			motorSet(MOTOR_LIFT_FRONTRIGHT, 127);
-			motorSet(MOTOR_LIFT_REARLEFT, 127);
-			motorSet(MOTOR_LIFT_MIDDLELEFT, 127);
-			motorSet(MOTOR_LIFT_FRONTLEFT, 127);
-		}
-		else 
-		{
-			motorSet(MOTOR_LIFT_REARRIGHT, 0);
-			motorSet(MOTOR_LIFT_MIDDLERIGHT, 0);
-			motorSet(MOTOR_LIFT_FRONTRIGHT, 0);
-			motorSet(MOTOR_LIFT_REARLEFT, 0);
-			motorSet(MOTOR_LIFT_MIDDLELEFT, 0);
-			motorSet(MOTOR_LIFT_FRONTLEFT, 0);
-		}
-		*/
-
-		delay(20);
-	}
+	lcdInitialize();
+	printText("hello world", Left, 1);
+	printText("hello world", Centered, 1);
+	printText("hello world", Right, 1);
+	printText("abcdefghijklmnopqrstuvwxyz01234567890", Left, 1);
+	printText("abcdefghijklmnopqrstuvwxyz0123456789", Right, 1);
 }

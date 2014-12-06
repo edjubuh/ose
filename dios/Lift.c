@@ -20,7 +20,6 @@
 
 static MasterSlavePIDController Controller;
 static TaskHandle LiftControllerTask;
-Gyro gyro;
 
 // ---------------- LEFT  SIDE ---------------- //
 /**

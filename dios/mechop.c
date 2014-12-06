@@ -164,36 +164,57 @@ void JoystickControl()
 	//Up / Down
 	if (theta1 == 90 && theta2 == 90)
 		ChassisSet( aJoy(r1, l4), aJoy(r1, l4), false);
+
 	else if (theta1 == -90 && theta2 == -90)
 		ChassisSet( -aJoy(r1, l4), -aJoy(r1, l4), false);
+
+
 	//Left / Right
 	else if (theta1 == 0 && theta2 == 0)
 		ChassisSetMecanum(-M_PI/2, aJoy(l4, r1), 0, false);
+
 	else if (theta1 == 180 && theta2 == 180)
 		ChassisSetMecanum(M_PI/2, aJoy(l4, r1), 0, false);
+
+
 	//Tank Drive ^+v or v+^
 	else if (theta1 == 90 && theta2 == -90)
 		ChassisSet( aJoy(r1, l4), -aJoy(r1, l4), false);
+
 	else if (theta1 == -90 && theta2 == 90)
 		ChassisSet( -aJoy(r1, l4), aJoy(r1, l4), false);
+
+
 	//northeast
 	else if (theta1 == 45 && theta2 == 45)
 		ChassisSetMecanum(-M_PI/4, aHypo( cHypo(l4, l3), cHypo(r1, r2) ), 0, false);
+
+
 	//northwest
 	else if (theta1 == 135 && theta2 == 135)
 		ChassisSetMecanum(M_PI/4, aHypo( cHypo(l4, l3), cHypo(r1, r2) ), 0, false);
+
+
 	//southeast
 	else if (theta1 == -45 && theta2 == -45)
 		ChassisSetMecanum(-3 * M_PI/4, aHypo( cHypo(l4, l3), cHypo(r1, r2) ), 0, false);
+
+
 	//southwest
 	else if (theta1 == -135 && theta2 == -135)
 		ChassisSetMecanum(3 * M_PI/4, aHypo( cHypo(l4, l3), cHypo(r1, r2) ), 0, false);
+
+
 	//strafe right
 	else if ((theta1 == 90 || theta1 == -90) && theta2 == 0)
 		ChassisSet(l3, (int)(l3 * (1.0 - abs( ((double)r1) / STRAFE_CONST ) ) ), false);
+
+
 	//strafe left
 	else if (theta1 == 180 && (theta2 == 90 || theta2 == -90))
 		ChassisSet( (int)(r2 * (1.0 - abs( ((double)l4) / STRAFE_CONST ) ) ), r2, false);
+
+
 	//TODO: Strafe up / down
 	else
 		ChassisSet(0, 0, false); //stop, so motors don't break

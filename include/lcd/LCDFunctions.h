@@ -10,8 +10,16 @@
 #ifndef LCDFUNC_H_
 #define LCDFUNC_H_
 
+
+typedef enum
+{
+	Left,
+	Right,
+	Centered
+} textJustifications;
+
 void lcdInitialize();
 
-
+bool printText(char * string, textJustifications justification, unsigned char line);
 
 #endif

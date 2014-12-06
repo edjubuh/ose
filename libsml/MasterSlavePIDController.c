@@ -49,7 +49,7 @@ static void MasterSlavePIDControllerTask(void *c)
 		masterOutput = (int)(masterOutput * scale);
 		slaveOutput  = (int)(slaveOutput * scale);
 
-		//lcdPrint(uart1, 1, "m: %+3d, s: %+3d", masterOutput, slaveOutput);
+		lcdPrint(uart1, 1, "m: %+3d, s: %+3d", masterOutput, slaveOutput);
 		lcdPrint(uart1, 2, "m: %4d, s: %4d", master->Call(), slave->Call());
 		
 		master->Execute(masterOutput, false);

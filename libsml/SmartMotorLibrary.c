@@ -71,8 +71,6 @@ void MotorManagerTask(void *none)
 				if (abs(command - current) < (skew * (millis() - Motors[i].lastUpdate))) // If skew is less than required delta-PWM, set commanded to output
 					motorSet(i+1, command);
 
-				if (i == 0) lcdPrint(uart1, 1, "o: %+3d u: %+3d", command, current);
-
 				// Add appropriate motor skew value to current speed
 				else
 					motorSet(i+1, (current + (int)(skew * (millis() - Motors[i].lastUpdate) * (command - current > 0 ? 1 : -1))));
@@ -80,7 +78,6 @@ void MotorManagerTask(void *none)
 			}
 			Motors[i].lastUpdate = millis();
 			mutexGive(Mutexes[i]);
-			delay(MOTOR_SKEWER_DELTAT);
 		}
 		delay(MOTOR_SKEWER_DELTAT);
 	}

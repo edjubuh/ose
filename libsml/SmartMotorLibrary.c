@@ -9,6 +9,7 @@
 
 #include "main.h"
 #include "sml/SmartMotorLibrary.h"
+#include "lcd/LCDFunctions.h"
 
 #define MOTOR_SKEWER_DELTAT	50
 
@@ -70,6 +71,8 @@ void MotorManagerTask(void *none)
 
 				if (abs(command - current) < (skew * (millis() - Motors[i].lastUpdate))) // If skew is less than required delta-PWM, set commanded to output
 					motorSet(i+1, command);
+
+				
 
 				// Add appropriate motor skew value to current speed
 				else

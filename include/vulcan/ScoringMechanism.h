@@ -9,12 +9,7 @@
 #ifndef SCORINGMECHANISM_H_
 #define SCORINGMECHANISM_H_
 
-/// <summary>
-/// Sets the scoring mechanism PWM output to the value
-/// </summary>
-/// <param name='value'>The PWM value. Will be checked for bounds</param>
-/// <param name='immediate'>Indicates if PWM change needs to happen immediately. Usually false, will ramp speeds</param>
-void ScoringMechSet(bool value);
+void ScoringMechSet(bool);
 
 void ScoringMechSwitch();
 

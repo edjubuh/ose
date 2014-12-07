@@ -15,23 +15,18 @@
 #define DEFAULT_INTERVAL 20
 
 // Creates a PID Controller struct
-PIDController PIDControllerCreate(void(*Execute)(int, bool), int(*Call)(void), double Kp, double Ki, double Kd, int MaxIntegral, int MinIntegral, int AcceptableTolerance);
+PIDController PIDControllerCreate(void(*func)(int, bool), int(*func)(void), double, double, double, int, int, int);
 
-// Cleanses internal variables in a PID Controller 
-void PIDControllerReset(PIDController *controller);
+void PIDControllerReset(PIDController *);
 
-// Computes and returns a PID Controller
-int PIDControllerCompute(PIDController *controller);
+int PIDControllerCompute(PIDController *);
 
-int PIDControllerComputer(PIDController *controller, int error);
+int PIDControllerComputer(PIDController *, int);
 
-// Executes a PID Controller once, for use when running multiple PID Controllers at once on the same level
-bool PIDControllerExecuteContinuous(PIDController *controller);
+bool PIDControllerExecuteContinuous(PIDController *);
 
-// Executes a PID Controller until it has reached target
 void PIDControllerExecuteCompletion(PIDController *controller);
 
-// Sets the goal of a PID Controller
 void PIDControllerSetGoal(PIDController *controller, int goal);
 
 #endif

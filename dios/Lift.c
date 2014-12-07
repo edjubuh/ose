@@ -98,6 +98,29 @@ int LiftGetEncoderLeft()
 	return value;
 }
 
+static int liftComputeCorrectedSpeedLeft(int in)
+{
+	static int lastValue;
+	static int lastTime;
+
+	int out;
+
+	if (in != 0)
+	{
+		int speed = (LiftGetCalibratedPotentiometerLeft() - lastValue) / ((millis() - lastTime) * 0.001);
+
+		if (speed != 0)
+			out = (motorGet(MOTOR_LIFT_FRONTLEFT) * motorGet(MOTOR_LIFT_FRONTLEFT) * 40) / (127 * speed);
+		else out = in;
+	}
+	else out = 0;
+
+	lastValue = LiftGetCalibratedPotentiometerLeft();
+	lastTime = millis();
+
+	return out;
+}
+
 // ---------------- RIGHT SIDE ---------------- //
 /**
  * @brief Sets the speed of the right side of the lift
@@ -175,6 +198,29 @@ int LiftGetEncoderRight()
 	return value;
 }
 
+static int liftComputeCorrectedSpeedRight(int in)
+{
+	static int lastValue;
+	static int lastTime;
+
+	int out;
+
+	if (in != 0)
+	{
+		int speed = (LiftGetCalibratedPotentiometerRight() - lastValue) / ((millis() - lastTime) * 0.001);
+
+		if (speed != 0)
+			out = (motorGet(MOTOR_LIFT_FRONTRIGHT) * motorGet(MOTOR_LIFT_FRONTRIGHT) * 40) / (127 * speed);
+		else out = in;
+	}
+	else out = 0;
+
+	lastValue = LiftGetCalibratedPotentiometerRight();
+	lastTime = millis();
+
+	return out;
+}
+
 // ---------------- MASTER (ALL) ---------------- //
 /**
  * @brief Sets the lift to the desired speed using the MasterSlavePIDController for the lift
@@ -187,9 +233,9 @@ int LiftGetEncoderRight()
  */
 void LiftSet(int value)
 {
-	MasterSlavePIDIncreaseGoal(&Controller, value);
-	//LiftSetLeft(value, false);
-	//LiftSetRight(value, false);
+	//MasterSlavePIDIncreaseGoal(&Controller, value);
+	LiftSetLeft(value, false);
+	LiftSetRight(value, false);
 }
 
 /**
@@ -200,6 +246,8 @@ int liftComputePotentiometerDifference()
 {
 	return LiftGetCalibratedPotentiometerRight() - LiftGetCalibratedPotentiometerLeft();
 }
+
+
 
 /**
  * @brief Initializes the lift motors and PID controllers
@@ -213,11 +261,20 @@ void LiftInitialize()
 	MotorConfigure(MOTOR_LIFT_REARLEFT, false, 1);
 	MotorConfigure(MOTOR_LIFT_REARRIGHT, true, 1);
 
+	MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTLEFT, &liftComputeCorrectedSpeedLeft);
+	MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTRIGHT, &liftComputeCorrectedSpeedRight);
+	MotorChangeRecalculateCommanded(MOTOR_LIFT_MIDDLELEFT, &liftComputeCorrectedSpeedLeft);
+	MotorChangeRecalculateCommanded(MOTOR_LIFT_MIDDLERIGHT, &liftComputeCorrectedSpeedRight);
+	MotorChangeRecalculateCommanded(MOTOR_LIFT_REARLEFT, &liftComputeCorrectedSpeedLeft);
+	MotorChangeRecalculateCommanded(MOTOR_LIFT_REARRIGHT, &liftComputeCorrectedSpeedRight);
+
 	unsigned long start = millis();
 	while ((millis() - start) < 250)
 	{ // Calibrate potentiometers
 		LiftGetCalibratedPotentiometerRight();
 		LiftGetCalibratedPotentiometerLeft();
+		liftComputeCorrectedSpeedRight(0);
+		liftComputeCorrectedSpeedRight(0);
 		delay(5);
 	}
 	delay(50);
@@ -228,5 +285,5 @@ void LiftInitialize()
 
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, false);
 
-	LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
+	//LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
 }

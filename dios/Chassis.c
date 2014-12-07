@@ -172,7 +172,7 @@ void ChassisSnappedJoystickControl(int l_x, int l_y, int r_x, int r_y)
 		ChassisSetMecanum((-1 * M_PI / 2), s, 0, false);
 
 	else if (l_a == (-1 * M_PI / 4))
-		ChassisSetMecanum((3 * PI_4), s, 0, false);
+		ChassisSetMecanum((3 * M_PI / 4), s, 0, false);
 
 	else if (l_a == (-1 * M_PI / 2))
 		ChassisSetMecanum(M_PI, s, 0, false);

@@ -8,6 +8,6 @@
 /**
  * @brief Declarations for functions in encoder.c
  */
-void GetAllEncoders(int *clicks, unsigned int size);
+void GetAllEncoders(int *, unsigned int);
 
 #endif /*ENCODER_H*/

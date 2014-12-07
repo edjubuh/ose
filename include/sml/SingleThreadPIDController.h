@@ -15,7 +15,7 @@
 #define DEFAULT_INTERVAL 20
 
 // Creates a PID Controller struct
-PIDController PIDControllerCreate(void(*func)(int, bool), int(*func)(void), double, double, double, int, int, int);
+PIDController PIDControllerCreate(void(*e)(int, bool), int(*c)(void), double, double, double, int, int, int);
 
 void PIDControllerReset(PIDController *);
 

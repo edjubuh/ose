@@ -13,6 +13,7 @@
 #include "sml/SingleThreadPIDController.h"
 #include "sml/MasterSlavePIDController.h"
 #include "sml/SmartMotorLibrary.h"
+#include "lcd/LCDFunctions.h"
 #include <main.h>
 
 /**
@@ -27,6 +28,15 @@ static void MasterSlavePIDControllerTask(void *c)
 	PIDController *master = &controller->master;
 	PIDController *slave = &controller->slave;
 	PIDController *equalizer = &controller->equalizer;
+#ifdef DEBUG
+	char ln1[16];
+	char ln2[16];
+	for (int i = 0; i < 16; i++)
+	{
+		ln1[i] = ' ';
+		ln2[i] = ' ';
+	}
+#endif
 	int masterOutput, slaveOutput;
 	while(true)
 	{
@@ -48,9 +58,13 @@ static void MasterSlavePIDControllerTask(void *c)
 		
 		masterOutput = (int)(masterOutput * scale);
 		slaveOutput  = (int)(slaveOutput * scale);
+#ifdef DEBUG
+		sprintf(ln1, "m: %+3d, s: %+3d", masterOutput, slaveOutput);
+		sprintf(ln2, "m: %4d, s: %4d", master->Call(), slave->Call());
 
-		lcdPrint(uart1, 1, "m: %+3d, s: %+3d", masterOutput, slaveOutput);
-		lcdPrint(uart1, 2, "m: %4d, s: %4d", master->Call(), slave->Call());
+		printText(ln1, Left, 1);
+		printText(ln2, Left, 2);
+#endif
 		
 		master->Execute(masterOutput, false);
 		slave->Execute(slaveOutput, false);

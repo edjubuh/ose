@@ -13,6 +13,8 @@
 #include "main.h"
 #include "sml/SmartMotorLibrary.h"
 
+#define DEBUG 1
+
 typedef struct
 {
 	PIDController master;

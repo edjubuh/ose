@@ -9,7 +9,7 @@
 #ifndef LIFT_H_
 #define LIFT_H_
 
-void LiftSet(int value, bool immediate);
+void LiftSet(int, bool);
 
 void LiftInitialize();
 

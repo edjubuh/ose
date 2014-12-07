@@ -9,11 +9,12 @@
 #include <math.h>
 
 #include "main.h"
+#include "sml/SmartMotorLibrary.h"
+#include "lcd/LCDFunctions.h"
+
+#include "dios/CortexDefinitions.h"
 #include "dios/Chassis.h"
 #include "dios/Lift.h"
-#include "dios/CortexDefinitions.h"
-#include "sml/SmartMotorLibrary.h"
-#include "dios/mechop.h"
 
 
 /**
@@ -21,15 +22,19 @@
  */
 void operatorControl()
 {
-	//Gyro gyro = gyroInit(5, 0);
+	int start = millis();
+
+	while (millis() - start > 1500)
+	{
+		
+	}
 	while (true)
 	{
-		//lcdPrint(uart1, 1, "l: %d, r: %d", digitalRead(DIG_LIFT_BOTLIM_LEFT), digitalRead(DIG_LIFT_BOTLIM_RIGHT));
-		//lcdPrint(uart1, 1, "l: %+3d, r: %+3d", MotorGet(MOTOR_LIFT_REARLEFT), -MotorGet(MOTOR_LIFT_REARRIGHT));
-		//lcdPrint(uart1, 2, "l: %4d, r: %4d", LiftGetRawPotentiometerLeft(), LiftGetRawPotentiometerRight());
-	
 		//ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
-		JoystickControl();
+		//JoystickControl();
+
+		LiftSetLeft(joystickGetAnalog(1, 3), false);
+		LiftSetRight(joystickGetAnalog(1, 2), false);
 		
 		/*
 		if (joystickGetDigital(1, 6, JOY_UP))
@@ -39,6 +44,6 @@ void operatorControl()
 		else
 			LiftSet(0);
 		*/
-		delay(20);
+		delay(100);
 	}
 }

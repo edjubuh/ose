@@ -47,6 +47,6 @@ void initButtons();
 /**
 * Returns true if button press is newly detected, false if not
 */
-bool buttonIsNewPress(buttons button);
+bool buttonIsNewPress(buttons);
 
 #endif 

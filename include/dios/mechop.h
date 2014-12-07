@@ -8,13 +8,20 @@
 /**
  * @brief Function declarations
  */
-double toDegrees(double radians);
-int toIntDegrees(double radians);
-double getJoyTheta(int x, int y);
-int thetaSector( double theta );
-int aJoy(int val1, int val2);
-double cHypo(int x, int y);
-int aHypo(double h1, double h2);
+double toDegrees(double);
+
+int toIntDegrees(double);
+
+double getJoyTheta(int, int);
+
+int thetaSector(double);
+
+int aJoy(int, int);
+
+double cHypo(int, int);
+
+int aHypo(double, double);
+
 void JoystickControl();
 
 #endif /*MECHOP_H*/

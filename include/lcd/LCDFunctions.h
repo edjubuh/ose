@@ -20,6 +20,6 @@ typedef enum
 
 void lcdInitialize();
 
-bool printText(char * string, textJustifications justification, unsigned char line);
+bool printText(char *, textJustifications, unsigned char);
 
 #endif

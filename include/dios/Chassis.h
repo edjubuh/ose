@@ -9,9 +9,9 @@
 #ifndef CHASSIS_H_
 #define CHASSIS_H_
 
-void ChassisSet(int left, int right, bool immediate);
+void ChassisSet(int, int, bool);
 
-void ChassisSetMecanum(double heading, int speed, int rotation, bool immediate);
+void ChassisSetMecanum(double, int, int, bool);
 
 void ChassisInitialize();
 

@@ -24,7 +24,7 @@ OUT:=$(BINDIR)/$(OUTNAME)
 .PHONY: all clean upload _force_look
 
 # By default, compile program
-all: $(BINDIR) $(OUT)
+all: clean $(BINDIR) $(OUT)
 
 # compile the dios project
 # dios:

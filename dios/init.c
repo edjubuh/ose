@@ -8,8 +8,10 @@
  ************************************************************************/
 
 #include "main.h"
-#include "dios/CortexDefinitions.h"
 #include "sml/SmartMotorLibrary.h"
+#include "lcd/LCDFunctions.h"
+
+#include "dios/CortexDefinitions.h"
 #include "dios/Chassis.h"
 #include "dios/Lift.h"
 
@@ -30,41 +32,39 @@ void initializeIO() {
  */
 void initialize()
 {
-	lcdInit(uart1);
-	lcdSetBacklight(uart1, true);
-	lcdClear(uart1);
-	lcdSetText(uart1, 1, "  Booting Dios  ");
-	lcdSetText(uart1, 2, "IMEs... "); // IMES must be first, followed by MotorManager. Chassis and Lift are not order dependent
+	lcdInitialize();
+	printText("Booting Dios", Centered, 1);
+	printText("IMEs... ", Left, 2); // IMES must be first, followed by MotorManager. Chassis and Lift are not order dependent
 	imeInitializeAll();
 	delay(100);
-	lcdSetText(uart1, 2, "MotorManager... ");
+	printText("MotorManager... ", Left, 2);
 	InitializeMotorManager();
 	delay(100);
-	lcdSetText(uart1, 2, "Chassis... ");
+	printText("Chassis... ", Left, 2);
 	ChassisInitialize();
 	delay(100);
-	lcdSetText(uart1, 2, "Lift... ");
+	printText("Lift... ", Left, 2);
 	LiftInitialize();
 	delay(200);
-	lcdSetText(uart1, 2, "");
+	printText("", Left, 2);
 	delay(100);
-	lcdSetText(uart1, 2, "       pl       ");
+	printText("       pl       ", Left, 2);
 	delay(100);
-	lcdSetText(uart1, 2, "      mple      ");
+	printText("      mple      ", Left, 2);
 	delay(100);
-	lcdSetText(uart1, 2, "     omplet     ");
+	printText("     omplet     ", Left, 2);
 	delay(100);
-	lcdSetText(uart1, 2, "    complete    ");
+	printText("    complete    ", Left, 2);
 	delay(100);
-	lcdSetText(uart1, 2, "   .complete.   ");
+	printText("   .complete.   ", Left, 2);
 	delay(100);
-	lcdSetText(uart1, 2, "  ..complete..  ");
+	printText("  ..complete..  ", Left, 2);
 	delay(100);
-	lcdSetText(uart1, 2, " ...complete... ");
+	printText(" ...complete... ", Left, 2);
 	delay(100);
-	lcdSetText(uart1, 2, "....complete....");
+	printText("....complete....", Left, 2);
 	delay(100);
-	lcdSetText(uart1, 2, "");
+	printText("", Left, 2);
 	delay(100);
-	lcdSetText(uart1, 2, "....complete....");
+	printText("....complete....", Left, 2);
 }

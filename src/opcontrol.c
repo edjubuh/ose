@@ -54,10 +54,4 @@
 void operatorControl() 
 {
 
-	lcdInitialize();
-	printText("hello world", Left, 1);
-	printText("hello world", Centered, 1);
-	printText("hello world", Right, 1);
-	printText("abcdefghijklmnopqrstuvwxyz01234567890", Left, 1);
-	printText("abcdefghijklmnopqrstuvwxyz0123456789", Right, 1);
 }

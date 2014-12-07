@@ -33,7 +33,6 @@
  */
 
 #include "main.h"
-#include "lcd/lcdFunctions.h"
 /*
  * Runs the user operator control code. This function will be started in its own task with the
  * default priority and stack size whenever the robot is enabled via the Field Management System
@@ -53,5 +52,20 @@
  */
 void operatorControl() 
 {
+	lcdInit(uart1);
+	lcdSetBacklight(uart1, true);
+	while (true)
+	{
+		motorSet(1, joystickGetAnalog(1, 2));
+		motorSet(6, joystickGetAnalog(1, 3));
+		motorSet(7, joystickGetAnalog(1, 2));
+		motorSet(8, joystickGetAnalog(1, 3));
+		motorSet(9, joystickGetAnalog(1, 2));
+		motorSet(10, -joystickGetAnalog(1, 3));
 
+		lcdPrint(uart1, 1, "left: %d %d", analogRead(3), digitalRead(1));
+		lcdPrint(uart1, 2, "right: %d %d", analogRead(4), digitalRead(2));
+
+		delay(20);
+	}
 }

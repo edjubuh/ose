@@ -22,28 +22,37 @@
  */
 void operatorControl()
 {
-	int start = millis();
-
-	while (millis() - start > 1500)
+	/*
+	char ln1[16];
+	char ln2[16];
+	for (int i = 0; i < 16; i++)
 	{
-		
+		ln1[i] = ' ';
+		ln2[i] = ' ';
 	}
+	*/
 	while (true)
 	{
 		//ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
 		//JoystickControl();
-
+		
 		LiftSetLeft(joystickGetAnalog(1, 3), false);
 		LiftSetRight(joystickGetAnalog(1, 2), false);
-		
 		/*
+		sprintf(ln1, "left: %d", LiftGetCalibratedPotentiometerLeft());
+		sprintf(ln2, "right: %d", LiftGetCalibratedPotentiometerRight());
+
+		printText(ln1, Left, 1);
+		printText(ln2, Right, 2);
+		*/
+		
 		if (joystickGetDigital(1, 6, JOY_UP))
 			LiftSet(10);
 		else if (joystickGetDigital(1, 6, JOY_DOWN))
 			LiftSet(-10);
 		else
 			LiftSet(0);
-		*/
+		
 		delay(100);
 	}
 }

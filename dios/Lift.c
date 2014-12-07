@@ -7,13 +7,15 @@
  * See include/API.h for additional notice.
  ***********************************************************************/
 
+#include <math.h>
 #include "main.h"
 #include "dios/Lift.h"
-#include "dios/CortexDefinitions.h"
+
 #include "sml/SmartMotorLibrary.h"
 #include "sml/MasterSlavePIDController.h"
 #include "sml/SingleThreadPIDController.h"
-#include <math.h>
+
+#include "dios/CortexDefinitions.h"
 
 #define IME_RESET_THRESHOLD		100
 #define POT_RESET_THRESHOLD		200
@@ -58,7 +60,7 @@ int LiftGetCalibratedPotentiometerLeft()
 	static int prevValues[20];
 	for (int i = 0; i < 19; i++)
 		prevValues[i] = prevValues[i+1];
-	prevValues[19] = LiftGetRawPotentiometerLeft() - zeroValue;
+	prevValues[19] = -(LiftGetRawPotentiometerLeft() - zeroValue);
 	int sum = 0;
 	for (int i = 0; i < 20; i++)
 		sum += prevValues[i];
@@ -103,14 +105,14 @@ static int liftComputeCorrectedSpeedLeft(int in)
 	static int lastValue;
 	static int lastTime;
 
-	int out;
+	int out = in;
 
 	if (in != 0)
 	{
 		int speed = (LiftGetCalibratedPotentiometerLeft() - lastValue) / ((millis() - lastTime) * 0.001);
 
-		if (speed != 0)
-			out = (motorGet(MOTOR_LIFT_FRONTLEFT) * motorGet(MOTOR_LIFT_FRONTLEFT) * 40) / (127 * speed);
+		if (speed != 0 && motorGet(MOTOR_LIFT_FRONTLEFT) != 0)
+			out = (in * in * 40) / (127 * speed);
 		else out = in;
 	}
 	else out = 0;
@@ -209,7 +211,7 @@ static int liftComputeCorrectedSpeedRight(int in)
 	{
 		int speed = (LiftGetCalibratedPotentiometerRight() - lastValue) / ((millis() - lastTime) * 0.001);
 
-		if (speed != 0)
+		if (speed != 0 && motorGet(MOTOR_LIFT_FRONTRIGHT) != 0)
 			out = (motorGet(MOTOR_LIFT_FRONTRIGHT) * motorGet(MOTOR_LIFT_FRONTRIGHT) * 40) / (127 * speed);
 		else out = in;
 	}
@@ -233,9 +235,9 @@ static int liftComputeCorrectedSpeedRight(int in)
  */
 void LiftSet(int value)
 {
-	//MasterSlavePIDIncreaseGoal(&Controller, value);
-	LiftSetLeft(value, false);
-	LiftSetRight(value, false);
+	MasterSlavePIDIncreaseGoal(&Controller, value);
+	//LiftSetLeft(value, false);
+	//LiftSetRight(value, false);
 }
 
 /**
@@ -261,12 +263,12 @@ void LiftInitialize()
 	MotorConfigure(MOTOR_LIFT_REARLEFT, false, 1);
 	MotorConfigure(MOTOR_LIFT_REARRIGHT, true, 1);
 
-	MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTLEFT, &liftComputeCorrectedSpeedLeft);
+	/*MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTLEFT, &liftComputeCorrectedSpeedLeft);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTRIGHT, &liftComputeCorrectedSpeedRight);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_MIDDLELEFT, &liftComputeCorrectedSpeedLeft);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_MIDDLERIGHT, &liftComputeCorrectedSpeedRight);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_REARLEFT, &liftComputeCorrectedSpeedLeft);
-	MotorChangeRecalculateCommanded(MOTOR_LIFT_REARRIGHT, &liftComputeCorrectedSpeedRight);
+	MotorChangeRecalculateCommanded(MOTOR_LIFT_REARRIGHT, &liftComputeCorrectedSpeedRight);*/
 
 	unsigned long start = millis();
 	while ((millis() - start) < 250)
@@ -279,11 +281,11 @@ void LiftInitialize()
 	}
 	delay(50);
 
-	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft, 0.335, 0.047, -0.05, 500, -400, 10);
-	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 0.335, 0.051, -0.09, 500, -400, 10);
+	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft, 0.75, 0.001, 0, 500, -400, 10);
+	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 0.75, 0.001, 0, 500, -400, 10);
 	PIDController equalizer = PIDControllerCreate(NULL, &liftComputePotentiometerDifference, 0, 0, 0, 50, -50, 5);
 
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, false);
 
-	//LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
+	LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
 }

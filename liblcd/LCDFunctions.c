@@ -6,8 +6,9 @@
 /* See include/API.h for additional notice.								*/
 /************************************************************************/
 
-#include "main.h"
 #include "lcd\LCDFunctions.h"
+
+#include "main.h"
 
 static Mutex mutex_line1, mutex_line2;
 static char * sleep_liine1, sleep_line2;
@@ -73,7 +74,7 @@ bool printText(char * string, textJustifications justification, unsigned char li
 	else return false;
 
 	if (strlen(string) > 16)
-	{ // TODO correctly calculate time
+	{ // TODO correctly calculate timeg
 		char out[16];
 		switch (justification)
 		{
@@ -148,12 +149,4 @@ bool printText(char * string, textJustifications justification, unsigned char li
 		mutexGive(mutex_line2);
 
 	return true;
-}
-
-static LCDSleeper(void *none)
-{
-	while (true)
-	{
-		
-	}
 }

@@ -1,20 +1,21 @@
-/************************************************************************/
-/* @file butons.c														*/
-/* @brief Source file for buttons API									*/
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file butons.c
+ * @brief Source file for buttons API
+ *
+ * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
+ * Portions of this file may contain elements from the PROS API.
+ * See include/API.h for additional notice.
+ ************************************************************************/
 
 #include "main.h"
-#include "vulcan/CortexDefinitions.h"
-#include "vulcan/buttons.h"
+#include "dios/CortexDefinitions.h"
+#include "dios/buttons.h"
 
 bool buttonPressed[27];
 
 /**
-* Initializes the buttons array
-*/
+ * @brief Initializes the buttons array.
+ */
 void initButtons()
 {
 	for (int i = 0; i <= 27; i++)
@@ -22,15 +23,20 @@ void initButtons()
 }
 
 /**
-* Detects if button is a new press from most recent check by comparing previous value to current value
-* @param button
-*			The button to detect from the Buttons enumeration (see include/buttons.h)
-*/
+ * @brief Detects if button is a new press from most recent check by comparing previous
+ *        value to current value.
+ *
+ * @param button
+ *        The button to detect from the Buttons enumeration (see include/buttons.h).
+ *
+ * @return true or false depending on if there was a change in button state.
+ */
 bool buttonIsNewPress(buttons button)
 {
 	bool currentButton = false;
 
-	// Determine how to get the current button value (from what function) and where it is, then get it
+	// Determine how to get the current button value (from what function) and where it
+	// is, then get it.
 	if (button < LCD_LEFT) // button is a joystick button
 	{
 		unsigned char joystick;
@@ -121,7 +127,7 @@ bool buttonIsNewPress(buttons button)
 	if (!currentButton) // buttons is not currently pressed
 		buttonPressed[button] = false;
 
-	if (currentButton && !buttonPressed[button])
+	if (currentButton && !buttonPressed[button]) 
 	{ // button is currently pressed and was not detected as being pressed during last check
 		buttonPressed[button] = true;
 		return true;

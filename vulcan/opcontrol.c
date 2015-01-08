@@ -1,39 +1,58 @@
-/************************************************************************/
-/* @file opcontrol.c		@brief Source file for operator control.	*/
-/*														                */
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file opcontrol.c
+ * @brief Source file for operator control.
+ *
+ * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
+ * Portions of this file may contain elements from the PROS API.
+ * See include/API.h for additional notice.
+ ************************************************************************/
+#include <math.h>
 
 #include "main.h"
-#include "vulcan/Chassis.h"
-#include "vulcan/Lift.h"
-#include "vulcan/ScoringMechanism.h"
-#include "vulcan/buttons.h"
+#include "sml/SmartMotorLibrary.h"
+#include "lcd/LCDFunctions.h"
 
+#include "dios/CortexDefinitions.h"
+#include "dios/Chassis.h"
+#include "dios/Lift.h"
+
+
+/**
+ * @brief Sets motors in motion based on user input (from controls).
+ */
 void operatorControl()
 {
-	lcdSetText(uart1, 2, "OSE Smiles");
-	bool Btn6DWasPressed = false, current = false;
+	/*
+	char ln1[16];
+	char ln2[16];
+	for (int i = 0; i < 16; i++)
+	{
+		ln1[i] = ' ';
+		ln2[i] = ' ';
+	}
+	*/
 	while (true)
 	{
-		ChassisSet(joystickGetAnalog(1, 3), joystickGetAnalog(1, 2), false);
+		//ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
+		//JoystickControl();
+		
+		LiftSetLeft(joystickGetAnalog(1, 3), false);
+		LiftSetRight(joystickGetAnalog(1, 2), false);
+		/*
+		sprintf(ln1, "left: %d", LiftGetCalibratedPotentiometerLeft());
+		sprintf(ln2, "right: %d", LiftGetCalibratedPotentiometerRight());
 
-		if (joystickGetDigital(1, 5, JOY_DOWN) && !Btn6DWasPressed)
-		{
-			Btn6DWasPressed = true;
-			lcdSetText(uart1, 2, "Button Pressed");
-			digitalWrite(10, current = !current);
-		}
-		else if (!joystickGetDigital(1, 5, JOY_DOWN))
-			Btn6DWasPressed = false;
-
+		printText(ln1, Left, 1);
+		printText(ln2, Right, 2);
+		*/
+		
 		if (joystickGetDigital(1, 6, JOY_UP))
-			LiftSet(127, false);
+			LiftSet(20);
 		else if (joystickGetDigital(1, 6, JOY_DOWN))
-			LiftSet(-70, false);
+			LiftSet(-20);
 		else
-			LiftSet(0, false);
+			LiftSet(0);
+		
+		delay(100);
 	}
 }

@@ -59,8 +59,8 @@ static void MasterSlavePIDControllerTask(void *c)
 		masterOutput = (int)(masterOutput * scale);
 		slaveOutput  = (int)(slaveOutput * scale);
 #ifdef DEBUG
-		sprintf(ln1, "m: %+3d, s: %+3d", masterOutput, slaveOutput);
-		sprintf(ln2, "m: %4d, s: %4d", master->Call(), slave->Call());
+		snprintf(ln1, 16, "m: %+3d, s: %+3d", masterOutput, slaveOutput);
+		snprintf(ln2, 16, "m:%4d,  s:%4d", master->Call(), slave->Call());
 
 		printText(ln1, Left, 1);
 		printText(ln2, Left, 2);

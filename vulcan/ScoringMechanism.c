@@ -13,7 +13,7 @@
 /**
  * Sets the scoring mechanism to the desired state 
  * @param value
- *			The output mode of the solenoid true is ACTIVATED/OUT false is DEACTIVATED/IN
+ *			The output mode of the solenoid true is RELEASE/OUT false is ACTIVE/IN
  */
 void ScoringMechSet(bool value)
 {

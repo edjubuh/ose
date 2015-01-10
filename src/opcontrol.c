@@ -52,19 +52,14 @@
  */
 void operatorControl() 
 {
-	lcdInit(uart1);
-	lcdSetBacklight(uart1, true);
 	while (true)
 	{
-		motorSet(1, joystickGetAnalog(1, 2));
-		motorSet(6, joystickGetAnalog(1, 3));
-		motorSet(7, joystickGetAnalog(1, 2));
+		motorSet(2, joystickGetAnalog(1, 2));
+		motorSet(3, joystickGetAnalog(1, 2));
+		motorSet(4, joystickGetAnalog(1, 2));
+		motorSet(7, joystickGetAnalog(1, 3));
 		motorSet(8, joystickGetAnalog(1, 3));
-		motorSet(9, joystickGetAnalog(1, 2));
-		motorSet(10, -joystickGetAnalog(1, 3));
-
-		lcdPrint(uart1, 1, "left: %d %d", analogRead(3), digitalRead(1));
-		lcdPrint(uart1, 2, "right: %d %d", analogRead(4), digitalRead(2));
+		motorSet(9, joystickGetAnalog(1, 3));
 
 		delay(20);
 	}

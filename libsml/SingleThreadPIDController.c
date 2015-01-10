@@ -1,5 +1,5 @@
 /**
- * @file SingleThreadPIDController.c
+ * @file libsml/SingleThreadPIDController.c
  * @brief Source file for single-threaded PIDController functions.	
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.

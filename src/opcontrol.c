@@ -1,4 +1,4 @@
-/** @file opcontrol.c
+/** @file src/opcontrol.c
  * @brief File for operator control code
  *
  * This file should contain the user operatorControl() function and any functions related to it.

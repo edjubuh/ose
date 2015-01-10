@@ -1,4 +1,4 @@
-/** @file init.c
+/** @file src/init.c
  * @brief File for initialization code
  *
  * This file should contain the user initialize() function and any functions related to it.

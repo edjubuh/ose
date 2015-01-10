@@ -1,5 +1,5 @@
 /**
- * @file recorder.c
+ * @file libsml/recorder.c
  *
  * @brief Records data about motor speeds, sensor data, etc. for analysis.
  */

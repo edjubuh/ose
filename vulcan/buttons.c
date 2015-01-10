@@ -1,5 +1,5 @@
 /************************************************************************/
-/* @file butons.c														*/
+/* @file vulcan/butons.c												*/
 /* @brief Source file for buttons API									*/
 /* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
 /* Portions of this file may contain elements from the PROS API.		*/

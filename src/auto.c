@@ -1,4 +1,4 @@
-/** @file auto.c
+/** @file src/auto.c
  * @brief File for autonomous code
  *
  * This file should contain the user autonomous() function and any functions related to it.

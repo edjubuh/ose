@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /********************************************************************************/
 /* @file vulcan/lift.c		@brief Source file for lift functions.				*/
 /*																				*/
@@ -9,26 +8,14 @@
 
 #include "vulcan/CortexDefinitions.h"
 #include "sml/SmartMotorLibrary.h"
-=======
-/**
- * @file lift.c
- * @brief Source file for lift functions.
- *
- * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
- * Portions of this file may contain elements from the PROS API.
- * See include/API.h for additional notice.
- ***********************************************************************/
-
-#include <math.h>
->>>>>>> e5c9ddddc0a530397ad087ee1f230d2c22dfc836
 #include "main.h"
-#include "dios/Lift.h"
+#include "vulcan/Lift.h"
 
 #include "sml/SmartMotorLibrary.h"
 #include "sml/MasterSlavePIDController.h"
 #include "sml/SingleThreadPIDController.h"
 
-#include "dios/CortexDefinitions.h"
+#include "vulcan/CortexDefinitions.h"
 
 #define IME_RESET_THRESHOLD		100
 #define POT_RESET_THRESHOLD		200

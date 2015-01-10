@@ -10,13 +10,8 @@
 #include <math.h>
 #include "main.h"
 
-<<<<<<< HEAD
 #include "vulcan/mechop.h"
 #include "vulcan/Chassis.h"
-=======
-#include "dios/mechop.h"
-#include "dios/Chassis.h"
->>>>>>> e5c9ddddc0a530397ad087ee1f230d2c22dfc836
 
 
 /**

@@ -47,9 +47,9 @@ void operatorControl()
 		*/
 		
 		if (joystickGetDigital(1, 6, JOY_UP))
-			LiftSet(10);
+			LiftSet(20);
 		else if (joystickGetDigital(1, 6, JOY_DOWN))
-			LiftSet(-10);
+			LiftSet(-20);
 		else
 			LiftSet(0);
 		

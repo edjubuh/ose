@@ -10,6 +10,7 @@
 #ifndef LCDFUNC_H_
 #define LCDFUNC_H_
 
+#include "main.h"
 
 typedef enum
 {

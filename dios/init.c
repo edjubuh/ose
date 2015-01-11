@@ -1,5 +1,5 @@
 /**
- * @file init.c
+ * @file dios/init.c
  * @brief Source file for initialize functions.
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.

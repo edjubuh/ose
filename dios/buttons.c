@@ -1,5 +1,5 @@
 /**
- * @file butons.c
+ * @file dios/buttons.c
  * @brief Source file for buttons API
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
@@ -11,6 +11,10 @@
 #include "dios/CortexDefinitions.h"
 #include "dios/buttons.h"
 
+/**
+ * @brief Represents whether or not the button was pressed during the last check. <br>
+ * Array of 27 elements because 27 possible buttons 
+ */
 bool buttonPressed[27];
 
 /**

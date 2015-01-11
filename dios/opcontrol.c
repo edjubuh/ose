@@ -1,5 +1,5 @@
 /**
- * @file opcontrol.c
+ * @file dios/opcontrol.c
  * @brief Source file for operator control.
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.

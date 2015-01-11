@@ -1,11 +1,12 @@
-/************************************************************************/
-/* @file SingleThreadPIDController.h									*/
-/* @brief Header file for single threaded PID controller functions		*/
-/* See src/SingleThreadPIDController.c for details of all functions     */
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file include/sml/SingleThreadPIDController.h
+ * @brief Header file for single threaded PID controller functions <br>
+ * See libsml/SingleThreadPIDController.c for details of all functions
+ *
+ * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
+ * Portions of this file may contain elements from the PROS API. <br>
+ * See include/API.h for additional notice.
+ ********************************************************************************/
 
 #ifndef SINGLETHREADPID_H_
 #define SINGLETHREADPID_H_

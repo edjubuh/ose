@@ -1,5 +1,5 @@
 /**
- * @file lift.c
+ * @file dios/lift.c
  * @brief Source file for lift functions.
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.

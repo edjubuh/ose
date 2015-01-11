@@ -39,6 +39,26 @@
  *
  * @param AcceptableTolerance
  *        Tolerance of the controller
+ *
+ * @returns Returns a PIDController struct representing the controller supplied in the parameters
+ *
+ * Example usage:
+ * @code
+ *		PIDController controller;
+ *		void SetMechanism(int speed, bool immediate)
+ *		{
+ *			MotorSet(1, speed, immediate);
+ *		}
+ *		int GetSensorValue()
+ *		{
+ *			return readAnalog(1);
+ *		}
+ *		void initializeMechanism()
+ *		{
+ *			controller = PIDControllerCreate(&SetMechanism, &GetSensorValue, 1.00, 0.10, 0.01, 50, -50, 4);
+ *			// MotorConfigure statements would also go in here. See the example for libsml/SmartMotorLibrary.c:MotorConfigure()
+ *		}
+ * @endcode
  */
 PIDController PIDControllerCreate(void(*Execute)(int, bool), int(*Call)(void), double Kp, double Ki, double Kd, int MaxIntegral, int MinIntegral, int AcceptableTolerance)
 {
@@ -72,6 +92,8 @@ void PIDControllerReset(PIDController *controller)
  *
  * @param controller
  *		A pointer to a PIDController struct containing the necessary constants and container values
+ * 
+ * @returns Returns the output computed by running the controller and using the standard (non-rinsed/modified) goal - current error
  */
 int PIDControllerCompute(PIDController *controller)
 {
@@ -87,6 +109,8 @@ int PIDControllerCompute(PIDController *controller)
  *
  * @param error
  *        Provided error usually Input - Goal
+ *
+ * @returns Returns the controller's output based off of the supplied error.
  */
 int PIDControllerComputer(PIDController *controller, int error)
 {
@@ -121,6 +145,13 @@ int PIDControllerComputer(PIDController *controller, int error)
  *        A pointer to a PIDController struct containing the necessary constants and container values
  *
  * @return True or false if the input parameter is within the acceptable tolerance of the goal
+ *
+ * Example usage:
+ * @code
+ *		...
+ *		while(PIDControllerExecuteContinuous(&myController) delay(25);
+ *		...
+ * @endcode
  */
 bool PIDControllerExecuteContinuous(PIDController *controller)
 {
@@ -135,6 +166,13 @@ bool PIDControllerExecuteContinuous(PIDController *controller)
  *
  * @param controller
  *        A pointer to a PIDController struct containing the necessary constants and container values
+ *
+ * Example usage:
+ * @code
+ *		...
+ *		PIDControllerExecuteCompletion(&controller);
+ *		...
+ * @endcode
  */
 void PIDControllerExecuteCompletion(PIDController *controller)
 {

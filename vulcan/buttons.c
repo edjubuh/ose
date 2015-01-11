@@ -1,14 +1,15 @@
-/************************************************************************/
-/* @file vulcan/butons.c												*/
-/* @brief Source file for buttons API									*/
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file vulcan/buttons.c
+ * @brief Source file for buttons API
+ *
+ * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
+ * Portions of this file may contain elements from the PROS API. <br>
+ * See include/API.h for additional notice.
+ ********************************************************************************/
 
 #include "main.h"
-#include "dios/CortexDefinitions.h"
-#include "dios/buttons.h"
+#include "vulcan/CortexDefinitions.h"
+#include "vulcan/buttons.h"
 
 bool buttonPressed[27];
 
@@ -29,6 +30,14 @@ void initButtons()
  *        The button to detect from the Buttons enumeration (see include/buttons.h).
  *
  * @return true or false depending on if there was a change in button state.
+ *
+ * Example code:
+ * @code
+ *		...
+ *		if(buttonIsNewPress(JOY1_8D))
+ *			digitalWrite(1, !digitalRead(1));
+ *		...
+ * @endcode
  */
 bool buttonIsNewPress(buttons button)
 {

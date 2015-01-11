@@ -1,5 +1,5 @@
 /**
-* @file mechop.c
+* @file dios/mechop.c
 * @brief Source file for mecanum functions
 *
 * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.

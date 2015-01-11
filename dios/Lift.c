@@ -1,5 +1,5 @@
 /**
- * @file lift.c
+ * @file dios/lift.c
  * @brief Source file for lift functions.
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
@@ -38,13 +38,11 @@ void LiftSetLeft(int value, bool immediate)
 	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW && value < 0)
 	{
 		MotorSet(MOTOR_LIFT_FRONTLEFT, 0, immediate);
-		MotorSet(MOTOR_LIFT_MIDDLELEFT, 0, immediate);
 		MotorSet(MOTOR_LIFT_REARLEFT, 0, immediate);
 	}
 	else
 	{
 		MotorSet(MOTOR_LIFT_FRONTLEFT, value, immediate);
-		MotorSet(MOTOR_LIFT_MIDDLELEFT, value, immediate);
 		MotorSet(MOTOR_LIFT_REARLEFT, value, immediate);
 	}
 }
@@ -138,13 +136,11 @@ void LiftSetRight(int value, bool immediate)
 	if (digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW && value < 0)
 	{
 		MotorSet(MOTOR_LIFT_FRONTRIGHT, 0, immediate);
-		MotorSet(MOTOR_LIFT_MIDDLERIGHT, 0, immediate);
 		MotorSet(MOTOR_LIFT_REARRIGHT, 0, immediate);
 	}
 	else
 	{
 		MotorSet(MOTOR_LIFT_FRONTRIGHT, value, immediate);
-		MotorSet(MOTOR_LIFT_MIDDLERIGHT, value, immediate);
 		MotorSet(MOTOR_LIFT_REARRIGHT, value, immediate);
 	}
 }
@@ -235,9 +231,9 @@ static int liftComputeCorrectedSpeedRight(int in)
  */
 void LiftSet(int value)
 {
-	MasterSlavePIDIncreaseGoal(&Controller, value);
-	//LiftSetLeft(value, false);
-	//LiftSetRight(value, false);
+	//MasterSlavePIDIncreaseGoal(&Controller, value);
+	LiftSetLeft(value, false);
+	LiftSetRight(value, false);
 }
 
 /**
@@ -257,11 +253,11 @@ int liftComputePotentiometerDifference()
 void LiftInitialize()
 {
 	MotorConfigure(MOTOR_LIFT_FRONTLEFT, true, 1);
-	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, true, 1);
-	MotorConfigure(MOTOR_LIFT_MIDDLELEFT, true, 1);
-	MotorConfigure(MOTOR_LIFT_MIDDLERIGHT, true, 1);
-	MotorConfigure(MOTOR_LIFT_REARLEFT, false, 1);
-	MotorConfigure(MOTOR_LIFT_REARRIGHT, true, 1);
+	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, false, 1);
+	//MotorConfigure(MOTOR_LIFT_MIDDLELEFT, true, 1);
+	//MotorConfigure(MOTOR_LIFT_MIDDLERIGHT, true, 1);
+	MotorConfigure(MOTOR_LIFT_REARLEFT, true, 1);
+	MotorConfigure(MOTOR_LIFT_REARRIGHT, false, 1);
 
 	/*MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTLEFT, &liftComputeCorrectedSpeedLeft);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTRIGHT, &liftComputeCorrectedSpeedRight);
@@ -269,7 +265,7 @@ void LiftInitialize()
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_MIDDLERIGHT, &liftComputeCorrectedSpeedRight);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_REARLEFT, &liftComputeCorrectedSpeedLeft);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_REARRIGHT, &liftComputeCorrectedSpeedRight);*/
-
+	/*
 	unsigned long start = millis();
 	while ((millis() - start) < 250)
 	{ // Calibrate potentiometers
@@ -288,4 +284,5 @@ void LiftInitialize()
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, false);
 
 	LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
+	*/
 }

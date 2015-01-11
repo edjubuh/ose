@@ -1,27 +1,30 @@
-/********************************************************************************/
-/* @file vulcan/init.c		@brief Source file for initialize functions.		*/
-/*																				*/
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.			*/
-/* Portions of this file may contain elements from the PROS API.				*/	
-/* See include/API.h for additional notice.										*/
-/********************************************************************************/
+/**
+ * @file vulcan/init.c		
+ * @brief Source file for initialize functions.
+ *
+ * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
+ * Portions of this file may contain elements from the PROS API. <br>
+ * See include/API.h for additional notice.
+ ********************************************************************************/
 
 #include "main.h"
+
 #include "sml/SmartMotorLibrary.h"
 #include "lcd/LCDFunctions.h"
 
-#include "dios/CortexDefinitions.h"
-#include "dios/Chassis.h"
-#include "dios/Lift.h"
+#include "vulcan/CortexDefinitions.h"
+#include "vulcan/Chassis.h"
+#include "vulcan/Lift.h"
 
 
 /**
  * @brief Runs pre-initialization functions.
  */
 void initializeIO() {
-	pinMode(3, OUTPUT);
-	pinMode(4, OUTPUT);
-	setTeamName("7702");
+	pinMode(DIG_LIFT_BOTLIM_RIGHT, INPUT);
+	pinMode(DIG_LIFT_BOTLIM_LEFT, INPUT);
+	pinMode(DIG_SCORINGMECH, OUTPUT);
+	setTeamName("7701");
 }
 
 
@@ -32,7 +35,7 @@ void initializeIO() {
 void initialize()
 {
 	lcdInitialize();
-	printText("Booting Dios", Centered, 1);
+	printText("Booting Vulcan", Centered, 1);
 	printText("IMEs... ", Left, 2); // IMES must be first, followed by MotorManager. Chassis and Lift are not order dependent
 	imeInitializeAll();
 	delay(100);

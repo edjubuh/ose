@@ -1,5 +1,5 @@
 /**
- * @file Chassis.c
+ * @file dios/Chassis.c
  * @brief Source file for chassis functions.
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
@@ -191,8 +191,8 @@ void ChassisSnappedJoystickControl(int l_x, int l_y, int r_x, int r_y)
 */
 void ChassisInitialize()
 {
-	MotorConfigure(MOTOR_CHASSIS_FRONTLEFT,  false, 5);
-	MotorConfigure(MOTOR_CHASSIS_FRONTRIGHT, true,  5);
+	MotorConfigure(MOTOR_CHASSIS_FRONTLEFT,  true, 5);
+	MotorConfigure(MOTOR_CHASSIS_FRONTRIGHT, false,  5);
 	MotorConfigure(MOTOR_CHASSIS_REARLEFT,   false, 5);
 	MotorConfigure(MOTOR_CHASSIS_REARRIGHT,  true,  5);
 

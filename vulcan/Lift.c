@@ -1,10 +1,11 @@
-/********************************************************************************/
-/* @file vulcan/lift.c		@brief Source file for lift functions.				*/
-/*																				*/
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.			*/
-/* Portions of this file may contain elements from the PROS API.				*/
-/* See include/API.h for additional notice.										*/
-/********************************************************************************/
+/**
+ * @file vulcan/lift.c		
+ * @brief Source file for lift functions.
+ *
+ * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
+ * Portions of this file may contain elements from the PROS API. <br>
+ * See include/API.h for additional notice.
+ ********************************************************************************/
 
 #include "vulcan/CortexDefinitions.h"
 #include "sml/SmartMotorLibrary.h"
@@ -38,13 +39,11 @@ void LiftSetLeft(int value, bool immediate)
 	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW && value < 0)
 	{
 		MotorSet(MOTOR_LIFT_FRONTLEFT, 0, immediate);
-		MotorSet(MOTOR_LIFT_MIDDLELEFT, 0, immediate);
 		MotorSet(MOTOR_LIFT_REARLEFT, 0, immediate);
 	}
 	else
 	{
 		MotorSet(MOTOR_LIFT_FRONTLEFT, value, immediate);
-		MotorSet(MOTOR_LIFT_MIDDLELEFT, value, immediate);
 		MotorSet(MOTOR_LIFT_REARLEFT, value, immediate);
 	}
 }
@@ -82,22 +81,6 @@ int LiftGetCalibratedPotentiometerLeft()
 int LiftGetRawPotentiometerLeft()
 {
 	return analogRead(ANA_POT_LIFT_LEFT);
-}
-
-/**
- * @brief Returns the raw left IME.
- *	     Retired. Use the potentiometer to get the current height of the lift
- */
-int LiftGetEncoderLeft()
-{
-	int value;
-	imeGet(I2C_MOTOR_LIFT_LEFT, &value);
-	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW)
-	{
-		imeReset(I2C_MOTOR_LIFT_LEFT);
-		value = 0;
-	}
-	return value;
 }
 
 static int liftComputeCorrectedSpeedLeft(int in)
@@ -138,13 +121,11 @@ void LiftSetRight(int value, bool immediate)
 	if (digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW && value < 0)
 	{
 		MotorSet(MOTOR_LIFT_FRONTRIGHT, 0, immediate);
-		MotorSet(MOTOR_LIFT_MIDDLERIGHT, 0, immediate);
 		MotorSet(MOTOR_LIFT_REARRIGHT, 0, immediate);
 	}
 	else
 	{
 		MotorSet(MOTOR_LIFT_FRONTRIGHT, value, immediate);
-		MotorSet(MOTOR_LIFT_MIDDLERIGHT, value, immediate);
 		MotorSet(MOTOR_LIFT_REARRIGHT, value, immediate);
 	}
 }
@@ -181,23 +162,6 @@ int LiftGetCalibratedPotentiometerRight()
 int LiftGetRawPotentiometerRight()
 {
 	return -analogRead(ANA_POT_LIFT_RIGHT);
-}
-
-/**
- * @brief Returns the raw right IME.
- * 		  Retired. Use the potentiometer to get the current height of the lift
- */
-int LiftGetEncoderRight()
-{
-	int value;
-	imeGet(I2C_MOTOR_LIFT_RIGHT, &value);
-	value = -value;
-	if (value < IME_RESET_THRESHOLD && digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW)
-	{
-		imeReset(I2C_MOTOR_LIFT_RIGHT);
-		value = 0;
-	}
-	return value;
 }
 
 static int liftComputeCorrectedSpeedRight(int in)
@@ -249,8 +213,6 @@ int liftComputePotentiometerDifference()
 	return LiftGetCalibratedPotentiometerRight() - LiftGetCalibratedPotentiometerLeft();
 }
 
-
-
 /**
  * @brief Initializes the lift motors and PID controllers
  */
@@ -258,15 +220,11 @@ void LiftInitialize()
 {
 	MotorConfigure(MOTOR_LIFT_FRONTLEFT, true, 1);
 	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, true, 1);
-	MotorConfigure(MOTOR_LIFT_MIDDLELEFT, true, 1);
-	MotorConfigure(MOTOR_LIFT_MIDDLERIGHT, true, 1);
 	MotorConfigure(MOTOR_LIFT_REARLEFT, false, 1);
 	MotorConfigure(MOTOR_LIFT_REARRIGHT, true, 1);
 
 	/*MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTLEFT, &liftComputeCorrectedSpeedLeft);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTRIGHT, &liftComputeCorrectedSpeedRight);
-	MotorChangeRecalculateCommanded(MOTOR_LIFT_MIDDLELEFT, &liftComputeCorrectedSpeedLeft);
-	MotorChangeRecalculateCommanded(MOTOR_LIFT_MIDDLERIGHT, &liftComputeCorrectedSpeedRight);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_REARLEFT, &liftComputeCorrectedSpeedLeft);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_REARRIGHT, &liftComputeCorrectedSpeedRight);*/
 

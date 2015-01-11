@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * @file vulcan/buttons.c
  * @brief Source file for buttons API
@@ -6,10 +7,19 @@
  * Portions of this file may contain elements from the PROS API. <br>
  * See include/API.h for additional notice.
  ********************************************************************************/
+=======
+/************************************************************************/
+/* @file vulcan/butons.c												*/
+/* @brief Source file for buttons API									*/
+/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
+/* Portions of this file may contain elements from the PROS API.		*/
+/* See include/API.h for additional notice.								*/
+/************************************************************************/
+>>>>>>> 7b38228c15fb78daf33c4b4aee5eb4dcd083a15a
 
 #include "main.h"
-#include "vulcan/CortexDefinitions.h"
-#include "vulcan/buttons.h"
+#include "dios/CortexDefinitions.h"
+#include "dios/buttons.h"
 
 bool buttonPressed[27];
 

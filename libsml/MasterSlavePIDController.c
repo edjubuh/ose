@@ -1,5 +1,5 @@
 /**
- * @file MasterSlavePIDController.c
+ * @file libsml/MasterSlavePIDController.c
  * @brief Extension of SingleThreadPIDController to implement 
  *        a multitasked Master/Slave PID Controller.
  *        See addendum documentation for more details.

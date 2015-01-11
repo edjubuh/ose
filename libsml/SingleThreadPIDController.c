@@ -1,5 +1,5 @@
 /**
- * @file SingleThreadPIDController.c
+ * @file libsml/SingleThreadPIDController.c
  * @brief Source file for single-threaded PIDController functions.	
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
@@ -39,6 +39,8 @@
  *
  * @param AcceptableTolerance
  *        Tolerance of the controller
+ *
+ * @returns Returns a PIDController struct representing the controller supplied in the parameters
  */
 PIDController PIDControllerCreate(void(*Execute)(int, bool), int(*Call)(void), double Kp, double Ki, double Kd, int MaxIntegral, int MinIntegral, int AcceptableTolerance)
 {
@@ -72,6 +74,8 @@ void PIDControllerReset(PIDController *controller)
  *
  * @param controller
  *		A pointer to a PIDController struct containing the necessary constants and container values
+ * 
+ * @returns Returns the output computed by running the controller and using the standard (non-rinsed/modified) goal - current error
  */
 int PIDControllerCompute(PIDController *controller)
 {
@@ -87,6 +91,8 @@ int PIDControllerCompute(PIDController *controller)
  *
  * @param error
  *        Provided error usually Input - Goal
+ *
+ * @returns Returns the controller's output based off of the supplied error.
  */
 int PIDControllerComputer(PIDController *controller, int error)
 {

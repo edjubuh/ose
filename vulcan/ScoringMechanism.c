@@ -1,19 +1,21 @@
-/************************************************************************/
-/* @file ScoringMechanism.c	@brief Source file for ScoringMech functions*/
-/*														                */
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file vulcan/ScoringMechanism.c
+ * @brief Source file for ScoringMech functions
+ *
+ * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
+ * Portions of this file may contain elements from the PROS API. <br>
+ * See include/API.h for additional notice.
+ ********************************************************************************/
 
 #include "main.h"
 #include "vulcan/ScoringMechanism.h"
+
 #include "vulcan/CortexDefinitions.h"
 
 /**
  * Sets the scoring mechanism to the desired state 
  * @param value
- *			The output mode of the solenoid true is ACTIVATED/OUT false is DEACTIVATED/IN
+ *			The output mode of the solenoid true is RELEASE/OUT false is ACTIVE/IN
  */
 void ScoringMechSet(bool value)
 {

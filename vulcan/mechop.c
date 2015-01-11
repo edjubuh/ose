@@ -1,5 +1,5 @@
 /**
-* @file dios/mechop.c
+* @file vulcan/mechop.c
 * @brief Source file for mecanum functions
 *
 * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
@@ -10,8 +10,8 @@
 #include <math.h>
 #include "main.h"
 
-#include "dios/mechop.h"
-#include "dios/Chassis.h"
+#include "vulcan/mechop.h"
+#include "vulcan/Chassis.h"
 
 
 /**
@@ -82,7 +82,7 @@ double getJoyTheta(int x, int y)
  */
 int thetaSector( double theta )
 {
-	//get rid of that quirky decimal place!
+	///TODO: get rid of that quirky decimal place!
 	int ltheta = (int)( roundf(theta * 100) );
 	if (ltheta >= -2250 && ltheta <= 2250)
 		return 0;

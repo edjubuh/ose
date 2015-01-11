@@ -1,5 +1,5 @@
 /**
- * @file SmartMotorLibrary.c
+ * @file libsml/SmartMotorLibrary.c
  * @brief Source file for SML functions.
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.

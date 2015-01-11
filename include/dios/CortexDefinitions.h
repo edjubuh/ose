@@ -1,10 +1,11 @@
-/************************************************************************/
-/* @file CortexDefinitions.h											*/
-/* @brief Header file containing Cortex wiring constants                */
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file include/dios/CortexDefinitions.h
+ * @brief Header file containing Cortex wiring constants
+ *
+ * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
+ * Portions of this file may contain elements from the PROS API. <br>
+ * See include/API.h for additional notice.
+ ********************************************************************************/
 
 #ifndef CORTEX_DEFINITIONS_H_
 #define CORTEX_DEFINITIONS_H_

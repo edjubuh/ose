@@ -1,52 +1,72 @@
-/************************************************************************/
-/* @file init.c		@brief Source file for initialize functions.		*/
-/*														                */
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file vulcan/init.c		
+ * @brief Source file for initialize functions.
+ *
+ * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
+ * Portions of this file may contain elements from the PROS API. <br>
+ * See include/API.h for additional notice.
+ ********************************************************************************/
 
 #include "main.h"
-#include "vulcan/CortexDefinitions.h"
+
 #include "sml/SmartMotorLibrary.h"
+#include "lcd/LCDFunctions.h"
+
+#include "vulcan/CortexDefinitions.h"
 #include "vulcan/Chassis.h"
 #include "vulcan/Lift.h"
-#include "vulcan/ScoringMechanism.h"
-#include "vulcan/buttons.h"
+
 
 /**
- * Initializes IO pins and sets team name
+ * @brief Runs pre-initialization functions.
  */
 void initializeIO() {
-	setTeamName("7701");
+	pinMode(DIG_LIFT_BOTLIM_RIGHT, INPUT);
+	pinMode(DIG_LIFT_BOTLIM_LEFT, INPUT);
 	pinMode(DIG_SCORINGMECH, OUTPUT);
-	digitalWrite(DIG_SCORINGMECH, HIGH);
+	setTeamName("7701");
 }
 
+
 /**
- * Initializes the LCD screen, prompts for autonomous selection, and initializes the various subsystems and components
+ * @brief Initializes the robot. Displays graphics depicting process in initialization
+ *        sequence.
  */
 void initialize()
 {
-	lcdInit(UART_LCDDISPLAY);
-	lcdClear(UART_LCDDISPLAY);
-	lcdSetBacklight(UART_LCDDISPLAY, true);
-
-	lcdSetText(UART_LCDDISPLAY, 1, " Booting Vulcan ");
-	lcdSetText(UART_LCDDISPLAY, 2, "..");
+	lcdInitialize();
+	printText("Booting Vulcan", Centered, 1);
+	printText("IMEs... ", Left, 2); // IMES must be first, followed by MotorManager. Chassis and Lift are not order dependent
 	imeInitializeAll();
-	lcdSetText(UART_LCDDISPLAY, 2, ".....");
+	delay(100);
+	printText("MotorManager... ", Left, 2);
 	InitializeMotorManager();
-	lcdSetText(UART_LCDDISPLAY, 2, ".......");
+	delay(100);
+	printText("Chassis... ", Left, 2);
 	ChassisInitialize();
-	lcdSetText(UART_LCDDISPLAY, 2, "........OS");
+	delay(100);
+	printText("Lift... ", Left, 2);
 	LiftInitialize();
-	lcdSetText(UART_LCDDISPLAY, 2, "........OSE.");
-	initButtons();
-	lcdSetText(UART_LCDDISPLAY, 2, "........OSE......");
-	delay(250);
-	lcdClear(UART_LCDDISPLAY);
-	lcdSetText(UART_LCDDISPLAY, 1, "  Boot Complete  ");
-	lcdSetText(UART_LCDDISPLAY, 1, " Vulcan|7701|OSE ");
-	delay(500);
+	delay(200);
+	printText("", Left, 2);
+	delay(100);
+	printText("       pl       ", Left, 2);
+	delay(100);
+	printText("      mple      ", Left, 2);
+	delay(100);
+	printText("     omplet     ", Left, 2);
+	delay(100);
+	printText("    complete    ", Left, 2);
+	delay(100);
+	printText("   .complete.   ", Left, 2);
+	delay(100);
+	printText("  ..complete..  ", Left, 2);
+	delay(100);
+	printText(" ...complete... ", Left, 2);
+	delay(100);
+	printText("....complete....", Left, 2);
+	delay(100);
+	printText("", Left, 2);
+	delay(100);
+	printText("....complete....", Left, 2);
 }

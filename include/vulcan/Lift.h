@@ -1,16 +1,29 @@
-/************************************************************************/
-/* @file Lift.h		@brief Header file for Lift functions				*/
-/* See src/Lift.c for details of all functions				            */
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.	*/
-/* Portions of this file may contain elements from the PROS API.		*/
-/* See include/API.h for additional notice.								*/
-/************************************************************************/
+/**
+ * @file include/vulcan/Lift.h		
+ * @brief Header file for Lift functions <br>
+ * See vulcan/Lift.c for details of all functions
+ *
+ * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
+ * Portions of this file may contain elements from the PROS API. <br>
+ * See include/API.h for additional notice.
+ ********************************************************************************/
 
 #ifndef LIFT_H_
 #define LIFT_H_
 
-void LiftSet(int, bool);
+// ---------------- LEFT  SIDE ---------------- //
+void LiftSetLeft(int, bool);
+int LiftGetCalibratedPotentiometerLeft();
+int LiftGetRawPotentiometerLeft();
 
+// ---------------- RIGHT SIDE ---------------- //
+void LiftSetRight(int, bool);
+int LiftGetCalibratedPotentiometerRight();
+int LiftGetRawPotentiometerRight();
+
+// ---------------- MASTER (ALL) ---------------- //
+void LiftSet();
+int liftComputePotentiometerDifference();
 void LiftInitialize();
 
 #endif

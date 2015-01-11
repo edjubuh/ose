@@ -1,7 +1,7 @@
 /**
- * @file include/dios/mechop.h
+ * @file include/vulcan/mechop.h
  * @brief Header file for advanced mecanum control <br>
- * See dios/mechop.c for details of all functions
+ * See vulcan/mechop.c for details of all functions
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
  * Portions of this file may contain elements from the PROS API. <br>

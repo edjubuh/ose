@@ -1,5 +1,5 @@
 /**
- * @file opcontrol.c
+ * @file dios/opcontrol.c
  * @brief Source file for operator control.
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
@@ -15,6 +15,7 @@
 #include "dios/CortexDefinitions.h"
 #include "dios/Chassis.h"
 #include "dios/Lift.h"
+#include "dios/buttons.h"
 
 
 /**
@@ -22,37 +23,33 @@
  */
 void operatorControl()
 {
-	/*
-	char ln1[16];
-	char ln2[16];
-	for (int i = 0; i < 16; i++)
-	{
-		ln1[i] = ' ';
-		ln2[i] = ' ';
-	}
-	*/
+	bool wasPressed = false;
+	bool inverted = true;
 	while (true)
 	{
-		//ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
-		//JoystickControl();
-		
-		LiftSetLeft(joystickGetAnalog(1, 3), false);
-		LiftSetRight(joystickGetAnalog(1, 2), false);
-		/*
-		sprintf(ln1, "left: %d", LiftGetCalibratedPotentiometerLeft());
-		sprintf(ln2, "right: %d", LiftGetCalibratedPotentiometerRight());
+		if (!wasPressed && joystickGetDigital(1, 8, JOY_UP))
+		{
+			wasPressed = true;
+			inverted = !inverted;
+		}
+		else if (!joystickGetDigital(1, 8, JOY_UP))
+			wasPressed = false;
 
-		printText(ln1, Left, 1);
-		printText(ln2, Right, 2);
-		*/
+		ChassisSet((inverted ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (inverted ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), false);
 		
-		if (joystickGetDigital(1, 6, JOY_UP))
-			LiftSet(20);
+		if (joystickGetDigital(1, 5, JOY_UP))
+			LiftSetLeft(127, false);
+		else if (joystickGetDigital(1, 5, JOY_DOWN))
+			LiftSetLeft(-127, false);
+		else if (joystickGetDigital(1, 6, JOY_UP))
+			LiftSet(127);
 		else if (joystickGetDigital(1, 6, JOY_DOWN))
-			LiftSet(-20);
+			LiftSet(-127);
 		else
 			LiftSet(0);
-		
+
+		digitalWrite(DIG_SCORINGMECH, !joystickGetDigital(1, 8, JOY_DOWN));
+
 		delay(100);
 	}
 }

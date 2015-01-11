@@ -1,16 +1,19 @@
-/********************************************************************************/
-/* @file vulcan/Chassis.c		@brief Source file for Chassis functions		*/
-/*																				*/
-/* Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.			*/
-/* Portions of this file may contain elements from the PROS API.				*/
-/* See include/API.h for additional notice.										*/
-/********************************************************************************/
+/**
+ * @file vulcan/Chassis.c
+ * @brief Source file for Chassis functions
+ *
+ * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
+ * Portions of this file may contain elements from the PROS API. <br>
+ * See include/API.h for additional notice.
+ ********************************************************************************/
+
+#include <math.h>
 
 #include "main.h"
-#include "dios/Chassis.h"
+#include "vulcan/Chassis.h"
+
 #include "sml/SmartMotorLibrary.h"
-#include "dios/CortexDefinitions.h"
-#include <math.h>
+#include "vulcan/CortexDefinitions.h"
 
 static Gyro gyro;
 
@@ -29,7 +32,6 @@ static Gyro gyro;
 void ChassisSet(int left, int right, bool immediate)
 {
 	//statements below catch speeds out of range
-
 	//catches left
 	if (abs(left) > 127)
 		left = signbit(left) ? -127 : 127;

@@ -145,10 +145,19 @@ int MotorGet(int channel)
  *        The port of the motor [1,10]
  *
  * @param inverted
- *        If the motor port is inverted, set to true (127 will become -127 and vice versa)
+ *        If the motor port is inverted, then set to true (127 will become -127 and vice versa)
  *
  * @param skewPerMsec
- *        The acceleration of the motor in dPWM/millisecond
+ *        The acceleration of the motor in dPWM/millisecond. DEFAULT_SKEW is available, which sets dPWM/millisecond to 0.5
+ *
+ * Example usage:
+ * @code
+ *		void MechanismConfigure()
+ *		{
+ *			MotorConfigure(1, false, DEFAULT_SKEW);
+ *			// Any related PID Controllers would go in here too, see the example for libsml/SingleThreadPIDController.c:PIDControllerCreate()
+ *		}
+ * @endcode
  */
 void MotorConfigure(int channel, bool inverted, double skewPerMsec)
 {
@@ -178,6 +187,34 @@ void MotorConfigure(int channel, bool inverted, double skewPerMsec)
  *
  * @param func
  *        A pointer to a function taking an integer input (the raw input) and returning the corrected output as an int
+ *
+ * Example usage:
+ * @code
+ *		int RecalculateCommandedRequest(int in)
+ *		{
+ *			static int lastValue;
+ *			static int lastTime;
+ *			int out = in;
+ *			if (in != 0)
+ *			{
+ *				int speed = (getSensorValue() - lastValue) / ((millis() - lastTime) * 0.001);
+ *				if (speed != 0 && motorGet(1) != 0) 
+ *				// This calculation will change the output to scale to the speed. For simplification, a PIDController was not used but is recommended
+ *					out = (in * in * 40) / (127 * speed);
+ *				else out = in;
+ *			}
+ *			else out = 0;
+ *			lastValue = LiftGetCalibratedPotentiometerLeft();
+ *			lastTime = millis();
+ *			return out;
+ *		}
+ *		void MechanismConfigure()
+ *		{
+ *			MotorConfigure(1, false, DEFAULT_SKEW);
+ *			MotorChangeRecalculateCommanded(1, &RecalculateCommandedRequest);
+ *			// Any related PID Controllers would go in here too, see the example for libsml/SingleThreadPIDController.c:PIDControllerCreate()
+ *		}
+ * @endcode
  */
 void MotorChangeRecalculateCommanded(int channel, int(*func)(int))
 {

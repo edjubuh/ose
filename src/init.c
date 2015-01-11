@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 /**
  * @file src/init.c
-=======
-/** @file src/init.c
->>>>>>> 7b38228c15fb78daf33c4b4aee5eb4dcd083a15a
  * @brief File for initialization code
  *
  * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>

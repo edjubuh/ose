@@ -1,9 +1,5 @@
 /**
-<<<<<<< HEAD
 * @file vulcan/mechop.c
-=======
-* @file mechop.c
->>>>>>> 7b38228c15fb78daf33c4b4aee5eb4dcd083a15a
 * @brief Source file for mecanum functions
 *
 * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
@@ -86,11 +82,7 @@ double getJoyTheta(int x, int y)
  */
 int thetaSector( double theta )
 {
-<<<<<<< HEAD
 	///TODO: get rid of that quirky decimal place!
-=======
-	//get rid of that quirky decimal place!
->>>>>>> 7b38228c15fb78daf33c4b4aee5eb4dcd083a15a
 	int ltheta = (int)( roundf(theta * 100) );
 	if (ltheta >= -2250 && ltheta <= 2250)
 		return 0;

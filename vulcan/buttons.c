@@ -2,6 +2,14 @@
  * @file vulcan/buttons.c
  * @brief Source file for buttons API
  *
+ * The Buttons API enables press-once to trigger control, allowing button pressed to be made which act like taps.
+ * The API works by holding a boolean "wasPressed" for each button and when buttonIsNewPress() is called, 
+ * the method compares whether the press is a new press that has not previously been detected. <br>
+ * <br>
+ * This is useful in applications where the operator needs to press a button to change a state, but does not want 
+ * the state to to change the state every time the button is checked. For example, toggling a solenoid on/off with
+ * a single button. <br>
+ * <br>
  * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
  * Portions of this file may contain elements from the PROS API. <br>
  * See include/API.h for additional notice.
@@ -11,6 +19,9 @@
 #include "vulcan/CortexDefinitions.h"
 #include "vulcan/buttons.h"
 
+/**
+ * Represents the array of "wasPressed" for all 27 available buttons.
+ */
 bool buttonPressed[27];
 
 /**

@@ -76,14 +76,23 @@ static void MasterSlavePIDControllerTask(void *c)
 }
 
 /**
-* @brief Creates a MasterSlavePIDController struct based off of the parameters.
-*
-* @param PIDController master
-*			The controller for the master process. The call/execute methods should only affect the master. (i.e. the execute should not set the output for both slave and master)
-*
-* @param PIDController slave
-*			The controller for the slave process.
-*/
+ * @brief Creates a MasterSlavePIDController struct based off of the parameters.
+ *
+ * @param master
+ *			The controller for the master process. The call/execute methods should only affect the master. (i.e. the execute should not set the output for both slave and master)
+ *
+ * @param slave
+ *			The controller for the slave process. The call/execute methods should only affect the slave system.
+ *
+ * @param equalizer
+ *			The controller for the equalizer. The call/execute methods are not used. Only constants need to be tuned. <br>
+ *			The equalizer will determine how much to change the slave's velocity in order to match the master.
+ *
+ * @param enabledPrimaryPID
+ *			Enables the master/slave controllers. May be changed later by using MasterSlavePIDChangeGoal(), MasterSlavePIDIncreaseGoal(), or MasterSlavePIDSetOutput()
+ *
+ * @returns Returns a MasterSlavePIDController struct representing the arguments.
+ */
 MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave, PIDController equalizer, bool enabledPrimaryPID)
 {
 	MasterSlavePIDController controller;
@@ -103,7 +112,7 @@ MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PI
 * @param primaryGoal
 *        The primary PID controller goal height
 *
-* @return A TaskHandle of the created task (so the task may be stopped)
+* @return A TaskHandle of the created task (so the task may be stopped later)
 */
 TaskHandle InitializeMasterSlaveController(MasterSlavePIDController *controller, int primaryGoal)
 {
@@ -192,11 +201,13 @@ void MasterSlavePIDSetOutput(MasterSlavePIDController *controller, int output)
 }
 
 /**
- * @brief Useless function is useless
+ * @brief Judges, please talk to us about VIVA LA REVOLUCION!
+ *
+ * @param MasterSlavePIDController controller
+ *			Revolutionizes the controller.
  */
 static void VivaLaRevolucion(MasterSlavePIDController *controller)
 {
-	// Judges, please talk to us about VIVA LA REVOLUCION!
 	PIDController temp = controller->master;
 	controller->master = controller->slave;
 	controller->slave = temp;

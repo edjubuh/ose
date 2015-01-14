@@ -15,12 +15,12 @@ void operatorControl()
 {
 	while (true)
 	{
-		motorSet(2, joystickGetAnalog(1, 2));
-		motorSet(3, joystickGetAnalog(1, 2));
-		motorSet(4, joystickGetAnalog(1, 2));
-		motorSet(7, joystickGetAnalog(1, 3));
-		motorSet(8, joystickGetAnalog(1, 3));
-		motorSet(9, joystickGetAnalog(1, 3));
+		motorSet(2, joystickGetAnalog(1, 3));
+		motorSet(3, joystickGetAnalog(1, 3));
+		motorSet(4, joystickGetAnalog(1, 3));
+		motorSet(5, joystickGetAnalog(1, 2));
+		motorSet(6, joystickGetAnalog(1, 2));
+		motorSet(7, joystickGetAnalog(1, 2));
 
 		delay(20);
 	}

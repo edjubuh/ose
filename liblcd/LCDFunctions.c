@@ -17,6 +17,11 @@ static char * sleep_liine1, sleep_line2;
 /**
  * @brief Returns the length of a string. Same functionality as strlen in <cstring>
  *        Code duplicated from http://fxr.watson.org/fxr/source/libkern/strlen.c?v=DFBSD
+ *
+ * @param str
+ *			The string to size
+ *
+ * @returns Returns the length of the string
  */
 static size_t strlen(const char *str)
 {
@@ -50,8 +55,7 @@ void lcdInitialize()
  * @param line
  *        The line to write the text to [1,2]
  *
- * @param time
- *        The amount of time in milliseconds to print the text (scrolling text will still use input time)
+ * @returns Returns true if printText() was successful
  */
 bool printText(char * string, textJustifications justification, unsigned char line)
 {

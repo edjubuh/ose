@@ -11,6 +11,7 @@
 #ifndef BUTTONS_H_
 #define BUTTONS_H_
 
+/// Represents all available 
 typedef enum
 {
 	JOY1_5D = 0,

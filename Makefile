@@ -6,6 +6,9 @@ ROOT=.
 BINDIR=$(ROOT)/bin
 # Subdirectories to include in the build
 SUBDIRS=src
+# Additional, manual flags that the user can input
+# By default, left as blank
+ADDITIONAL=
 
 # Nothing below here needs to be modified by typical users
 

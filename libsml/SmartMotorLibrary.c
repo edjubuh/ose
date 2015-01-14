@@ -22,6 +22,7 @@ static TaskHandle MotorManagerTaskHandle;
  *        This method is only accessible to this file for organizational purposes and may be opened to other files.
  * @param in
  *        Input value
+ * @returns Returns in
  */
 static int DefaultRecalculate(int in)
 {
@@ -97,6 +98,8 @@ void MotorManagerTask(void *none)
  *
  * @param immediate
  *        Will change the speed of the motor immediately, bypassing the motor manager ramping if set to true.
+ *
+ * @returns Returns true if MotorSet was successful.
  */
 bool MotorSet(int channel, int set, bool immediate)
 {
@@ -122,6 +125,8 @@ bool MotorSet(int channel, int set, bool immediate)
  *
  * @param channel
  *			The port of the motor [1,10]
+ *
+ * @returns Returns the commanded speed of the motor
  */
 int MotorGet(int channel)
 {

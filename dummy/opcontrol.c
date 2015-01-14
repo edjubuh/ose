@@ -8,25 +8,19 @@
  ********************************************************************************/
 
 #include "main.h"
-#include "dummy/MotorDefinitions.h"
-#include "sml/SmartMotorLibrary.h"
 
 /**
 * @brief Sets motors in motion based on user input (from controls).
 */
 void operatorControl() 
 {
-	for (int i = 1; i <= 12; i++)
-		pinMode(i, OUTPUT);
-
 	while (true) 
 	{
-		for (int i = 1; i < 11; i++)
-			motorSet(i, joystickGetAnalog(1, 2));
-
-		for (int i = 1; i <= 12; i++)
-			digitalWrite(i, joystickGetDigital(1, 7, JOY_UP));
-
-		delay(20);
+			motorSet(5, 127);
+		delay(1000);
+			motorSet(5, -127);
+		delay(1000);
+			motorSet(5, 0);
+		delay(2000);
 	}
 }

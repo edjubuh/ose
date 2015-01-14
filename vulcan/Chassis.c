@@ -93,6 +93,7 @@ void ChassisSetMecanum(double heading, int speed, int rotation, bool immediate)
 	MotorSet(MOTOR_CHASSIS_REARRIGHT,  (int)(rearRight * speedScale),  immediate);
 	MotorSet(MOTOR_CHASSIS_FRONTLEFT,  (int)(frontLeft * speedScale),  immediate);
 	MotorSet(MOTOR_CHASSIS_REARLEFT,   (int)(rearLeft * speedScale),   immediate);
+<<<<<<< HEAD
 }
 
 /**

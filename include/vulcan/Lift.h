@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file include/vulcan/Lift.h		
  * @brief Header file for Lift functions <br>
  * See vulcan/Lift.c for details of all functions
@@ -11,7 +11,6 @@
 #ifndef LIFT_H_
 #define LIFT_H_
 
-<<<<<<< HEAD
 #include "sml/SmartMotorLibrary.h"
 
 // ---------------- LEFT  SIDE ---------------- //

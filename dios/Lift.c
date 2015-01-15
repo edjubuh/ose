@@ -39,11 +39,13 @@ void LiftSetLeft(int value, bool immediate)
 	{
 		MotorSet(MOTOR_LIFT_FRONTLEFT, 0, immediate);
 		MotorSet(MOTOR_LIFT_REARLEFT, 0, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLELEFT, 0, immediate);
 	}
 	else
 	{
 		MotorSet(MOTOR_LIFT_FRONTLEFT, value, immediate);
 		MotorSet(MOTOR_LIFT_REARLEFT, value, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLELEFT, value, immediate);
 	}
 }
 
@@ -137,11 +139,13 @@ void LiftSetRight(int value, bool immediate)
 	{
 		MotorSet(MOTOR_LIFT_FRONTRIGHT, 0, immediate);
 		MotorSet(MOTOR_LIFT_REARRIGHT, 0, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLERIGHT, 0, immediate);
 	}
 	else
 	{
 		MotorSet(MOTOR_LIFT_FRONTRIGHT, value, immediate);
 		MotorSet(MOTOR_LIFT_REARRIGHT, value, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLERIGHT, value, immediate);
 	}
 }
 
@@ -252,12 +256,12 @@ int liftComputePotentiometerDifference()
  */
 void LiftInitialize()
 {
-	MotorConfigure(MOTOR_LIFT_FRONTLEFT, true, 1);
-	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, false, 1);
-	//MotorConfigure(MOTOR_LIFT_MIDDLELEFT, true, 1);
-	//MotorConfigure(MOTOR_LIFT_MIDDLERIGHT, true, 1);
-	MotorConfigure(MOTOR_LIFT_REARLEFT, true, 1);
-	MotorConfigure(MOTOR_LIFT_REARRIGHT, false, 1);
+	MotorConfigure(MOTOR_LIFT_FRONTLEFT, false, 1);
+	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, true, 1);
+	MotorConfigure(MOTOR_LIFT_MIDDLELEFT, false, 1);
+	MotorConfigure(MOTOR_LIFT_MIDDLERIGHT, true, 1);
+	MotorConfigure(MOTOR_LIFT_REARLEFT, false, 1);
+	MotorConfigure(MOTOR_LIFT_REARRIGHT, true, 1);
 
 	/*MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTLEFT, &liftComputeCorrectedSpeedLeft);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTRIGHT, &liftComputeCorrectedSpeedRight);

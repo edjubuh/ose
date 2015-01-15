@@ -24,18 +24,16 @@ void operatorControl()
 {
 	while (true)
 	{
-		//ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
+		ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
 		//JoystickControl();
 		
-		LiftSetLeft(joystickGetAnalog(1, 3), false);
-		LiftSetRight(joystickGetAnalog(1, 2), false);
-
 		if (joystickGetDigital(1, 6, JOY_UP))
 			LiftSet(127);
 		else if (joystickGetDigital(1, 6, JOY_DOWN))
 			LiftSet(-127);
-		else
-			LiftSet(0);
+		else LiftSet(0);
+
+		if (buttonIsNewPress(JOY1_8U)) ScoringMechSwitch();
 		
 		delay(100);
 	}

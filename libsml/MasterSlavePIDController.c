@@ -126,7 +126,7 @@ TaskHandle InitializeMasterSlaveController(MasterSlavePIDController *controller,
 }
 
 /**
- * @brief Changes the Primary PID Goal to the desired speed.
+ * @brief Changes the Primary PID Goal to the desired goal value.
  *
  * @param controller
  *        Point to a MasterSlavePIDController struct containing information for the controller
@@ -142,7 +142,7 @@ void MasterSlavePIDChangeGoal(MasterSlavePIDController *controller, int primaryP
 	controller->enabledPrimaryPID = true;
 	
 	controller->master.Goal = primaryPIDGoal;
-	controller->master.Goal = primaryPIDGoal;
+	controller->slave.Goal = primaryPIDGoal;
 	
 	mutexGive(controller->mutex);
 }

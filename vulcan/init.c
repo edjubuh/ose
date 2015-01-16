@@ -37,7 +37,7 @@ void initialize()
 	lcdInitialize();
 	printText("Booting Vulcan", Centered, 1);
 	printText("IMEs... ", Left, 2); // IMES must be first, followed by MotorManager. Chassis and Lift are not order dependent
-	imeInitializeAll();
+	//imeInitializeAll();
 	delay(100);
 	printText("MotorManager... ", Left, 2);
 	InitializeMotorManager();

@@ -27,9 +27,9 @@
 
 /* --- DIGITAL DEFINITIONS --- */
 
-#define DIG_LIFT_BOTLIM_RIGHT			1
-#define DIG_LIFT_BOTLIM_LEFT			2
 #define DIG_SCORINGMECH					1
+#define DIG_LIFT_BOTLIM_LEFT			2
+#define DIG_LIFT_BOTLIM_RIGHT			3
 
 
 /* --- ANALOG DEFINITIONS --- */

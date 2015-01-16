@@ -7,8 +7,6 @@
  * See include/API.h for additional notice.
  ********************************************************************************/
 
-#include "vulcan/CortexDefinitions.h"
-#include "sml/SmartMotorLibrary.h"
 #include "main.h"
 #include "vulcan/Lift.h"
 
@@ -21,7 +19,7 @@
 #define IME_RESET_THRESHOLD		100
 #define POT_RESET_THRESHOLD		200
 
-static MasterSlavePIDController Controller;
+static PIDController Controller;
 static TaskHandle LiftControllerTask;
 
 // ---------------- LEFT  SIDE ---------------- //
@@ -40,11 +38,13 @@ void LiftSetLeft(int value, bool immediate)
 	{
 		MotorSet(MOTOR_LIFT_FRONTLEFT, 0, immediate);
 		MotorSet(MOTOR_LIFT_REARLEFT, 0, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLELEFT, 0, immediate);
 	}
 	else
 	{
 		MotorSet(MOTOR_LIFT_FRONTLEFT, value, immediate);
 		MotorSet(MOTOR_LIFT_REARLEFT, value, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLELEFT, value, immediate);
 	}
 }
 
@@ -80,7 +80,7 @@ int LiftGetCalibratedPotentiometerLeft()
  */
 int LiftGetRawPotentiometerLeft()
 {
-	return analogRead(ANA_POT_LIFT_LEFT);
+	return -analogRead(ANA_POT_LIFT_LEFT);
 }
 
 static int liftComputeCorrectedSpeedLeft(int in)
@@ -122,11 +122,13 @@ void LiftSetRight(int value, bool immediate)
 	{
 		MotorSet(MOTOR_LIFT_FRONTRIGHT, 0, immediate);
 		MotorSet(MOTOR_LIFT_REARRIGHT, 0, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLERIGHT, 0, immediate);
 	}
 	else
 	{
 		MotorSet(MOTOR_LIFT_FRONTRIGHT, value, immediate);
 		MotorSet(MOTOR_LIFT_REARRIGHT, value, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLERIGHT, value, immediate);
 	}
 }
 
@@ -161,7 +163,7 @@ int LiftGetCalibratedPotentiometerRight()
  */
 int LiftGetRawPotentiometerRight()
 {
-	return -analogRead(ANA_POT_LIFT_RIGHT);
+	return analogRead(ANA_POT_LIFT_RIGHT);
 }
 
 static int liftComputeCorrectedSpeedRight(int in)
@@ -192,16 +194,32 @@ static int liftComputeCorrectedSpeedRight(int in)
  * @brief Sets the lift to the desired speed using the MasterSlavePIDController for the lift
  *
  * @param value
- *			[-127g,127] Speed of the lift
+ *			[-127,127] Speed of the lift
  *
  * @param immediate
  *			Determines if speed input change is immediate or ramped according to SML
  */
-void LiftSet(int value)
+void LiftSet(int value, bool immediate)
 {
-	MasterSlavePIDIncreaseGoal(&Controller, value);
-	//LiftSetLeft(value, false);
-	//LiftSetRight(value, false);
+	//MasterSlavePIDSetOutput(&Controller, value);
+	LiftSetLeft(value, immediate);
+	LiftSetRight(value, immediate);
+}
+
+/**
+ * @brief Sets the lift goal height to the supplied parameter.
+ *
+ * @param value
+ *			The new goal height of the lift.
+ */
+void LiftSetHeight(int value)
+{
+	PIDControllerSetGoal(&Controller, value);
+}
+
+void LiftContinuous()
+{
+	PIDControllerExecuteContinuous(&Controller);
 }
 
 /**
@@ -218,16 +236,18 @@ int liftComputePotentiometerDifference()
  */
 void LiftInitialize()
 {
-	MotorConfigure(MOTOR_LIFT_FRONTLEFT, true, 1);
-	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, true, 1);
-	MotorConfigure(MOTOR_LIFT_REARLEFT, false, 1);
-	MotorConfigure(MOTOR_LIFT_REARRIGHT, true, 1);
+	MotorConfigure(MOTOR_LIFT_FRONTLEFT, true, 0.5);
+	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, false, 0.5);
+	MotorConfigure(MOTOR_LIFT_MIDDLELEFT, true, 0.5);
+	MotorConfigure(MOTOR_LIFT_MIDDLERIGHT, false, 0.5);
+	MotorConfigure(MOTOR_LIFT_REARLEFT, true, 0.5);
+	MotorConfigure(MOTOR_LIFT_REARRIGHT, false, 0.5);
 
 	/*MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTLEFT, &liftComputeCorrectedSpeedLeft);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTRIGHT, &liftComputeCorrectedSpeedRight);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_REARLEFT, &liftComputeCorrectedSpeedLeft);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_REARRIGHT, &liftComputeCorrectedSpeedRight);*/
-
+	
 	unsigned long start = millis();
 	while ((millis() - start) < 250)
 	{ // Calibrate potentiometers
@@ -238,12 +258,16 @@ void LiftInitialize()
 		delay(5);
 	}
 	delay(50);
-	//                                           Execute           Call								 Kp     Ki     Kd      MaI  MiI  Tol
-	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft,	0.65, 0, 0.01, 300, -200, 5);
-	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 0.65, 0, 0.01, 300, -200, 5);
+	/*
+	//                                           Execute           Call							     Kp  Ki   Kd    MaI  MiI  Tol
+	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetCalibratedPotentiometerLeft,	0.65, 0, 0, 300, -200, 5);
+	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetCalibratedPotentiometerRight, 0.65, 0, 0, 300, -200, 5);
 	PIDController equalizer = PIDControllerCreate(NULL, &liftComputePotentiometerDifference, 0, 0, 0, 50, -50, 5);
 
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, false);
 
 	LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
+	*/
+
+	Controller = PIDControllerCreate(&LiftSet, &LiftGetCalibratedPotentiometerLeft, 0.25, 0, -.01, 300, -100, 15);
 }

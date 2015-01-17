@@ -12,6 +12,7 @@
 #include "lcd/LCDFunctions.h"
 
 #include "vulcan/buttons.h"
+#include "vulcan/mechop.h"
 #include "vulcan/CortexDefinitions.h"
 #include "vulcan/Chassis.h"
 #include "vulcan/Lift.h"
@@ -23,6 +24,8 @@
  */
 void operatorControl()
 {
+	bool mode = false; // true: skyrise, false: cubes
+	bool pidEnabled = false;
 	char ln1[16];
 	char ln2[16];
 	for (int i = 0; i < 16; i++)
@@ -33,30 +36,65 @@ void operatorControl()
 
 	while (true)
 	{
-		ChassisSet(joystickGetAnalog(1,3), joystickGetAnalog(1,2), false);
-		//JoystickControl();
-		
-		
+		if (buttonIsNewPress(JOY1_8R)) mode = !mode;
+
+		//ChassisSet((mode ? joystickGetAnalog(1, 3) : -joystickGetAnalog(1, 2)), (mode ? joystickGetAnalog(1, 2) : -joystickGetAnalog(1, 3)), false);
+		JoystickControl();
+
+		/*
 		if (joystickGetDigital(1, 6, JOY_UP))
-			LiftSet(127, false);
+		LiftSet(127, false);
 		else if (joystickGetDigital(1, 6, JOY_DOWN))
-			LiftSet(-127, false);
+		LiftSet(-127, false);
 		else LiftSet(0, false);
-		
+		*/
 
-		//if (buttonIsNewPress(JOY1_6U)) LiftSetHeight(1000);
-		//if (buttonIsNewPress(JOY1_6D)) LiftSetHeight(400);
+		if (mode && buttonIsNewPress(JOY1_8U))
+		{
+			LiftSetHeight(125);
+			pidEnabled = true;
+		}
+		if (!mode && buttonIsNewPress(JOY1_8U))
+		{
+			LiftSetHeight(350);
+			pidEnabled = true;
+		}
 
-		//if (!joystickGetDigital(1, 8, JOY_UP)) LiftContinuous();
+		if (buttonIsNewPress(JOY1_8D))
+		{
+			LiftSetHeight(0);
+			pidEnabled = true;
+		}
 
-		if (buttonIsNewPress(JOY1_7U)) ScoringMechSwitch();
-		
-		snprintf(ln1, 16, "L: %+05d", LiftGetCalibratedPotentiometerLeft());
-		snprintf(ln2, 16, "R: %+05d", LiftGetCalibratedPotentiometerRight());
+		if (joystickGetDigital(1, 6, JOY_UP))
+		{
+			LiftSet(127, false);
+			pidEnabled = false;
+		}
+		else if (joystickGetDigital(1, 6, JOY_DOWN))
+		{
+			LiftSet(-90, false);
+			pidEnabled = false;
+		}
+		else if (!pidEnabled)
+			LiftSet(0, false);
 
-		printText(ln1, Centered, 1);
-		printText(ln2, Centered, 2);
-		
+		if(pidEnabled) LiftContinuous();
+
+		ScoringMechSet(!joystickGetDigital(1, 7, JOY_UP));
+
+		//snprintf(ln1, 16, "L:%+05d;R:%+05d", LiftGetCalibratedPotentiometerLeft(), LiftGetCalibratedPotentiometerRight());
+		if (pidEnabled && mode)
+			printText("   PID | Skyrise", Left, 2);
+		if (pidEnabled && !mode)
+			printText("   PID | Cube", Left, 2);
+		if (!pidEnabled && mode)
+			printText(" NoPID | Skyrise", Left, 2);
+		if (!pidEnabled && !mode)
+			printText(" NoPID | Cube", Left, 2);
+
+		printText("Vulcan , Centered, 1);
+
 		delay(100);
 	}
 }

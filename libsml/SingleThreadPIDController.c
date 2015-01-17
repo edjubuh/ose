@@ -123,7 +123,7 @@ int PIDControllerComputer(PIDController *controller, int error)
 		controller->integral = 0;
 
 
-	long derivative = (error - controller->prevError) /
+	long derivative = abs(error - controller->prevError) /
 		((micros() - controller->prevTime) * 1000000); // get true estimated instantaneous change in ticks/sec
 
 	int out = (int)((controller->Kp * error) + (controller->Ki * controller->integral) + (controller->Kd * derivative));

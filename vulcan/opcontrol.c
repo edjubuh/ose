@@ -26,6 +26,7 @@ void operatorControl()
 {
 	bool mode = false; // true: skyrise, false: cubes
 	bool pidEnabled = false;
+	/*
 	char ln1[16];
 	char ln2[16];
 	for (int i = 0; i < 16; i++)
@@ -33,13 +34,14 @@ void operatorControl()
 		ln1[i] = ' ';
 		ln2[i] = ' ';
 	}
+	*/
 
 	while (true)
 	{
-		if (buttonIsNewPress(JOY1_8R)) mode = !mode;
+		if (buttonIsNewPress(JOY1_8D)) mode = !mode;
 
-		//ChassisSet((mode ? joystickGetAnalog(1, 3) : -joystickGetAnalog(1, 2)), (mode ? joystickGetAnalog(1, 2) : -joystickGetAnalog(1, 3)), false);
-		JoystickControl();
+		ChassisSet((mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), false);
+		//JoystickControl();
 
 		/*
 		if (joystickGetDigital(1, 6, JOY_UP))
@@ -60,7 +62,7 @@ void operatorControl()
 			pidEnabled = true;
 		}
 
-		if (buttonIsNewPress(JOY1_8D))
+		if (buttonIsNewPress(JOY1_7D))
 		{
 			LiftSetHeight(0);
 			pidEnabled = true;
@@ -93,7 +95,7 @@ void operatorControl()
 		if (!pidEnabled && !mode)
 			printText(" NoPID | Cube", Left, 2);
 
-		printText("Vulcan , Centered, 1);
+		printText("Vulcan aae5f23", Centered, 1);
 
 		delay(100);
 	}

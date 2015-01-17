@@ -75,10 +75,10 @@ double getJoyTheta(int x, int y)
  *              an int in order to prevent error in comparisons.
  *              EXAMPLE: double 24.526312  ------> int 2453
  *
- * @return Sector number 0, 45, 90, 135, 180, -45, -90, -135; & -1 for error
- *  \|/
- * --0--
- *- /|\
+ * @return Sector number 0, 45, 90, 135, 180, -45, -90, -135; & -1 for error <br>
+ *  \|/ <br>
+ * --0--<br>
+ *- /|\ <br>
  */
 int thetaSector( double theta )
 {

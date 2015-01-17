@@ -11,6 +11,7 @@
 
 #include "vulcan/Chassis.h"
 #include "vulcan/Lift.h"
+#include "vulcan/ScoringMechanism.h"
 
 /**
  * @brief Runs a sequence of commands during the competition "autonomous period." (15 seconds)
@@ -47,7 +48,6 @@ void autonomous()
 	delay(750);
 	ChassisSet(0, 0, false); //return home!
 	*/
-	
 	ChassisSet(127, 127, false);
 	delay(500);
 	ChassisSet(0, 0, false);

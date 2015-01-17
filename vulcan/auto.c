@@ -17,5 +17,42 @@
  */
 void autonomous()
 {
+	/*
+	//input before auton begins
+	//left (-1) & right (1) is psuedo-code
+	int side = 1;
+
+	while (LiftSetHeight(125)) delay(35);
+	ChassisSet(100, 100, false); //Go forward
+	delay(750);
+	ChassisSet(0, 0, false);
+	delay(100);
+	while (LiftSetHeight(0)) delay(35);
+	delay(200);
+	ChassisSet(side * 75, side * -75, false); //turn right/left?
+	delay(250);
+	ChassisSet(0, 0, false);
+	while (LiftSetHeight(400)) delay(35); //height of the medium post???
+	ChassisSet(50, 50, false);
+	delay(100);
+	ChassisSet(0, 0, false);
+	ScoringMechSet(false); //deposit cube
+	ChassisSet(-50, -50, false); //backup
+	delay(200);
+	ChassisSet(0, 0, false);
+	while (LiftSetHeight(0)) delay(35);
+	ChassisSet(side * 75, side * -75, false); //turn right/left?
+	delay(250);
+	ChassisSet(100, 100, false);
+	delay(750);
+	ChassisSet(0, 0, false); //return home!
+	*/
 	
+	ChassisSet(127, 127, false);
+	delay(500);
+	ChassisSet(0, 0, false);
+	delay(50);
+	ChassisSet(-127, -127, false);
+	delay(100);
+	ChassisSet(0, 0, false);
 }

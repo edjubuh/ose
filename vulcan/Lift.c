@@ -218,9 +218,9 @@ void LiftSetHeight(int value)
 	PIDControllerSetGoal(&Controller, value);
 }
 
-void LiftContinuous()
+bool LiftContinuous()
 {
-	PIDControllerExecuteContinuous(&Controller);
+	return PIDControllerExecuteContinuous(&Controller);
 }
 
 /**
@@ -270,5 +270,5 @@ void LiftInitialize()
 	LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
 	*/
 
-	Controller = PIDControllerCreate(&LiftSet, &LiftGetCalibratedPotentiometerLeft, 0.21, 0.1, -0.3, 300, -100, 15);
+	Controller = PIDControllerCreate(&LiftSet, &LiftGetCalibratedPotentiometerLeft, 0.19, 0.08, -0.3, 300, -100, 15);
 }

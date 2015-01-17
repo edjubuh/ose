@@ -29,7 +29,7 @@ void operatorControl()
 	/*
 	char ln1[16];
 	char ln2[16];
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < 16; i++) 
 	{
 		ln1[i] = ' ';
 		ln2[i] = ' ';

@@ -56,15 +56,15 @@ void LiftSetLeft(int value, bool immediate)
 int LiftGetCalibratedPotentiometerLeft()
 {
 	static int zeroValue = 1435;
-	static int prevValues[20];
-	for (int i = 0; i < 19; i++)
+	static int prevValues[10];
+	for (int i = 0; i < 9; i++)
 		prevValues[i] = prevValues[i+1];
-	prevValues[19] = -(LiftGetRawPotentiometerLeft() - zeroValue);
+	prevValues[9] = -(LiftGetRawPotentiometerLeft() - zeroValue);
 	int sum = 0;
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 10; i++)
 		sum += prevValues[i];
 
-	int out = (int)(sum / 20.0);
+	int out = (int)(sum / 10.0);
 
 	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW)
 	{
@@ -138,16 +138,16 @@ void LiftSetRight(int value, bool immediate)
 int LiftGetCalibratedPotentiometerRight()
 {
 	static int zeroValue = -210;
-	static int prevValues[20];
-	for (int i = 0; i < 19; i++)
+	static int prevValues[10];
+	for (int i = 0; i < 9; i++)
 		prevValues[i] = prevValues[i+1];
-	prevValues[19] = LiftGetRawPotentiometerRight() - zeroValue;
+	prevValues[9] = LiftGetRawPotentiometerRight() - zeroValue;
 
 	int sum = 0;
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 10; i++)
 		sum += prevValues[i];
 
-	int out = (int)(sum / 20.0);
+	int out = (int)(sum / 10.0);
 
 	if (digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW)
 	{
@@ -202,6 +202,7 @@ static int liftComputeCorrectedSpeedRight(int in)
 void LiftSet(int value, bool immediate)
 {
 	//MasterSlavePIDSetOutput(&Controller, value);
+	if (value < -90) value = -90;
 	LiftSetLeft(value, immediate);
 	LiftSetRight(value, immediate);
 }
@@ -269,5 +270,5 @@ void LiftInitialize()
 	LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
 	*/
 
-	Controller = PIDControllerCreate(&LiftSet, &LiftGetCalibratedPotentiometerLeft, 0.25, 0, -.01, 300, -100, 15);
+	Controller = PIDControllerCreate(&LiftSet, &LiftGetCalibratedPotentiometerLeft, 0.21, 0.1, -0.3, 300, -100, 15);
 }

@@ -121,6 +121,7 @@ int aHypo(double h1, double h2)
 /**
  * @brief Controls robot wheels.
  */
+#define MOTOROPTION false // used for the function below
 void JoystickControl()
 {
     int l3 = joystickGetAnalog(1, 3), //up left y
@@ -135,23 +136,25 @@ void JoystickControl()
          (right == 3 || right == 4)    )
         ChassisSet( aJoy(r1, l4),
                     aJoy(r1, l4),
-                    false);
+					MOTOROPTION);
     else if ( (left  == -3 || left  == -4) &&
               (right == -3 || right == -4)    )
         ChassisSet( -aJoy(r1, l4),
                     -aJoy(r1, l4),
-                    false);
+					MOTOROPTION);
 
 
     //Left / Right
     else if ( (left  == 0 || left  == -0) &&
               (right == 0 || right == -0)    )
-        ChassisSetMecanum(-M_PI_2, aJoy(l4, r1), 0, false);
+        ChassisSetMecanum(-M_PI_2,
+		                  aJoy(l4, r1),
+						  0, MOTOROPTION);
     else if ( (left  == 7 || left  == -7) &&
               (right == 7 || right == -7)    )
         ChassisSetMecanum(M_PI_2, 
                           aJoy(l4, r1), 
-                          0, false);
+						  0, MOTOROPTION);
 
 
     //Tank Drive ^+v or v+^
@@ -159,12 +162,12 @@ void JoystickControl()
               (right == -3 || right == -4)    )
         ChassisSet( aJoy(r1, l4),
                     -aJoy(r1, l4),
-                    false);
+					MOTOROPTION);
     else if ( (left  == -3 || left  == -4) &&
               (right == 3  || right == 4)    )
         ChassisSet( -aJoy(r1, l4),
                     aJoy(r1, l4),
-                    false);
+					MOTOROPTION);
 
 
     //northeast / northwest
@@ -172,12 +175,12 @@ void JoystickControl()
               (right == 2 || right == 3)    )
         ChassisSetMecanum(-M_PI_4,
                           aHypo( cHypo(l4, l3), cHypo(r1, r2) ),
-                          0, false);
+						  0, MOTOROPTION);
     else if ( (left  == 5 || left  == 6) &&
               (right == 5 || right == 6)    )
         ChassisSetMecanum(M_PI_4, 
                           aHypo( cHypo(l4, l3), cHypo(r1, r2) ),
-                          0, false);
+						  0, MOTOROPTION);
 
 
     //southeast / southwest
@@ -185,12 +188,12 @@ void JoystickControl()
               (right == -2 || right == -3)    )
         ChassisSetMecanum(-3.0 * M_PI_4,
                           aHypo( cHypo(l4, l3), cHypo(r1, r2) ),
-                          0, false);
+						  0, MOTOROPTION);
     else if ( (left  == -5 || left  == -6) &&
               (right == -5 || right == -6)    )
         ChassisSetMecanum(3.0 * M_PI_4,
                           aHypo( cHypo(l4, l3), cHypo(r1, r2) ),
-                          0, false);
+						  0, MOTOROPTION);
 
 
     //strafe right / left
@@ -198,17 +201,25 @@ void JoystickControl()
               (right == 0 || right == -0)                                    )
         ChassisSet(l3,
                    (int)(l3 * (1.0 - abs( ((double)r1) / STRAFE_CONST ) ) ),
-                   false);
+				   MOTOROPTION);
     else if ( (left == 7 || left == -7) && 
               ( (right == 3 || right == 4) || (right == -3 || right == -4) ) )
         ChassisSet( (int)(r2 * (1.0 - abs( ((double)l4) / STRAFE_CONST ) ) ),
                     r2,
-                    false);
+					MOTOROPTION);
 
 
     //TODO: Strafe up / down
+	/*
+	else if ( (left == 0 || left == -0) &&
+	          (right == 3 || right = 4) || (right == -3 || right == -4) )
+		mechanumDrive( l4, some equation with r1, false);
+	else if ( ( left == 3 || left = 4) || (left == -3 || left == -4) &&
+	          ( right == 7 || right == -7)                              )
+		mechanumDrive( r1, some equation with l3, false);
+	*/
 
     //By default: stop, so motors don't break
     else
-        ChassisSet(0, 0, false);
+		ChassisSet(0, 0, MOTOROPTION);
 }

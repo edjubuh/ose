@@ -25,7 +25,7 @@ int LiftGetRawPotentiometerRight();
 
 // ---------------- MASTER (ALL) ---------------- //
 void LiftSet(int, bool);
-void LiftSetHeight(int);
+bool LiftSetHeight(int);
 bool LiftContinuous();
 int liftComputePotentiometerDifference();
 void LiftInitialize();

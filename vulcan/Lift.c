@@ -213,9 +213,10 @@ void LiftSet(int value, bool immediate)
  * @param value
  *			The new goal height of the lift.
  */
-void LiftSetHeight(int value)
+bool LiftSetHeight(int value)
 {
 	PIDControllerSetGoal(&Controller, value);
+	return false;
 }
 
 bool LiftContinuous()

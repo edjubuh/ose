@@ -41,12 +41,12 @@ double getJoyTheta(int x, int y)
     else if (x < 0)
     {
         if ( atan( ((double)y)/x) < 0.0)
-            return ( atan( ((double)y)/x)) + M_PI );
+            return (( ( atan( ((double)y)/x)) + M_PI ));
         else
-            return ( atan( ((double)y)/x)) - M_PI );
+            return (( ( atan( ((double)y)/x)) - M_PI ));
     }
     else
-        return ( atan( ((double)y)/x) ) );
+        return ( atan( ((double)y)/x) );
 }
 
 

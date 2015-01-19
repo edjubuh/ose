@@ -1,11 +1,11 @@
 /**
  * @file include/vulcan/buttons.h
  * @brief Header file for buttons API <br>
- * See vulcan/buttons.c for details of all functions
+ * @sa vulcan/buttons.c
  *
- * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
- * Portions of this file may contain elements from the PROS API. <br>
- * See include/API.h for additional notice.
+ * @copyright Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
+ *		Portions of this file may contain elements from the PROS API. <br>
+ *		See include/API.h for additional notice.
  ********************************************************************************/
 
 #ifndef BUTTONS_H_
@@ -45,8 +45,8 @@ typedef enum
 	LCD_RIGHT = 26
 } buttons;
 
+/** @cond */
 void initButtons();
-
 bool buttonIsNewPress(buttons);
-
+/** @endcond */
 #endif 

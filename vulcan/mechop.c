@@ -2,9 +2,9 @@
  * @file vulcan/mechop.c
  * @brief Source file for mecanum functions
  *
- * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
+ * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
  * Portions of this file may contain elements from the PROS API.
- * See include/API.h for additional notice.
+ * See include/main.h for additional notice.
  ***********************************************************************/
 
 #include <math.h>
@@ -17,10 +17,12 @@
 /**
  * @brief Returns theta, determined from function parameters.
  *
- * NOTE: Constants defined in math.h
- *       M_PI     pi constant
- *       M_PI_2   pi/2 constant
- *       M_PI_4   pi/4 constant
+ * NOTE: Helpful constants defined in math.h: <br>
+ *		  MACRO   |  Equivalent 
+ *		 -------- | -----------
+ *        M_PI    |  \f[\pi\f]
+ *        M_PI_2  |  \f[\pi/2\f] 
+ *        M_PI_4  |  \f[\pi/4\f]
  *
  * @param x
  *        X value for a joystick.
@@ -55,15 +57,17 @@ double getJoyTheta(int x, int y)
  * @brief Rounds theta values and calculates sector theta is in.
  *
  * @param theta
- *        Angle to be rounded (in radians) and its sector determined.
+ *        Angle to be rounded (in radians) and its sector determined.<br>
  *        NOTE: The double 'theta' will be rounded to three decimal places and converted to
- *              an int in order to prevent error in comparisons.
+ *              an int in order to prevent error in comparisons. <br>
  *              EXAMPLE: double 1.526312 r  ------> int 1526
  *
- * @return Sector number +/-0, +/-1, +/-2, +/-3, +/-4, +/-5, +/-6, +/-7
+ * @return Sector number +/-0, +/-1, +/-2, +/-3, +/-4, +/-5, +/-6, +/-7 <br>
+ * ~~~
  *  \|/
  * --0--
- *- /|\
+ *  /|\
+ * ~~~
  */
 int thetaSector( double theta )
 {
@@ -118,10 +122,11 @@ int aHypo(double h1, double h2)
     return (int)(roundf((h1 + h2) / 2));
 }
 
-/**
- * @brief Controls robot wheels.
- */
+
 #define MOTOROPTION false // used for the function below
+/**
+* @brief Controls robot wheels.
+*/
 void JoystickControl()
 {
     int l3 = joystickGetAnalog(1, 3), //up left y
@@ -209,7 +214,7 @@ void JoystickControl()
 					MOTOROPTION);
 
 
-    //TODO: Strafe up / down
+    /// @TODO Strafe up / down
 	/*
 	else if ( (left == 0 || left == -0) &&
 	          (right == 3 || right = 4) || (right == -3 || right == -4) )

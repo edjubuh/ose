@@ -1,5 +1,6 @@
 /**
- * @file include/vulcan/ScoringMechanism.h	
+ * @file include/vulcan/ScoringMechanism.h
+ * @author Elliot Berman
  * @brief Header file for ScoringMech functions <br>
  * See vulcan/ScoringMechanism.c for details of all functions
  *

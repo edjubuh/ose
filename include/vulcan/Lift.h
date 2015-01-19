@@ -1,5 +1,6 @@
 ﻿/**
  * @file include/vulcan/Lift.h		
+ * @author Elliot Berman
  * @brief Header file for Lift functions <br>
  * See vulcan/Lift.c for details of all functions
  *

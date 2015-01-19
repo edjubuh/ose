@@ -1,5 +1,6 @@
 /**
  * @file include/vulcan/buttons.h
+ * @author Elliot Berman
  * @brief Header file for buttons API <br>
  * @sa vulcan/buttons.c
  *

@@ -1,5 +1,6 @@
 /**
  * @file vulcan/Chassis.h
+ * @author Elliot Berman and Robert Shrote
  * @brief Header file for Chassis functions <br>
  * See vulcan/Chassis.c for details of all functions
  *
@@ -12,13 +13,8 @@
 #define CHASSIS_H_
 
 void ChassisSet(int, int, bool);
-
 void ChassisSetMecanum(double, int, int, bool);
-
 void ChassisInitialize();
-
-int ChassisGetLeftIME();
-
 void ChassisInitialize();
 
 #endif

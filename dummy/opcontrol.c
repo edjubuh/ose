@@ -8,19 +8,19 @@
  ********************************************************************************/
 
 #include "main.h"
+#include "lcd/LCDManager.h"
+#include "lcd/LCDFunctions.h"
+
 
 /**
 * @brief Sets motors in motion based on user input (from controls).
 */
 void operatorControl() 
 {
+	//initLCDManager();
+	
 	while (true) 
 	{
-			motorSet(5, 127);
-		delay(1000);
-			motorSet(5, -127);
-		delay(1000);
-			motorSet(5, 0);
-		delay(2000);
+		delay(20);
 	}
 }

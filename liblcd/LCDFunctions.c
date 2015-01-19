@@ -1,5 +1,6 @@
 /**
  * @file liblcd/LCDFunctions.c
+ * @author Elliot Berman
  * @brief Source file LCD functions.
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
@@ -40,6 +41,7 @@ void lcdInitialize()
 	lcdSetBacklight(uart1, true);
 	mutex_line1 = mutexCreate();
 	mutex_line2 = mutexCreate();
+	delay(10);
 }
 
 /**
@@ -56,21 +58,23 @@ void lcdInitialize()
  * @param line
  *        The line to write the text to [1,2]
  *
- * @returns Returns true if printText() was successful
+ * @returns Returns true if lcdprintf() was successful
  */
-bool printText(char * stringFormat, textJustifications justification, unsigned char line, ...)
+bool lcdprintf(textJustifications justification, unsigned char line, char * stringFormat, ...)
 {
+	char string[128];
 	va_list args;
 	va_start(args, stringFormat);
-	char *string;
 	vex_vsprintf(string, stringFormat, args);
 	va_end(args);
-
+	
 	if (mutex_line1 == NULL || mutex_line2 == NULL)
 		lcdInitialize();
 	
 	// If we're unable to take the mutex of the given line or the queried line is not valid, return false b/c unable to print
-	if ((line == 1 && !mutexTake(mutex_line1, 2000)) || (line == 2 && !mutexTake(mutex_line2, 2000) || (line != 1 && line != 2))
+	if ((line == 1 && !mutexTake(mutex_line1, 2000)) || 
+		(line == 2 && !mutexTake(mutex_line2, 2000)) || 
+		(line != 1 && line != 2) )
 		return false;
 
 	if (strlen(string) > 16)
@@ -112,6 +116,7 @@ bool printText(char * stringFormat, textJustifications justification, unsigned c
 					lcdPrint(uart1, line, out);
 					delay(175);
 				}
+
 				break;
 		}
 	}
@@ -146,6 +151,5 @@ bool printText(char * stringFormat, textJustifications justification, unsigned c
 		mutexGive(mutex_line1);
 	else if (line == 2)
 		mutexGive(mutex_line2);
-
 	return true;
 }

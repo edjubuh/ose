@@ -21,6 +21,6 @@ typedef enum
 } textJustifications;
 
 void lcdInitialize();
-bool printText(char *, textJustifications, unsigned char, ...);
+bool lcdprintf(textJustifications, unsigned char, char *, ...);
 
 #endif

@@ -26,15 +26,7 @@ void operatorControl()
 {
 	bool mode = false; // true: skyrise, false: cubes
 	bool pidEnabled = false;
-	/*
-	char ln1[16];
-	char ln2[16];
-	for (int i = 0; i < 16; i++) 
-	{
-		ln1[i] = ' ';
-		ln2[i] = ' ';
-	}
-	*/
+	int displayRound = 0;
 
 	while (true)
 	{

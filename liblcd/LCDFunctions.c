@@ -10,9 +10,10 @@
 #include "lcd\LCDFunctions.h"
 
 #include "main.h"
+#include <stdarg.h>
+#include "lcd/vexprintf.h"
 
 static Mutex mutex_line1, mutex_line2;
-static char * sleep_liine1, sleep_line2;
 
 /**
  * @brief Returns the length of a string. Same functionality as strlen in <cstring>
@@ -44,7 +45,7 @@ void lcdInitialize()
 /**
  * @brief Prints a string on the LCD Screen. If the length of the string is greater than 16 (the max number of character spaces), the text will scroll across the screen.
  *
- * @param string
+ * @param stringFormat
  *        An array of characters to write to the LCD Screen
  *
  * @param justification
@@ -57,29 +58,23 @@ void lcdInitialize()
  *
  * @returns Returns true if printText() was successful
  */
-bool printText(char * string, textJustifications justification, unsigned char line)
+bool printText(char * stringFormat, textJustifications justification, unsigned char line, ...)
 {
+	va_list args;
+	va_start(args, stringFormat);
+	char *string;
+	vex_vsprintf(string, stringFormat, args);
+	va_end(args);
+
 	if (mutex_line1 == NULL || mutex_line2 == NULL)
-	{
-		lcdInit(uart1);
-		lcdSetBacklight(uart1, true);
-		mutex_line1 = mutexCreate();
-		mutex_line2 = mutexCreate();
-	}
-	if (line == 1)
-	{
-		if (!mutexTake(mutex_line1, 2000))
-			return false;
-	}
-	else if (line == 2)
-	{
-		if (!mutexTake(mutex_line2, 2000))
-			return false;
-	}
-	else return false;
+		lcdInitialize();
+	
+	// If we're unable to take the mutex of the given line or the queried line is not valid, return false b/c unable to print
+	if ((line == 1 && !mutexTake(mutex_line1, 2000)) || (line == 2 && !mutexTake(mutex_line2, 2000) || (line != 1 && line != 2))
+		return false;
 
 	if (strlen(string) > 16)
-	{ // TODO correctly calculate timeg
+	{
 		char out[16];
 		switch (justification)
 		{
@@ -89,7 +84,6 @@ bool printText(char * string, textJustifications justification, unsigned char li
 					out[i] = string[j];
 				lcdPrint(uart1, line, out);
 				delay(450);
-				// TODO: get this to work
 				for (int i = strlen(string) - 16; i >= 0; i--)
 				{
 					// Shift all characters on screen to the right by one

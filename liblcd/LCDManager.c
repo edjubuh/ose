@@ -16,37 +16,51 @@
 
 static DisplayText cycleText_l1[NUM_CYCLE_TEXT_DISPLAYS];
 static DisplayText cycleText_l2[NUM_CYCLE_TEXT_DISPLAYS];
-static Mutex m_l1, m_l2, m_cT;
+static Mutex m_cT;
 static TaskHandle handle;
 
-static void lcdManagerTask()
+static int i = 0, j = 0;
+static unsigned long lastCycle = 0;
+
+void lcdManagerTask()
 {
 	while (true)
 	{
-		for (int i = 0; i < NUM_CYCLE_TEXT_DISPLAYS; i++)
+		
+		if ((millis() - lastCycle) >= 1750)
 		{
-			lcdprintf(Centered, 2, "%d / %d", i, NUM_CYCLE_TEXT_DISPLAYS);
-			//if(!mutexTake(m_cT, 500)) continue;
-			/*
-			if (cycleText_l1[i].GetText != NULL)
-				lcdprintf((cycleText_l1[i].GetText)(), cycleText_l1[i].justification, 1);
-			if (cycleText_l2[i].GetText != NULL)
-				lcdprintf((cycleText_l2[i].GetText)(), cycleText_l2[i].justification, 2);
-				*/
-			//mutexGive(m_cT);
-			delay(100);
+			lastCycle = millis();
+			i++;
+			j++;
 		}
-		delay(30);
+
+		if (i >= NUM_CYCLE_TEXT_DISPLAYS)
+			i = 0;
+
+		if (j >= NUM_CYCLE_TEXT_DISPLAYS)
+			j = 0;
+
+		mutexTake(m_cT, 500);
+		if ((cycleText_l1[i]).GetText)
+			lcdprintf(Centered, 1, "%s", (cycleText_l1[i]).GetText());
+		else i++;
+
+		//lcdprintf(Centered, 2, "%d", i);
+		
+		if ((cycleText_l2[j]).GetText)
+			lcdprintf(Centered, 2, "%s", (cycleText_l2[2]).GetText());
+		else j++;
+		
+		mutexGive(m_cT);
+		delay(40);
 	}
 }
 
 void initLCDManager()
 {
-	lcdInitialize();
-	m_l1 = mutexCreate();
-	m_l2 = mutexCreate();
 	m_cT = mutexCreate();
-	handle = taskCreate(&lcdManagerTask, 85, NULL, 2);
+	delay(100);
+	handle = taskCreate(&lcdManagerTask, TASK_DEFAULT_STACK_SIZE, NULL, 0);
 }
 
 void addCycleText(DisplayText text, int line)
@@ -63,7 +77,8 @@ void addCycleText(DisplayText text, int line)
 			break;
 		case 2:
 			for (; cycleText_l2[i].GetText != NULL; i++);
-			if (i > (NUM_CYCLE_TEXT_DISPLAYS - 1)) i = (NUM_CYCLE_TEXT_DISPLAYS - 1);
+			if (i > (NUM_CYCLE_TEXT_DISPLAYS - 1)) 
+				i = (NUM_CYCLE_TEXT_DISPLAYS - 1);
 			cycleText_l2[i] = text;
 			break;
 		default:

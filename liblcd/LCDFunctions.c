@@ -33,48 +33,61 @@ static size_t strlen(const char *str)
 }
 
 /**
+ * @brief Subtracts a number from an unsigned long, not allowing to to flip over, a - b
+ *
+ * @param a
+ *			A pointer to an unsigned long
+ *
+ * @param b
+ *			The number to subtract
+ */
+static void subtract(unsigned long *a, int b)
+{
+	if (*a > b) *a -= b;
+	else *a = 0;
+}
+
+/**
  * @brief Intializes the LCD screen at uart1, turns on backlight, and creates mutexes
  */
 void lcdInitialize()
 {
+	lcdShutdown(uart1);
 	lcdInit(uart1);
 	lcdSetBacklight(uart1, true);
+	delay(10);
 	mutex_line1 = mutexCreate();
 	mutex_line2 = mutexCreate();
-	delay(10);
 }
 
 /**
- * @brief Prints a string on the LCD Screen. If the length of the string is greater than 16 (the max number of character spaces), the text will scroll across the screen.
- *
- * @param stringFormat
- *        An array of characters to write to the LCD Screen
- *
- * @param justification
- *        A text justification strategy to use to print if the number of characters is less than 16
- *        Left, Centered, and Right
- *        If the number of characters in the string is greater than 16, the justification is used as a scrolling strategy (from LEFT->right or RIGHT->left) with default to LEFT->right
- *
- * @param line
- *        The line to write the text to [1,2]
- *
- * @returns Returns true if lcdprintf() was successful
- */
-bool lcdprintf(textJustifications justification, unsigned char line, char * stringFormat, ...)
+* @brief Prints a string on the LCD Screen. If the length of the string is greater than 16 (the max number of character spaces), the text will scroll across the screen.
+*
+* @param justification
+*        A text justification strategy to use to print if the number of characters is less than 16
+*        Left, Centered, and Right
+*        If the number of characters in the string is greater than 16, the justification is used as a scrolling strategy (from LEFT->right or RIGHT->left) with default to LEFT->right
+*
+* @param line
+*        The line to write the text to [1,2]
+*
+* @param duration
+*		Minimum duration of display in milliseconds
+*
+* @param string
+*        An array of characters to write to the LCD Screen
+*
+* @returns Returns true if lcdprintf() was successful
+*/
+bool lcdprint_d(textJustifications justification, unsigned char line, unsigned long duration, char * string)
 {
-	char string[128];
-	va_list args;
-	va_start(args, stringFormat);
-	vex_vsprintf(string, stringFormat, args);
-	va_end(args);
-	
 	if (mutex_line1 == NULL || mutex_line2 == NULL)
 		lcdInitialize();
-	
+
 	// If we're unable to take the mutex of the given line or the queried line is not valid, return false b/c unable to print
-	if ((line == 1 && !mutexTake(mutex_line1, 2000)) || 
-		(line == 2 && !mutexTake(mutex_line2, 2000)) || 
-		(line != 1 && line != 2) )
+	if ((line == 1 && !mutexTake(mutex_line1, 2000)) ||
+		(line == 2 && !mutexTake(mutex_line2, 2000)) ||
+		(line != 1 && line != 2))
 		return false;
 
 	if (strlen(string) > 16)
@@ -88,6 +101,7 @@ bool lcdprintf(textJustifications justification, unsigned char line, char * stri
 					out[i] = string[j];
 				lcdPrint(uart1, line, out);
 				delay(450);
+				subtract(&duration, 450);
 				for (int i = strlen(string) - 16; i >= 0; i--)
 				{
 					// Shift all characters on screen to the right by one
@@ -97,6 +111,7 @@ bool lcdprintf(textJustifications justification, unsigned char line, char * stri
 					out[15] = string[i];
 					lcdPrint(uart1, line, out);
 					delay(175);
+					subtract(&duration, 175);
 				}
 				break;
 			default:
@@ -105,6 +120,7 @@ bool lcdprintf(textJustifications justification, unsigned char line, char * stri
 					out[i] = string[i];
 				lcdPrint(uart1, line, out);
 				delay(450);
+				subtract(&duration, 450);
 				// Iterate through each of the rest of the characters
 				for (int i = 16; i <= strlen(string); i++)
 				{
@@ -114,7 +130,7 @@ bool lcdprintf(textJustifications justification, unsigned char line, char * stri
 					// Fill last character on screen with new character
 					out[15] = string[i];
 					lcdPrint(uart1, line, out);
-					delay(175);
+					subtract(&duration, 175);
 				}
 
 				break;
@@ -147,9 +163,150 @@ bool lcdprintf(textJustifications justification, unsigned char line, char * stri
 		}
 	}
 
+	delay(duration);
+
 	if (line == 1)
 		mutexGive(mutex_line1);
 	else if (line == 2)
 		mutexGive(mutex_line2);
 	return true;
+}
+
+/**
+* @brief Prints a string on the LCD Screen. If the length of the string is greater than 16 (the max number of character spaces), the text will scroll across the screen.
+
+* @param justification
+*        A text justification strategy to use to print if the number of characters is less than 16
+*        Left, Centered, and Right
+*        If the number of characters in the string is greater than 16, the justification is used as a scrolling strategy (from LEFT->right or RIGHT->left) with default to LEFT->right
+*
+* @param line
+*        The line to write the text to [1,2]
+*
+* @param stringFormat
+*        An array of characters to write to the LCD Screen
+*
+* @param duration
+*		Minimum duration of display in milliseconds
+*
+* @param args
+*			A list of optional arguments for the string format
+*
+* @returns Returns true if lcdprintv() was successful
+*/
+bool lcdprint_dv(textJustifications justification, unsigned char line, unsigned long duration, char * stringFormat, va_list args)
+{
+	char string[128];
+	vex_vsprintf(string, stringFormat, args);
+	return lcdprint_d(justification, line, duration, string);
+}
+
+/**
+* @brief Prints a string on the LCD Screen. If the length of the string is greater than 16 (the max number of character spaces), the text will scroll across the screen.
+
+* @param justification
+*        A text justification strategy to use to print if the number of characters is less than 16
+*        Left, Centered, and Right
+*        If the number of characters in the string is greater than 16, the justification is used as a scrolling strategy (from LEFT->right or RIGHT->left) with default to LEFT->right
+*
+* @param line
+*        The line to write the text to [1,2]
+*
+* @param duration
+*		Minimum duration of display in milliseconds
+*
+* @param stringFormat
+*        An array of characters to write to the LCD Screen
+*
+* @param ...
+*			A list of optional arguments for the string format
+*
+* @returns Returns true if lcdprintf() was successful
+*/
+bool lcdprint_df(textJustifications justification, unsigned char line, unsigned long duration, char * stringFormat, ...)
+{
+	char string[128];
+	va_list args;
+	va_start(args, stringFormat);
+	vex_vsprintf(string, stringFormat, args);
+	va_end(args);
+
+	return lcdprint_d(justification, line, duration, string);
+}
+
+/**
+* @brief Prints a string on the LCD Screen. If the length of the string is greater than 16 (the max number of character spaces), the text will scroll across the screen.
+*
+* @param justification
+*        A text justification strategy to use to print if the number of characters is less than 16
+*        Left, Centered, and Right
+*        If the number of characters in the string is greater than 16, the justification is used as a scrolling strategy (from LEFT->right or RIGHT->left) with default to LEFT->right
+*
+* @param line
+*        The line to write the text to [1,2]
+*
+* @param string
+*        An array of characters to write to the LCD Screen
+*
+* @returns Returns true if lcdprintf() was successful
+*/
+bool lcdprint(textJustifications justification, unsigned char line, char * string)
+{
+	return lcdprint_d(justification, line, 0, string);
+}
+
+/**
+ * @brief Prints a string on the LCD Screen. If the length of the string is greater than 16 (the max number of character spaces), the text will scroll across the screen.
+
+ * @param justification
+ *        A text justification strategy to use to print if the number of characters is less than 16
+ *        Left, Centered, and Right
+ *        If the number of characters in the string is greater than 16, the justification is used as a scrolling strategy (from LEFT->right or RIGHT->left) with default to LEFT->right
+ *
+ * @param line
+ *        The line to write the text to [1,2]
+ *
+ * @param stringFormat
+ *        An array of characters to write to the LCD Screen
+ *
+ * @param args
+ *			A list of optional arguments for the string format
+ *
+ * @returns Returns true if lcdprintv() was successful
+ */
+bool lcdprintv(textJustifications justification, unsigned char line, char * stringFormat, va_list args)
+{
+	char string[128];
+	vex_vsprintf(string, stringFormat, args);
+	return lcdprint(justification, line, string);
+}
+
+/**
+* @brief Prints a string on the LCD Screen. If the length of the string is greater than 16 (the max number of character spaces), the text will scroll across the screen.
+
+* @param justification
+*        A text justification strategy to use to print if the number of characters is less than 16
+*        Left, Centered, and Right
+*        If the number of characters in the string is greater than 16, the justification is used as a scrolling strategy (from LEFT->right or RIGHT->left) with default to LEFT->right
+*
+* @param line
+*        The line to write the text to [1,2]
+*
+* @param stringFormat
+*        An array of characters to write to the LCD Screen
+*
+* @param ...
+*			A list of optional arguments for the string format
+*
+* @returns Returns true if lcdprintf() was successful
+*/
+bool lcdprintf(textJustifications justification, unsigned char line, char * stringFormat, ...)
+{
+	char string[128];
+	va_list args;
+	va_start(args, stringFormat);
+	vex_vsprintf(string, stringFormat, args);
+	va_end(args);
+	
+	return lcdprint(justification, line, string);
 }

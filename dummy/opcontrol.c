@@ -21,6 +21,7 @@ void operatorControl()
 	
 	while (true) 
 	{
-		delay(20);
+		//lcdprint_d(Centered, 1, 175, "Hello World!");
+		delay(2000);
 	}
 }

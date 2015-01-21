@@ -12,27 +12,52 @@
 #include "lcd/LCDFunctions.h"
 
 
-char * Text1()
+char * VulcanText()
 {
-	return "Hello World!";
+	return "VULCAN";
 }
 
-char * Text2()
+static char * battext;
+char * BatteryText()
 {
-	char * string;
-	snprintf(string, 16, "V: %1.4f", powerLevelMain() / 1000.0);
-	return string;
+	free(battext);
+	battext = (char*)malloc(16*sizeof(char));
+	snprintf(battext, 16, "M:%1.2fV", (double)powerLevelMain()/1000.0);
+	if (battext == NULL) return "";
+	return battext;
+}
+
+char * OSEText()
+{
+	return "OSE | 7701";
+}
+
+char * ModeText()
+{
+	if (isEnabled())
+	{
+		if (isAutonomous())
+			return "Autonomous";
+		else
+			return "Teleop";
+	}
+	else
+		return "Disabled";
 }
 
 void initializeIO() {
 }
 
 void initialize() {
-	//lcdInitialize();
+	lcdInitialize();
 	initLCDManager();
-	DisplayText text1 = { &Text1, Centered };
-	DisplayText text2 = { &Text2, Centered };
-	//addCycleText(text1, 1);
-	//addCycleText(text2, 1);
-	//lcdprintf("Hello people from all the different worlds", Centered, 1);
+	DisplayText text1 = { &VulcanText, Centered };
+	DisplayText text2 = { &BatteryText, Centered };
+	DisplayText text3 = { &OSEText, Centered };
+	DisplayText text4 = { &ModeText, Centered };
+	addCycleText(text1, 1);
+	addCycleText(text2, 1);
+	addCycleText(text3, 1);
+	addCycleText(text4, 1);
+	//lcdprintf(Centered, 1, "%s", Text2());
 }

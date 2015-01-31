@@ -35,38 +35,19 @@ void initializeIO() {
 void initialize()
 {
 	lcdInitialize();
-	printText("Booting Vulcan", Centered, 1);
-	printText("IMEs... ", Left, 2); // IMES must be first, followed by MotorManager. Chassis and Lift are not order dependent
+	lcdprint(Centered, 1, "Booting Vulcan");
+	lcdprint(Left, 2, "IMEs... "); // IMES must be first, followed by MotorManager. Chassis and Lift are not order dependent
 	//imeInitializeAll();
 	delay(100);
-	printText("MotorManager... ", Left, 2);
+	lcdprint(Left, 2, "MotorManager... ");
 	InitializeMotorManager();
 	delay(100);
-	printText("Chassis... ", Left, 2);
+	lcdprint(Left, 2, "Chassis... ");
 	ChassisInitialize();
 	delay(100);
-	printText("Lift... ", Left, 2);
+	lcdprint(Left, 2, "Lift... ");
 	LiftInitialize();
 	delay(200);
-	printText("", Left, 2);
-	delay(100);
-	printText("       pl       ", Left, 2);
-	delay(100);
-	printText("      mple      ", Left, 2);
-	delay(100);
-	printText("     omplet     ", Left, 2);
-	delay(100);
-	printText("    complete    ", Left, 2);
-	delay(100);
-	printText("   .complete.   ", Left, 2);
-	delay(100);
-	printText("  ..complete..  ", Left, 2);
-	delay(100);
-	printText(" ...complete... ", Left, 2);
-	delay(100);
-	printText("....complete....", Left, 2);
-	delay(100);
-	printText("", Left, 2);
-	delay(100);
-	printText("....complete....", Left, 2);
+	lcdprint(Left, 2, "....complete....");
+	delay(500);
 }

@@ -16,10 +16,10 @@ void operatorControl()
 	while (true)
 	{
 		motorSet(2, -joystickGetAnalog(1, 3)); // Middle Right
-		motorSet(3,  joystickGetAnalog(1, 2)); // Middle Left
-		motorSet(4,  joystickGetAnalog(1, 2)); // Front Left
+		motorSet(3,  joystickGetAnalog(1, 3)); // Middle Left
+		motorSet(4,  joystickGetAnalog(1, 3)); // Front Left
 		motorSet(5, -joystickGetAnalog(1, 3)); // Front Right
-		motorSet(8, -joystickGetAnalog(1, 2)); // Rear Right
+		motorSet(8, -joystickGetAnalog(1, 3)); // Rear Right
 		motorSet(9,  joystickGetAnalog(1, 3)); // Rear Left
 
 		delay(20);

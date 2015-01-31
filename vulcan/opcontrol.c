@@ -79,15 +79,15 @@ void operatorControl()
 
 		//snprintf(ln1, 16, "L:%+05d;R:%+05d", LiftGetCalibratedPotentiometerLeft(), LiftGetCalibratedPotentiometerRight());
 		if (pidEnabled && mode)
-			printText("   PID | Skyrise", Left, 2);
+			lcdprint(Left, 2, "   PID | Skyrise");
 		if (pidEnabled && !mode)
-			printText("   PID | Cube", Left, 2);
+			lcdprint(Left, 2, "   PID | Cube");
 		if (!pidEnabled && mode)
-			printText(" NoPID | Skyrise", Left, 2);
+			lcdprint(Left, 2, " NoPID | Skyrise");
 		if (!pidEnabled && !mode)
-			printText(" NoPID | Cube", Left, 2);
+			lcdprint(Left, 2, " NoPID | Cube");
 
-		printText("Vulcan aae5f23", Centered, 1);
+		lcdprint(Centered, 1, "Vulcan aae5f23");
 
 		delay(100);
 	}

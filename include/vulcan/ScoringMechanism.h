@@ -12,7 +12,9 @@
 #ifndef SCORINGMECHANISM_H_
 #define SCORINGMECHANISM_H_
 
-void ScoringMechSet(bool);
-void ScoringMechSwitch();
+void ScoringMechNeedleSet(bool);
+void ScoringMechNeedleSwitch();
 
+void ScoringMechClawSet(bool);
+void ScoringMechClawSwitch();
 #endif

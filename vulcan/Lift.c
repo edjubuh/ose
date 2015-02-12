@@ -34,11 +34,17 @@ static TaskHandle LiftControllerTask;
  */
 void LiftSetLeft(int value, bool immediate)
 {
-	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW && value < 0)
+	if ((digitalRead(DIG_LIFT_BOTLIM) == LOW && value < 0) || (digitalRead(DIG_LIFT_TOPLIM) == LOW && value > 0))
 	{
-		MotorSet(MOTOR_LIFT_FRONTLEFT, 0, immediate);
-		MotorSet(MOTOR_LIFT_REARLEFT, 0, immediate);
-		MotorSet(MOTOR_LIFT_MIDDLELEFT, 0, immediate);
+		MotorSet(MOTOR_LIFT_FRONTLEFT, 0, true);
+		MotorSet(MOTOR_LIFT_REARLEFT, 0, true);
+		MotorSet(MOTOR_LIFT_MIDDLELEFT, 0, true);
+	}
+	else if (value > 100)
+	{
+		MotorSet(MOTOR_LIFT_FRONTLEFT, 100, immediate);
+		MotorSet(MOTOR_LIFT_REARLEFT, 100, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLELEFT, 100, immediate);
 	}
 	else
 	{
@@ -66,7 +72,7 @@ int LiftGetCalibratedPotentiometerLeft()
 
 	int out = (int)(sum / 10.0);
 
-	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW)
+	if (digitalRead(DIG_LIFT_BOTLIM) == LOW)
 	{
 		zeroValue = LiftGetRawPotentiometerLeft();
 		out = 0;
@@ -118,11 +124,17 @@ static int liftComputeCorrectedSpeedLeft(int in)
  */
 void LiftSetRight(int value, bool immediate)
 {
-	if (digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW && value < 0)
+	if ((digitalRead(DIG_LIFT_BOTLIM) == LOW && value < 0) || (digitalRead(DIG_LIFT_TOPLIM) == LOW && value > 0))
 	{
-		MotorSet(MOTOR_LIFT_FRONTRIGHT, 0, immediate);
-		MotorSet(MOTOR_LIFT_REARRIGHT, 0, immediate);
-		MotorSet(MOTOR_LIFT_MIDDLERIGHT, 0, immediate);
+		MotorSet(MOTOR_LIFT_FRONTRIGHT, 0, true);
+		MotorSet(MOTOR_LIFT_REARRIGHT, 0, true);
+		MotorSet(MOTOR_LIFT_MIDDLERIGHT, 0, true);
+	}
+	else if (value > 100)
+	{
+		MotorSet(MOTOR_LIFT_FRONTRIGHT, 100, immediate);
+		MotorSet(MOTOR_LIFT_REARRIGHT, 100, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLERIGHT, 100, immediate);
 	}
 	else
 	{
@@ -149,7 +161,7 @@ int LiftGetCalibratedPotentiometerRight()
 
 	int out = (int)(sum / 10.0);
 
-	if (digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW)
+	if (digitalRead(DIG_LIFT_BOTLIM) == LOW)
 	{
 		zeroValue = LiftGetRawPotentiometerRight();
 		out = 0;
@@ -238,12 +250,12 @@ int liftComputePotentiometerDifference()
  */
 void LiftInitialize()
 {
-	MotorConfigure(MOTOR_LIFT_FRONTLEFT, true, 0.5);
-	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, false, 0.5);
-	MotorConfigure(MOTOR_LIFT_MIDDLELEFT, true, 0.5);
-	MotorConfigure(MOTOR_LIFT_MIDDLERIGHT, false, 0.5);
-	MotorConfigure(MOTOR_LIFT_REARLEFT, true, 0.5);
-	MotorConfigure(MOTOR_LIFT_REARRIGHT, false, 0.5);
+	MotorConfigure(MOTOR_LIFT_FRONTLEFT, true, 0.25);
+	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, false, 0.25);
+	MotorConfigure(MOTOR_LIFT_MIDDLELEFT, true, 0.25);
+	MotorConfigure(MOTOR_LIFT_MIDDLERIGHT, false, 0.25);
+	MotorConfigure(MOTOR_LIFT_REARLEFT, false, 0.25);
+	MotorConfigure(MOTOR_LIFT_REARRIGHT, false, 0.25);
 
 	/*MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTLEFT, &liftComputeCorrectedSpeedLeft);
 	MotorChangeRecalculateCommanded(MOTOR_LIFT_FRONTRIGHT, &liftComputeCorrectedSpeedRight);

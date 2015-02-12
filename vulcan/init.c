@@ -11,19 +11,22 @@
 
 #include "sml/SmartMotorLibrary.h"
 #include "lcd/LCDFunctions.h"
+#include "lcd/LCDManager.h"
 
 #include "vulcan/CortexDefinitions.h"
 #include "vulcan/Chassis.h"
 #include "vulcan/Lift.h"
+#include "vulcan/LCDDisplays.h"
 
 
 /**
  * @brief Runs pre-initialization functions.
  */
 void initializeIO() {
-	pinMode(DIG_LIFT_BOTLIM_RIGHT, INPUT);
-	pinMode(DIG_LIFT_BOTLIM_LEFT, INPUT);
-	pinMode(DIG_SCORINGMECH, OUTPUT);
+	pinMode(DIG_LIFT_BOTLIM, INPUT);
+	pinMode(DIG_LIFT_TOPLIM, INPUT);
+	pinMode(DIG_SCORINGMECH_NEEDLE, OUTPUT);
+	pinMode(DIG_SCORINGMECH_CLAW, OUTPUT);
 	setTeamName("7701");
 }
 
@@ -37,7 +40,7 @@ void initialize()
 	lcdInitialize();
 	lcdprint(Centered, 1, "Booting Vulcan");
 	lcdprint(Left, 2, "IMEs... "); // IMES must be first, followed by MotorManager. Chassis and Lift are not order dependent
-	//imeInitializeAll();
+	imeInitializeAll();
 	delay(100);
 	lcdprint(Left, 2, "MotorManager... ");
 	InitializeMotorManager();
@@ -48,6 +51,8 @@ void initialize()
 	lcdprint(Left, 2, "Lift... ");
 	LiftInitialize();
 	delay(200);
-	lcdprint(Left, 2, "....complete....");
-	delay(500);
+	lcdprint(Left, 2, "LCD Display...");
+	//DisplayText o = { &getRobotState, Left };
+	//addCycleText(o, 1);
+	lcdprint_d(Left, 2, 500, "....complete....");
 }

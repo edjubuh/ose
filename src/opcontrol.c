@@ -13,14 +13,19 @@
 */
 void operatorControl() 
 {
+	for (int i = 0; i <= 12; i++)
+		pinMode(i, OUTPUT);
 	while (true)
 	{
-		motorSet(2, -joystickGetAnalog(1, 3)); // Middle Right
+		motorSet(2,  joystickGetAnalog(1, 3)); // Middle Right
 		motorSet(3,  joystickGetAnalog(1, 3)); // Middle Left
 		motorSet(4,  joystickGetAnalog(1, 3)); // Front Left
-		motorSet(5, -joystickGetAnalog(1, 3)); // Front Right
-		motorSet(8, -joystickGetAnalog(1, 3)); // Rear Right
+		motorSet(5,  joystickGetAnalog(1, 3)); // Front Right
+		motorSet(8,  joystickGetAnalog(1, 3)); // Rear Right
 		motorSet(9,  joystickGetAnalog(1, 3)); // Rear Left
+
+		for (int i = 0; i <= 12; i++)
+			digitalWrite(i, joystickGetDigital(1, 7, JOY_UP));
 
 		delay(20);
 	}

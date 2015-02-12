@@ -13,19 +13,38 @@
 #include "vulcan/CortexDefinitions.h"
 
 /**
- * Sets the scoring mechanism to the desired state 
+ * Sets the scoring claw to the desired state 
  * @param value
  *			The output mode of the solenoid true is RELEASE/OUT false is ACTIVE/IN
  */
-void ScoringMechSet(bool value)
+void ScoringMechClawSet(bool value)
 {
-	digitalWrite(DIG_SCORINGMECH, value);
+	digitalWrite(DIG_SCORINGMECH_CLAW, value);
 }
 
 /**
- * Switches the scoring mechanism. If the solenoid is currently activated, it will become deactivated and vice versa
+ * Switches the scoring claw. If the solenoid is currently activated, it will become deactivated and vice versa
  */
-void ScoringMechSwitch()
+void ScoringMechClawSwitch()
 {
-	digitalWrite(DIG_SCORINGMECH, !digitalRead(DIG_SCORINGMECH));
+	digitalWrite(DIG_SCORINGMECH_CLAW, !digitalRead(DIG_SCORINGMECH_CLAW));
+}
+
+
+/**
+* Sets the scoring mechanism to the desired state
+* @param value
+*			The output mode of the solenoid true is RELEASE/OUT false is ACTIVE/IN
+*/
+void ScoringMechNeedleSet(bool value)
+{
+	digitalWrite(DIG_SCORINGMECH_NEEDLE, value);
+}
+
+/**
+* Switches the scoring mechanism. If the solenoid is currently activated, it will become deactivated and vice versa
+*/
+void ScoringMechNeedleSwitch()
+{
+	digitalWrite(DIG_SCORINGMECH_NEEDLE, !digitalRead(DIG_SCORINGMECH_NEEDLE));
 }

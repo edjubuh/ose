@@ -15,10 +15,10 @@
 /* --- MOTOR DEFINITIONS --- */
 // 6: A		7: B		8: C		9: D
 #define MOTOR_CHASSIS_REARRIGHT			1
-#define MOTOR_LIFT_MIDDLERIGHT			2
-#define MOTOR_LIFT_MIDDLELEFT			3
+#define MOTOR_LIFT_MIDDLELEFT			2//may need to invert this
+#define MOTOR_LIFT_FRONTRIGHT			3
 #define MOTOR_LIFT_FRONTLEFT			4
-#define MOTOR_LIFT_FRONTRIGHT			5
+#define MOTOR_LIFT_MIDDLERIGHT			5
 #define MOTOR_CHASSIS_FRONTRIGHT		6
 #define MOTOR_CHASSIS_FRONTLEFT			7
 #define MOTOR_LIFT_REARRIGHT			8
@@ -27,16 +27,16 @@
 
 /* --- DIGITAL DEFINITIONS --- */
 
-#define DIG_SCORINGMECH					1
-#define DIG_LIFT_BOTLIM_LEFT			2
-#define DIG_LIFT_BOTLIM_RIGHT			3
-
+#define DIG_LIFT_BOTLIM					1
+#define DIG_LIFT_TOPLIM					2
+#define DIG_SCORINGMECH_CLAW			3
+#define DIG_SCORINGMECH_NEEDLE			4
 
 /* --- ANALOG DEFINITIONS --- */
 
+#define ANA_POWEREXP					1
 #define ANA_POT_LIFT_LEFT				2
 #define ANA_POT_LIFT_RIGHT				3
-#define ANA_POWEREXP					1
 #define ANA_GYROSCOPE					4
 
 

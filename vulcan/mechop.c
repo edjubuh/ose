@@ -129,12 +129,8 @@ int aHypo(double h1, double h2)
 /**
 * @brief Controls robot wheels.
 */
-void JoystickControl()
+void JoystickControl(int r1, int r2, int l3, int l4)
 {
-    int l3 = joystickGetAnalog(1, 3), //up left y
-        l4 = joystickGetAnalog(1, 4), //side left x
-        r1 = joystickGetAnalog(1, 1), //side right x
-        r2 = joystickGetAnalog(1, 2); //up right y
     int left = thetaSector( getJoyTheta(l4, l3) ), //left joystick
         right = thetaSector( getJoyTheta(r1, r2) ); // right joystick
 
@@ -154,16 +150,16 @@ void JoystickControl()
 		lcdprint(Centered, 1, "tank");
 	}
     //Left / Right
-	else if ((abs(left) == 0) &&
-		(abs(right) == 0))
+	else if (((abs(left) == 0) || (abs(left) == 1)) &&
+		     ((abs(right) == 0) || (abs(right) == 1)) )
 	{
 		ChassisSetMecanum(M_PI_2,
 			aJoy(l4, r1),
 			0, MOTOROPTION);
 		lcdprint(Centered, 1, "strafe right");
 	}
-	else if ((abs(left)  == 7) &&
-		(abs(right) == 7))
+	else if (((abs(left)  == 7) || (abs(left) == 6)) &&
+		     ((abs(right) == 7) || (abs(right) == 6)))
 	{
 		ChassisSetMecanum(-M_PI_2,
 			aJoy(l4, r1),

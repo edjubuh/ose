@@ -14,7 +14,8 @@
 /**
  * @brief Constants
  */
-#define STRAFE_CONST  254
+#define STRAFE_CONST	254
+#define THRESHOLD		25
 
 double getJoyTheta(int, int);
 int thetaSector(double);

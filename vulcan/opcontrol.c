@@ -25,6 +25,7 @@ bool pidEnabled = false;
 /**
  * Returns a string representing the current robot state
  */
+/*
 char * getRobotState()
 {
 	if (!isAutonomous()) return;
@@ -37,6 +38,7 @@ char * getRobotState()
 	if (!pidEnabled && !mode)
 		return " NoPID | Cube   ";
 }
+*/
 
 /**
  * Sets motors in motion based on user input (from controls).
@@ -97,7 +99,7 @@ void operatorControl()
 		//snprintf(ln1, 16, "L:%+05d;R:%+05d", LiftGetCalibratedPotentiometerLeft(), LiftGetCalibratedPotentiometerRight());
 		
 
-		lcdprint(Centered, 1, "Vulcan aae5f23");
+		//lcdprint(Centered, 1, "Vulcan aae5f23");
 
 		delay(100);
 	}

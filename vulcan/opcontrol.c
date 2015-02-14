@@ -59,7 +59,7 @@ void operatorControl()
 		LiftSet(-127, false);
 		else LiftSet(0, false);
 		*/
-
+		/*
 		if (mode && buttonIsNewPress(JOY1_8U))
 		{
 			LiftSetHeight(125);
@@ -75,7 +75,7 @@ void operatorControl()
 		{
 			LiftSetHeight(0);
 			pidEnabled = true;
-		}
+		}*/
 
 		if (joystickGetDigital(1, 6, JOY_UP))
 		{
@@ -94,7 +94,8 @@ void operatorControl()
 
 		ScoringMechNeedleSet(!joystickGetDigital(1, 7, JOY_UP));
 
-		ScoringMechClawSet(!joystickGetDigital(1, 7, JOY_DOWN));
+		if (buttonIsNewPress(JOY1_7D))
+			ScoringMechClawSwitch();
 
 		//snprintf(ln1, 16, "L:%+05d;R:%+05d", LiftGetCalibratedPotentiometerLeft(), LiftGetCalibratedPotentiometerRight());
 		

@@ -237,7 +237,7 @@ void JoystickControl()
     //By default: stop, so motors don't break
 	else
 	{
-		ChassisSet(0, 0, MOTOROPTION);
+		ChassisSet(l3, r2, MOTOROPTION);
 		lcdprint(Centered, 1, "stopping");
 	}
 }

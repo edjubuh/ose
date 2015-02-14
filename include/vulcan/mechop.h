@@ -22,6 +22,6 @@ int thetaSector(double);
 int aJoy(int, int);
 double cHypo(int, int);
 int aHypo(double, double);
-void JoystickControl();
+void JoystickControl(int, int, int, int);
 
 #endif /*MECHOP_H*/

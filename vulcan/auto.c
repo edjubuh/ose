@@ -49,10 +49,10 @@ void autonomous()
 	ChassisSet(0, 0, false); //return home!
 	*/
 	LiftSet(127, false);
-	delay(1000);
+	delay(2000);
 	LiftSet(0, false);
 	ChassisSet(-127, -127, false);
-	delay(500);
+	delay(750);
 	ChassisSet(0, 0, false);
 	/*
 	ChassisSet(127, 127, false);

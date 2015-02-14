@@ -11,6 +11,7 @@
 #include "sml/SmartMotorLibrary.h"
 #include "lcd/LCDFunctions.h"
 
+//#include "sml/recorder.h"
 #include "vulcan/buttons.h"
 #include "vulcan/mechop.h"
 #include "vulcan/CortexDefinitions.h"
@@ -45,12 +46,13 @@ char * getRobotState()
  */
 void operatorControl()
 {
+	//extern unsigned long start = millis();
 	while (true)
 	{
 		if (buttonIsNewPress(JOY1_8D)) mode = !mode;
 
 		//ChassisSet((mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), false);
-		JoystickControl();
+		JoystickControl((mode ? -joystickGetAnalog(1, 4) : joystickGetAnalog(1, 1)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), (mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 1) : joystickGetAnalog(1, 4)));
 
 		/*
 		if (joystickGetDigital(1, 6, JOY_UP))
@@ -92,9 +94,9 @@ void operatorControl()
 
 		if(pidEnabled) LiftContinuous();
 
-		ScoringMechNeedleSet(!joystickGetDigital(1, 7, JOY_UP));
+		ScoringMechNeedleSet(!(joystickGetDigital(1, 7, JOY_UP) || joystickGetDigital(1,5,JOY_DOWN)));
 
-		if (buttonIsNewPress(JOY1_7D))
+		if (buttonIsNewPress(JOY1_7D) || buttonIsNewPress(JOY1_5U))
 			ScoringMechClawSwitch();
 
 		//snprintf(ln1, 16, "L:%+05d;R:%+05d", LiftGetCalibratedPotentiometerLeft(), LiftGetCalibratedPotentiometerRight());

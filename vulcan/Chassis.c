@@ -193,10 +193,10 @@ void ChassisSnappedJoystickControl(int l_x, int l_y, int r_x, int r_y)
 */
 void ChassisInitialize()
 {
-	MotorConfigure(MOTOR_CHASSIS_FRONTLEFT,  true, 5);
-	MotorConfigure(MOTOR_CHASSIS_FRONTRIGHT, false,  5);
-	MotorConfigure(MOTOR_CHASSIS_REARLEFT,   false, 5);
-	MotorConfigure(MOTOR_CHASSIS_REARRIGHT,  false,  5);
+	MotorConfigure(MOTOR_CHASSIS_FRONTLEFT,  true, 3);
+	MotorConfigure(MOTOR_CHASSIS_FRONTRIGHT, false,  3);
+	MotorConfigure(MOTOR_CHASSIS_REARLEFT,   false, 3);
+	MotorConfigure(MOTOR_CHASSIS_REARRIGHT,  false,  3);
 
 	gyro = gyroInit(ANA_GYROSCOPE, 196);
 }

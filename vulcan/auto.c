@@ -48,6 +48,13 @@ void autonomous()
 	delay(750);
 	ChassisSet(0, 0, false); //return home!
 	*/
+	LiftSet(127, false);
+	delay(1000);
+	LiftSet(0, false);
+	ChassisSet(-127, -127, false);
+	delay(500);
+	ChassisSet(0, 0, false);
+	/*
 	ChassisSet(127, 127, false);
 	delay(500);
 	ChassisSet(0, 0, false);
@@ -55,4 +62,5 @@ void autonomous()
 	ChassisSet(-127, -127, false);
 	delay(100);
 	ChassisSet(0, 0, false);
+	*/
 }

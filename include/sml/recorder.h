@@ -9,5 +9,5 @@
  ********************************************************************************/
 
 int recorderInit(char mode, const unsigned long time);
-extern unsigned long start;
+extern  unsigned long start;
 int recorderUser(int l3, int l4, int r1, int r2);

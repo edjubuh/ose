@@ -64,15 +64,13 @@ int recorderInit(char mode, const unsigned long time)
 	return EXIT_SUCCESS; //program success (0)
 }
 
-unsigned long start;
+//unsigned long start;
 #define CURRENT_T millis() - start
 #define MOTOROPTION false // used for the function below
 
 int recorderUser(int l3, int l4, int r1, int r2)
 {
-	fdelete("trial.cvs");
-
-	FILE *trial_cvs = fopen("trial.csv", "w");
+	FILE *trial_cvs = fopen("trial.cvs", "a");
 
 	int left = thetaSector(getJoyTheta(l4, l3)), //left joystick
 		right = thetaSector(getJoyTheta(r1, r2)); // right joystick

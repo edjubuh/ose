@@ -20,6 +20,8 @@
 #include "vulcan/ScoringMechanism.h"
 #include "vulcan/LCDDisplays.h"
 
+//#include "sml/recorder.h"
+
 bool mode = false; // true: skyrise, false: cubes
 bool pidEnabled = false;
 
@@ -46,13 +48,16 @@ char * getRobotState()
  */
 void operatorControl()
 {
-	//extern unsigned long start = millis();
+	//fdelete("trial.cvs");
+	//start = millis();
+	//recorderUser specific commands above
 	while (true)
 	{
 		if (buttonIsNewPress(JOY1_8D)) mode = !mode;
 
 		//ChassisSet((mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), false);
 		JoystickControl((mode ? -joystickGetAnalog(1, 4) : joystickGetAnalog(1, 1)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), (mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 1) : joystickGetAnalog(1, 4)));
+		//recorderUser((mode ? -joystickGetAnalog(1, 4) : joystickGetAnalog(1, 1)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), (mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 1) : joystickGetAnalog(1, 4)));
 
 		/*
 		if (joystickGetDigital(1, 6, JOY_UP))

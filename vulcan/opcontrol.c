@@ -1,5 +1,6 @@
 /**
  * @file vulcan/opcontrol.c
+ * @author Elliot Berman and Robert Shrote
  * @brief Source file for operator control.
  *
  * @copyright Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
@@ -55,8 +56,13 @@ void operatorControl()
 	{
 		if (buttonIsNewPress(JOY1_8D)) mode = !mode;
 
-		//ChassisSet((mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), false);
+		// Tank Control
+		//ChassisSet((mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), false); 
+
+		// Mecanum Control
 		JoystickControl((mode ? -joystickGetAnalog(1, 4) : joystickGetAnalog(1, 1)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), (mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 1) : joystickGetAnalog(1, 4)));
+
+		// Recorded Control
 		//recorderUser((mode ? -joystickGetAnalog(1, 4) : joystickGetAnalog(1, 1)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), (mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 1) : joystickGetAnalog(1, 4)));
 
 		/*
@@ -66,15 +72,15 @@ void operatorControl()
 		LiftSet(-127, false);
 		else LiftSet(0, false);
 		*/
-		/*
+		
 		if (mode && buttonIsNewPress(JOY1_8U))
 		{
-			LiftSetHeight(125);
+			LiftSetHeight(80);
 			pidEnabled = true;
 		}
 		if (!mode && buttonIsNewPress(JOY1_8U))
 		{
-			LiftSetHeight(350);
+			LiftSetHeight(40);
 			pidEnabled = true;
 		}
 
@@ -82,7 +88,7 @@ void operatorControl()
 		{
 			LiftSetHeight(0);
 			pidEnabled = true;
-		}*/
+		}
 
 		if (joystickGetDigital(1, 6, JOY_UP))
 		{
@@ -91,13 +97,11 @@ void operatorControl()
 		}
 		else if (joystickGetDigital(1, 6, JOY_DOWN))
 		{
-			LiftSet(-90, false);
+			LiftSet(-100, false);
 			pidEnabled = false;
 		}
 		else if (!pidEnabled)
 			LiftSet(0, false);
-
-		if(pidEnabled) LiftContinuous();
 
 		ScoringMechNeedleSet(!(joystickGetDigital(1, 7, JOY_UP) || joystickGetDigital(1,5,JOY_DOWN)));
 
@@ -108,6 +112,9 @@ void operatorControl()
 		
 
 		//lcdprint(Centered, 1, "Vulcan aae5f23");
+
+		//lcdprintf(Centered, 1, "pl:%04d r:%04d", LiftGetCalibratedPotentiometerLeft(), LiftGetCalibratedPotentiometerRight());
+		lcdprintf(Centered, 2, "el:%02d r:%02d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
 
 		delay(100);
 	}

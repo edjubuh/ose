@@ -50,7 +50,7 @@ void initializeIO() {
 
 void initialize() {
 	lcdInitialize();
-	initLCDManager();
+	/*initLCDManager();
 	DisplayText text1 = { &VulcanText, Centered };
 	DisplayText text2 = { &BatteryText, Centered };
 	DisplayText text3 = { &OSEText, Centered };
@@ -58,6 +58,6 @@ void initialize() {
 	addCycleText(text1, 1);
 	addCycleText(text2, 1);
 	addCycleText(text3, 1);
-	addCycleText(text4, 1);
+	addCycleText(text4, 1);*/
 	//lcdprintf(Centered, 1, "%s", Text2());
 }

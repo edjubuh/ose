@@ -1,5 +1,6 @@
 /**
  * @file libsml/SingleThreadPIDController.c
+ * @author Elliot Berman
  * @brief Source file for single-threaded PIDController functions.	
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
@@ -71,6 +72,7 @@ PIDController PIDControllerCreate(void(*Execute)(int, bool), int(*Call)(void), d
 	controller.MaxIntegral = MaxIntegral;
 	controller.MinIntegral = MinIntegral;
 	controller.AcceptableTolerance = AcceptableTolerance;
+	controller.Goal = 0;
 	return controller;
 }
 

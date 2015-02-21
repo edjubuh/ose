@@ -31,13 +31,18 @@
 #define DIG_LIFT_TOPLIM					2
 #define DIG_SCORINGMECH_CLAW			3
 #define DIG_SCORINGMECH_NEEDLE			4
+#define DIG_LIFT_ENC_RIGHT_TOP			5
+#define DIG_LIFT_ENC_RIGHT_BOT			6
+#define DIG_LIFT_ENC_LEFT_TOP			7
+#define DIG_LIFT_ENC_LEFT_BOT			8
 
 /* --- ANALOG DEFINITIONS --- */
 
 #define ANA_POWEREXP					1
 #define ANA_POT_LIFT_LEFT				2
 #define ANA_POT_LIFT_RIGHT				3
-#define ANA_GYROSCOPE					4
+#define ANA_IR_LEFT						4
+#define ANA_IR_RIGHT					5
 
 
 /* --- UART DEFINITIONS --- */
@@ -47,7 +52,9 @@
 
 /* --- I2C DEFINITIONS --- */
 
-#define I2C_MOTOR_CHASSIS_RIGHT			1
-#define I2C_MOTOR_CHASSIS_LEFT			2
+#define I2C_MOTOR_CHASSIS_RIGHT			0
+#define I2C_MOTOR_CHASSIS_LEFT			1
+#define I2C_MOTOR_LIFT_LEFT				2
+#define I2C_MOTOR_LIFT_RIGHT			3
 
 #endif

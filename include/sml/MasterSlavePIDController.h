@@ -1,5 +1,6 @@
 /**
  * @file include/sml/MasterSlavePIDController.h
+ * @author Elliot Berman
  * @brief Header file for master/slave PID controller functions <br>
  * See libsml/MasterSlavePIDController.c for details of all functions
  *
@@ -53,7 +54,7 @@ MasterSlavePIDController CreateMasterSlavePIDController(PIDController, PIDContro
 
 TaskHandle InitializeMasterSlaveController(MasterSlavePIDController*, int);
 
-void MasterSlavePIDChangeGoal(MasterSlavePIDController*, int);
+void MasterSlavePIDSetGoal(MasterSlavePIDController*, int);
 
 void MasterSlavePIDSetOutput(MasterSlavePIDController*, int);
 

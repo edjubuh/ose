@@ -56,6 +56,7 @@ void operatorControl()
 	{
 		if (buttonIsNewPress(JOY1_8D)) mode = !mode;
 
+		// ---------- CHASSIS CONTROL ---------- //
 		// Tank Control
 		//ChassisSet((mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), false); 
 
@@ -64,15 +65,8 @@ void operatorControl()
 
 		// Recorded Control
 		//recorderUser((mode ? -joystickGetAnalog(1, 4) : joystickGetAnalog(1, 1)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), (mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 1) : joystickGetAnalog(1, 4)));
-
-		/*
-		if (joystickGetDigital(1, 6, JOY_UP))
-		LiftSet(127, false);
-		else if (joystickGetDigital(1, 6, JOY_DOWN))
-		LiftSet(-127, false);
-		else LiftSet(0, false);
-		*/
 		
+		// ------------ LIFT CONTROL ------------ //
 		if (mode && buttonIsNewPress(JOY1_8U))
 		{
 			LiftSetHeight(80);
@@ -103,18 +97,20 @@ void operatorControl()
 		else if (!pidEnabled)
 			LiftSet(0, false);
 
+		// --------- SCORE MECH CONTROL --------- //
 		ScoringMechNeedleSet(!(joystickGetDigital(1, 7, JOY_UP) || joystickGetDigital(1,5,JOY_DOWN)));
 
 		if (buttonIsNewPress(JOY1_7D) || buttonIsNewPress(JOY1_5U))
 			ScoringMechClawSwitch();
-
-		//snprintf(ln1, 16, "L:%+05d;R:%+05d", LiftGetCalibratedPotentiometerLeft(), LiftGetCalibratedPotentiometerRight());
 		
-
+		// ------------ LCD PRINTERS ----------- //
 		//lcdprint(Centered, 1, "Vulcan aae5f23");
 
-		//lcdprintf(Centered, 1, "pl:%04d r:%04d", LiftGetCalibratedPotentiometerLeft(), LiftGetCalibratedPotentiometerRight());
-		lcdprintf(Centered, 2, "el:%02d r:%02d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
+		//lcdprintf(Centered, 2, "el:%02d r:%02d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
+		//lcdprintf(Centered, 2, "l:%04d r: %04d", ChassisGetIRLeft(), ChassisGetIRRight());
+		int ir = ChassisGetIRLeft();
+		lcdprintf(Centered, 1, "g:%d", (ir < 600) ? 1 : 0);
+		lcdprintf(Centered, 2, "r:%d  b:%d", (ir < 260) ? 1 : 0, (ir < 450) ? 1 : 0);
 
 		delay(100);
 	}

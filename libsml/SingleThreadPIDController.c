@@ -183,7 +183,8 @@ void PIDControllerExecuteCompletion(PIDController *controller)
 }
 
 /**
- * @brief Resets the PIDController and sets the goal to parameter
+ * @brief Resets the PIDController and sets the goal to parameter if the controller's original goal is not the requested new one. 
+ *		  To guarantee a reset, use PIDControllerReset
  *
  * @param controller
  *         A pointer to a PIDController struct containing the necessary constants and container values
@@ -193,6 +194,8 @@ void PIDControllerExecuteCompletion(PIDController *controller)
  */
 void PIDControllerSetGoal(PIDController *controller, int goal)
 {
+	if (controller->Goal == goal) return;
+
 	PIDControllerReset(controller);
 	controller->Goal = goal;
 }

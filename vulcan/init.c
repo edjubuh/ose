@@ -23,8 +23,6 @@
  * @brief Runs pre-initialization functions.
  */
 void initializeIO() {
-	pinMode(DIG_LIFT_BOTLIM, INPUT);
-	pinMode(DIG_LIFT_TOPLIM, INPUT);
 	pinMode(DIG_SCORINGMECH_NEEDLE, OUTPUT);
 	pinMode(DIG_SCORINGMECH_CLAW, OUTPUT);
 	setTeamName("7701");

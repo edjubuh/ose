@@ -16,13 +16,13 @@
 
 // ---------------- LEFT  SIDE ---------------- //
 void LiftSetLeft(int, bool);
-int LiftGetCalibratedIMELeft();
+int LiftGetCalibIMELeft();
 int LiftGetRawIMELeft();
 int LiftGetQuadEncLeft();
 
 // ---------------- RIGHT SIDE ---------------- //
 void LiftSetRight(int, bool);
-int LiftGetCalibratedIMERight();
+int LiftGetCalibIMERight();
 int LiftGetRawIMERight();
 int LiftGetQuadEncRight();
 

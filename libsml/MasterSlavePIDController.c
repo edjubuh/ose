@@ -41,7 +41,7 @@ static void MasterSlavePIDControllerTask(void *c)
 		slaveOutput += PIDControllerCompute(equalizer);
 		masterOutput -= PIDControllerCompute(equalizer);
 
-		lcdprintf(Centered, 1, "eq:%d", PIDControllerCompute(equalizer));
+		//lcdprintf(Centered, 1, "eq:%d", PIDControllerCompute(equalizer));
 		
 		int max = 127;
 		if(abs(masterOutput) > max)

@@ -19,13 +19,9 @@
 #include "vulcan/CortexDefinitions.h"
 
 #define IME_RESET_THRESHOLD		100
-#define POT_RESET_THRESHOLD		200
+#define QUAD_ENC_MAX_DIF		5
 
-static Encoder leftEncoder, rightEncoder;
-
-static MasterSlavePIDController Controller;
-static TaskHandle LiftControllerTask;
-
+static Encoder rightEncoder, leftEncoder;
 // ---------------- LEFT  SIDE ---------------- //
 /**
  * @brief Sets the speed of the left side of the lift
@@ -38,7 +34,7 @@ static TaskHandle LiftControllerTask;
  */
 void LiftSetLeft(int value, bool immediate)
 {
-	if ((digitalRead(DIG_LIFT_BOTLIM) == LOW && value < 0) || (digitalRead(DIG_LIFT_TOPLIM) == LOW && value > 0))
+	if ((digitalRead(DIG_LIFT_BOTLIM) == LOW && value < 0) || (digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW && value > 0))
 	{
 		MotorSet(MOTOR_LIFT_FRONTLEFT, 0, true);
 		MotorSet(MOTOR_LIFT_REARLEFT, 0, true);
@@ -61,7 +57,7 @@ void LiftSetLeft(int value, bool immediate)
 /**
 * @brief Returns the calibrated value of the left lift IME
 */
-int LiftGetCalibratedIMELeft()
+int LiftGetCalibIMELeft()
 {
 	static int prevValues[10];
 	for (int i = 0; i < 9; i++)
@@ -98,6 +94,7 @@ int LiftGetQuadEncLeft()
 {
 	if (digitalRead(DIG_LIFT_BOTLIM) == LOW && encoderGet(leftEncoder) != 0)
 		encoderReset(leftEncoder);
+
 	return encoderGet(leftEncoder);
 }
 
@@ -113,7 +110,7 @@ int LiftGetQuadEncLeft()
  */
 void LiftSetRight(int value, bool immediate)
 {
-	if ((digitalRead(DIG_LIFT_BOTLIM) == LOW && value < 0) || (digitalRead(DIG_LIFT_TOPLIM) == LOW && value > 0))
+	if ((digitalRead(DIG_LIFT_BOTLIM) == LOW && value < 0) || (digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW && value > 0))
 	{
 		MotorSet(MOTOR_LIFT_FRONTRIGHT,  0, true);
 		MotorSet(MOTOR_LIFT_REARRIGHT,   0, true);
@@ -136,7 +133,7 @@ void LiftSetRight(int value, bool immediate)
 /**
  * @brief Returns the calibrated value of the right lift IME
  */
-int LiftGetCalibratedIMERight()
+int LiftGetCalibIMERight()
 {
 	static int prevValues[10];
 	for (int i = 0; i < 9; i++)
@@ -173,11 +170,14 @@ int LiftGetQuadEncRight()
 {
 	if (digitalRead(DIG_LIFT_BOTLIM) == LOW && encoderGet(rightEncoder) != 0)
 		encoderReset(rightEncoder);
+
 	return encoderGet(rightEncoder);
 }
 
 
 // ---------------- MASTER (ALL) ---------------- //
+static MasterSlavePIDController Controller;
+static TaskHandle LiftControllerTask;
 /**
  * @brief Sets the lift to the desired speed using the MasterSlavePIDController for the lift
  *
@@ -215,7 +215,7 @@ bool LiftSetHeight(int value)
  */
 static int liftComputeIMEDiff()
 {
-	return LiftGetCalibratedIMERight() - LiftGetCalibratedIMELeft();
+	return LiftGetCalibIMERight() - LiftGetCalibIMELeft();
 }
 
 /**
@@ -224,6 +224,17 @@ static int liftComputeIMEDiff()
  */
 static int liftComputeQuadEncDiff()
 {
+	// Only compute difference if lift has hit bottom at soem point
+	static bool encCorrect = false;
+	if (digitalRead(DIG_LIFT_BOTLIM) == LOW) encCorrect = true;
+	if (!encCorrect) return 0;
+
+	// If the difference between the two is greater than the maximum difference
+	//		pretend that we're on target because something is going massively wrong (i.e. hitting guidance bars)
+	if (abs(LiftGetQuadEncRight() - LiftGetQuadEncLeft()) > QUAD_ENC_MAX_DIF) return 0;
+
+	// If we're both on top, don't fix
+	if (digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW && digitalRead(DIG_LIFT_TOPLIM_RIGHT)) return 0;;
 	return LiftGetQuadEncRight() - LiftGetQuadEncLeft();
 }
 
@@ -245,7 +256,7 @@ void LiftInitialize()
 	//                                           Execute           Call			    Kp    Ki   Kd MaI  MiI  Tol
 	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  1.5, 0.01, 0, 300, -200, 2);
 	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 1.5, 0.01, 0, 300, -200, 2);
-	PIDController equalizer = PIDControllerCreate(NULL, &liftComputeQuadEncDiff,   0.75, 0.05, 0, 800, -600, 2);
+	PIDController equalizer = PIDControllerCreate(NULL, &liftComputeQuadEncDiff,   0.85, 0.1, 0, 400, -300, 2);
 
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, false);
 

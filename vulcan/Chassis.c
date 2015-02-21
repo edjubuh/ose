@@ -14,19 +14,93 @@
 #include "vulcan/Chassis.h"
 
 #include "sml/SmartMotorLibrary.h"
+#include "sml/SingleThreadPIDController.h"
 #include "vulcan/CortexDefinitions.h"
 
-static Gyro gyro;
+// ---------------- LEFT  SIDE ---------------- //
+static PIDController leftController;
+/**
+ * @brief Sets the speed of the left motors on the chassis as specified by the parameters
+ *
+ * @param speed
+ *		  [-127,127] The speed of the left side of the chassis
+ * @param immediate
+ *		  Determins if speed input change is immediate or ramped according to SML
+ */
+void ChassisSetLeft(int speed, bool immediate)
+{
+	if (abs(speed) > 127)
+		speed = signbit(speed) ? -127 : 127;
 
+	MotorSet(MOTOR_CHASSIS_FRONTLEFT, speed , immediate);
+	MotorSet(MOTOR_CHASSIS_REARLEFT, speed, immediate);
+}
+
+/**
+ * @brief Returns the value of the left chassis IME
+ */
+int ChassisGetIMELeft()
+{
+	int val; 
+	imeGet(I2C_MOTOR_CHASSIS_LEFT, &val);
+	return val;
+}
+
+/**
+ * @brief Returns the value of the left side line follower
+ */
+int ChassisGetIRLeft()
+{
+	return analogRead(ANA_IR_LEFT);
+}
+
+// ---------------- RIGHT  SIDE ---------------- //
+static PIDController rightController;
+/**
+* @brief Sets the speed of the right motors on the chassis as specified by the parameters
+*
+* @param speed
+*		  [-127,127] The speed of the right side of the chassis
+* @param immediate
+*		  Determins if speed input change is immediate or ramped according to SML
+*/
+void ChassisSetRight(int speed, bool immediate)
+{
+	if (abs(speed) > 127)
+		speed = signbit(speed) ? -127 : 127;
+
+	MotorSet(MOTOR_CHASSIS_FRONTRIGHT, speed, immediate);
+	MotorSet(MOTOR_CHASSIS_REARRIGHT, speed, immediate);
+}
+
+/**
+* @brief Returns the value of the right chassis IME
+*/
+int ChassisGetIMERight()
+{
+	int val;
+	imeGet(I2C_MOTOR_CHASSIS_RIGHT, &val);
+	return val;
+}
+
+/**
+* @brief Returns the value of the right side line follower
+*/
+int ChassisGetIRRight()
+{
+	return analogRead(ANA_IR_RIGHT);
+}
+
+// ---------------- MASTER (ALL) ---------------- //
 /**
  * @brief Sets the left and right motors of the chassis as specified by the parameters.
  *        Speeds of left and right will be scaled down relative to each other if either
  *        is greater than 127.
  *
  * @param left
- *        The speed of the left side of the chassis.
+ *        [-127,127] The speed of the left side of the chassis.
  * @param right
- *        The speed of the right side of the chassis.
+ *        [-127,127] The speed of the right side of the chassis.
  * @param immediate
  *        Determines if speed input change is immediate or ramped according to SML
  */
@@ -98,6 +172,44 @@ void ChassisSetMecanum(double heading, int speed, int rotation, bool immediate)
 }
 
 /**
+ * @brief Runs through one iteration of the PID Controllers, with the goal values being the ones in the parameters
+ *
+ * @param left
+ *		  The left side goal value
+ * @param right
+ *		  The right side goal value
+ *
+ * @returns Returns true if BOTH sides are on target
+ */
+bool ChassisGoToGoalContiniuous(int left, int right)
+{
+	PIDControllerSetGoal(&leftController, left);
+	PIDControllerSetGoal(&rightController, right);
+
+	// Use 1 '&' instead of 2 to force execution of both sides (both right and left side will run) because short-circuiting
+	return PIDControllerExecuteContinuous(&leftController) & PIDControllerExecuteContinuous(&rightController);
+}
+
+/**
+ * @brief Runs to completion of the PID Controllers, with the goal values being the ones in the parameters
+ *
+ * @param left
+ *		  The left side goal value
+ * @param right
+ *		  The right side goal value
+ *
+ * @returns Returns true if BOTH sides are on target
+ */
+void ChassisGoToGoalCompletion(int left, int right)
+{
+	PIDControllerSetGoal(&leftController, left);
+	PIDControllerSetGoal(&rightController, right);
+
+	// Use 1 '&' instead of 2 to force execution of both sides (both right and left side will run) because short-circuiting
+	while (!(PIDControllerExecuteContinuous(&leftController) & PIDControllerExecuteContinuous(&rightController))) delay(20);
+}
+
+/**
 * @brief Initializes the chassis motors with the SML and creates the PID controllers for the
 *        chassis.
 */
@@ -107,6 +219,10 @@ void ChassisInitialize()
 	MotorConfigure(MOTOR_CHASSIS_FRONTRIGHT,	false,	2.5);
 	MotorConfigure(MOTOR_CHASSIS_REARLEFT,		false,  2.5);
 	MotorConfigure(MOTOR_CHASSIS_REARRIGHT,		false,	2.5);
+
+	//										Execute			Get					Kp Ki Kd MaxI MinI Tol
+	leftController = PIDControllerCreate(&ChassisSetLeft, &ChassisGetIMELeft,	 1, 0, 0, 100, 100, 20);
+	rightController = PIDControllerCreate(&ChassisSetRight, &ChassisGetIMERight, 1, 0, 0, 100, 100, 20);
 
 	//gyro = gyroInit(ANA_GYROSCOPE, 196);
 }

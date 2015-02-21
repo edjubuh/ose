@@ -78,7 +78,7 @@ int recorderUser(int l3, int l4, int r1, int r2)
     if (previous_data != NULL) {
         lcdprintf(Left, 1, "Copying!!!");
         while (fgets( buffer, BUFFER_SIZE, previous_data) != NULL) {
-            fprintf(trial_cvs, "%s", buffer); //copy everything
+            fprintf(trial_cvs, "%s\n", buffer); //copy everything
         }
         lcdprintf(Left, 1, "Done Copying");
     }

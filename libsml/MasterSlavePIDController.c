@@ -1,5 +1,6 @@
 /**
  * @file libsml/MasterSlavePIDController.c
+ * @author Elliot Berman
  * @brief Extension of SingleThreadPIDController to implement 
  *        a multitasked Master/Slave PID Controller.
  *        See addendum documentation for more details.
@@ -11,10 +12,10 @@
 
 #include "main.h"
 #include "sml/SingleThreadPIDController.h"
+
 #include "sml/MasterSlavePIDController.h"
 #include "sml/SmartMotorLibrary.h"
 #include "lcd/LCDFunctions.h"
-#include <main.h>
 
 /**
  * @brief The task keeping the MasterSlavePIDController on target
@@ -38,6 +39,9 @@ static void MasterSlavePIDControllerTask(void *c)
 		slaveOutput = controller->enabledPrimaryPID ? PIDControllerCompute(slave) : controller->manualPrimaryOutput;
 		
 		slaveOutput += PIDControllerCompute(equalizer);
+		masterOutput -= PIDControllerCompute(equalizer);
+
+		lcdprintf(Centered, 1, "eq:%d", PIDControllerCompute(equalizer));
 		
 		int max = 127;
 		if(abs(masterOutput) > max)
@@ -45,7 +49,7 @@ static void MasterSlavePIDControllerTask(void *c)
 		if(abs(slaveOutput) > max)
 			max = abs(slaveOutput);
 		
-		double scale = 127.0 / max;
+		float scale = 127.0 / max;
 		
 		masterOutput = (int)(masterOutput * scale);
 		slaveOutput  = (int)(slaveOutput * scale);
@@ -55,7 +59,7 @@ static void MasterSlavePIDControllerTask(void *c)
 		
 		mutexGive(controller->mutex);
 
-		delay(40);
+		delay(50);
 	}
 }
 
@@ -118,7 +122,7 @@ TaskHandle InitializeMasterSlaveController(MasterSlavePIDController *controller,
  * @param primaryPIDGoal
  *        The new goal height
  */
-void MasterSlavePIDChangeGoal(MasterSlavePIDController *controller, int primaryPIDGoal)
+void MasterSlavePIDSetGoal(MasterSlavePIDController *controller, int primaryPIDGoal)
 {
 	if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
 		return;
@@ -143,6 +147,7 @@ void MasterSlavePIDChangeGoal(MasterSlavePIDController *controller, int primaryP
  */
 void MasterSlavePIDIncreaseGoal(MasterSlavePIDController *controller, int deltaGoal)
 {
+	//if we don't have enough resources at the current time, exit the function
 	if (!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
 		return;
 
@@ -174,6 +179,7 @@ void MasterSlavePIDIncreaseGoal(MasterSlavePIDController *controller, int deltaG
  */
 void MasterSlavePIDSetOutput(MasterSlavePIDController *controller, int output)
 {
+	//if we don't have enough resources at the current time, exit the function
 	if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
 		return;
 		

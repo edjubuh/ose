@@ -134,7 +134,7 @@ void JoystickControl(int r1, int r2, int l3, int l4)
     int left = thetaSector( getJoyTheta(l4, l3) ), //left joystick
         right = thetaSector( getJoyTheta(r1, r2) ); // right joystick
 
-	lcdprintf(Left, 2, "L:%dR:%d", left, right);
+	//lcdprintf(Left, 2, "L:%dR:%d", left, right);
 
 	if (abs(l3) < THRESHOLD && abs(l4) < THRESHOLD && abs(r1) < THRESHOLD && abs(r2) < THRESHOLD)
 	{
@@ -147,7 +147,7 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		(abs(right) == 3 || abs(right) == 4))
 	{
 		ChassisSet(l3, r2, MOTOROPTION);
-		lcdprint(Centered, 1, "tank");
+		//lcdprint(Centered, 1, "tank");
 	}
     //Left / Right
 	else if (((abs(left) == 0) || (abs(left) == 1)) &&
@@ -156,7 +156,7 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		ChassisSetMecanum(M_PI_2,
 			aJoy(l4, r1),
 			0, MOTOROPTION);
-		lcdprint(Centered, 1, "strafe right");
+		//lcdprint(Centered, 1, "strafe right");
 	}
 	else if (((abs(left)  == 7) || (abs(left) == 6)) &&
 		     ((abs(right) == 7) || (abs(right) == 6)))
@@ -164,7 +164,7 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		ChassisSetMecanum(-M_PI_2,
 			aJoy(l4, r1),
 			0, MOTOROPTION);
-		lcdprint(Centered, 1, "strafe left");
+		//lcdprint(Centered, 1, "strafe left");
 	}
 
 	
@@ -176,7 +176,7 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		ChassisSetMecanum(M_PI_4,
 			h,
 			0, MOTOROPTION);
-		lcdprintf(Centered, 1, "northeast%d",h);
+		//lcdprintf(Centered, 1, "northeast%d",h);
 	}
 	else if ((left  == 5 || left  == 6) &&
 		(right == 5 || right == 6))
@@ -184,7 +184,7 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		ChassisSetMecanum(-M_PI_4,
 			aHypo(cHypo(l4, l3), cHypo(r1, r2)),
 			0, MOTOROPTION);
-		lcdprint(Centered, 1, "northwest");
+		//lcdprint(Centered, 1, "northwest");
 	}
 
 	
@@ -195,7 +195,7 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		ChassisSetMecanum(-3.0 * M_PI_4,
 			aHypo(cHypo(l4, l3), cHypo(r1, r2)),
 			0, MOTOROPTION);
-		lcdprint(Centered, 1, "southeast");
+		//lcdprint(Centered, 1, "southeast");
 	}
 	else if ((left  == -5 || left  == -6) &&
 		(right == -5 || right == -6))
@@ -203,7 +203,7 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		ChassisSetMecanum(3.0 * M_PI_4,
 			aHypo(cHypo(l4, l3), cHypo(r1, r2)),
 			0, MOTOROPTION);
-		lcdprint(Centered, 1, "southwest");
+		//lcdprint(Centered, 1, "southwest");
 	}
 
 	/*
@@ -234,6 +234,6 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 	else
 	{
 		ChassisSet(l3, r2, MOTOROPTION);
-		lcdprint(Centered, 1, "stopping");
+		//lcdprint(Centered, 1, "stopping");
 	}
 }

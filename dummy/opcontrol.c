@@ -11,17 +11,26 @@
 #include "lcd/LCDManager.h"
 #include "lcd/LCDFunctions.h"
 
+//630MulberryStreet46077
 
 /**
 * @brief Sets motors in motion based on user input (from controls).
 */
 void operatorControl() 
 {
-	//initLCDManager();
+	Encoder enc = encoderInit(1, 2, false);
+	Encoder enc0 = encoderInit(3, 4, false);
 	
 	while (true) 
 	{
-		//lcdprint_d(Centered, 1, 175, "Hello World!");
-		delay(2000);
+		lcdprintf(Centered, 1, "%d", encoderGet(enc));
+		lcdprintf(Centered, 2, "%d", encoderGet(enc0));
+
+		if (lcdReadButtons(uart1) != 0)
+		{
+			encoderReset(enc);
+			encoderReset(enc0);
+		}
+		delay(150);
 	}
 }

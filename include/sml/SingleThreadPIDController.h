@@ -1,5 +1,6 @@
 /**
  * @file include/sml/SingleThreadPIDController.h
+ * @author Elliot Berman
  * @brief Header file for single threaded PID controller functions <br>
  * See libsml/SingleThreadPIDController.c for details of all functions
  *

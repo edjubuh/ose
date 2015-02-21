@@ -1,6 +1,6 @@
 ﻿/**
  * @file include/vulcan/Lift.h		
- * @author Elliot Berman
+ * @author Elliot Berman and Robert Shrote
  * @brief Header file for Lift functions <br>
  * See vulcan/Lift.c for details of all functions
  *
@@ -16,19 +16,19 @@
 
 // ---------------- LEFT  SIDE ---------------- //
 void LiftSetLeft(int, bool);
-int LiftGetCalibratedPotentiometerLeft();
-int LiftGetRawPotentiometerLeft();
+int LiftGetCalibratedIMELeft();
+int LiftGetRawIMELeft();
+int LiftGetQuadEncLeft();
 
 // ---------------- RIGHT SIDE ---------------- //
 void LiftSetRight(int, bool);
-int LiftGetCalibratedPotentiometerRight();
-int LiftGetRawPotentiometerRight();
+int LiftGetCalibratedIMERight();
+int LiftGetRawIMERight();
+int LiftGetQuadEncRight();
 
 // ---------------- MASTER (ALL) ---------------- //
 void LiftSet(int, bool);
 bool LiftSetHeight(int);
-bool LiftContinuous();
-int liftComputePotentiometerDifference();
 void LiftInitialize();
 
 PIDController LiftPIDController_l, LiftPIDController_r;

@@ -15,6 +15,5 @@
 void ChassisSet(int, int, bool);
 void ChassisSetMecanum(double, int, int, bool);
 void ChassisInitialize();
-void ChassisInitialize();
 
 #endif

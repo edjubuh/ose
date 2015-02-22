@@ -10,6 +10,7 @@
 #include "vulcan/mechop.h"
 #include "lcd/LCDFunctions.h"
 #include <math.h>
+#include <stdio.h>
 #include "vulcan/Chassis.h"
 
 
@@ -65,12 +66,22 @@ int recorderInit(char mode, const unsigned long time)
 }
 
 //unsigned long start;
-#define CURRENT_T millis() - start
-#define MOTOROPTION false // used for the function below
-
+#define CURRENT_T    millis() - start
+#define MOTOROPTION  false // used for the function below
+#define BUFFER_SIZE  200
+static char buffer[BUFFER_SIZE]; //should be large enough
 int recorderUser(int l3, int l4, int r1, int r2)
 {
-	FILE *trial_cvs = fopen("trial.cvs", "a");
+    rename("data.cvs", "previous"); //rename data.cvs and label it as previous
+    FILE *previous_data = fopen("previous", "r"); //open previous data
+    FILE *trial_cvs = fopen("data.cvs", "w"); //creat new data.cvs
+    if (previous_data != NULL) {
+        lcdprintf(Left, 1, "Copying!!!");
+        while (fgets( buffer, BUFFER_SIZE, previous_data) != NULL) {
+            fprintf(trial_cvs, "%s\n", buffer); //copy everything
+        }
+        lcdprintf(Left, 1, "Done Copying");
+    }
 
 	int left = thetaSector(getJoyTheta(l4, l3)), //left joystick
 		right = thetaSector(getJoyTheta(r1, r2)); // right joystick

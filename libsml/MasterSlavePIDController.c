@@ -49,11 +49,12 @@ static void MasterSlavePIDControllerTask(void *c)
 		if(abs(slaveOutput) > max)
 			max = abs(slaveOutput);
 		
-		float scale = 127.0 / max;
+		double scale = 127.0 / max;
 		
 		masterOutput = (int)(masterOutput * scale);
 		slaveOutput  = (int)(slaveOutput * scale);
 		
+		lcdprintf(Centered, 1, "%03d,%03d|%03d,%03d", masterOutput, master->Call(), slaveOutput, slave->Call());
 		master->Execute(masterOutput, false);
 		slave->Execute(slaveOutput, false);
 		
@@ -128,9 +129,9 @@ void MasterSlavePIDSetGoal(MasterSlavePIDController *controller, int primaryPIDG
 		return;
 	
 	controller->enabledPrimaryPID = true;
-	
-	controller->master.Goal = primaryPIDGoal;
-	controller->slave.Goal = primaryPIDGoal;
+
+	PIDControllerSetGoal(&(controller->master), primaryPIDGoal);
+	PIDControllerSetGoal(&(controller->slave), primaryPIDGoal);
 	
 	mutexGive(controller->mutex);
 }
@@ -188,6 +189,22 @@ void MasterSlavePIDSetOutput(MasterSlavePIDController *controller, int output)
 	controller->manualPrimaryOutput = output;
 	
 	mutexGive(controller->mutex);
+}
+
+/**
+ * @brief Returns true if the MasterSlavePIDController is on target
+ */
+bool MasterSlavePIDOnTarget(MasterSlavePIDController *controller)
+{
+	if (!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT)) return false;
+
+	bool out = 
+		((abs(controller->master.Goal - controller->master.Call()) < controller->master.AcceptableTolerance) &&
+		(abs(controller->slave.Goal - controller->slave.Call()) < controller->slave.AcceptableTolerance));
+
+	mutexGive(controller->mutex);
+
+	return out;
 }
 
 /**

@@ -12,6 +12,7 @@
 #include "main.h"
 #include "vulcan/Lift.h"
 
+#include "lcd/LCDFunctions.h"
 #include "sml/SmartMotorLibrary.h"
 #include "sml/MasterSlavePIDController.h"
 #include "sml/SingleThreadPIDController.h"
@@ -20,6 +21,7 @@
 
 #define IME_RESET_THRESHOLD		100
 #define QUAD_ENC_MAX_DIF		5
+#define MAX_DOWN_PWM			-80
 
 static Encoder rightEncoder, leftEncoder;
 // ---------------- LEFT  SIDE ---------------- //
@@ -40,11 +42,11 @@ void LiftSetLeft(int value, bool immediate)
 		MotorSet(MOTOR_LIFT_REARLEFT, 0, true);
 		MotorSet(MOTOR_LIFT_MIDDLELEFT, 0, true);
 	}
-	else if (value < -100)
+	else if (value < MAX_DOWN_PWM)
 	{
-		MotorSet(MOTOR_LIFT_FRONTLEFT,  -100, immediate);
-		MotorSet(MOTOR_LIFT_REARLEFT,   -100, immediate);
-		MotorSet(MOTOR_LIFT_MIDDLELEFT, -100, immediate);
+		MotorSet(MOTOR_LIFT_FRONTLEFT, MAX_DOWN_PWM, immediate);
+		MotorSet(MOTOR_LIFT_REARLEFT, MAX_DOWN_PWM, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLELEFT, MAX_DOWN_PWM, immediate);
 	}
 	else
 	{
@@ -116,11 +118,11 @@ void LiftSetRight(int value, bool immediate)
 		MotorSet(MOTOR_LIFT_REARRIGHT,   0, true);
 		MotorSet(MOTOR_LIFT_MIDDLERIGHT, 0, true);
 	}
-	else if (value < -100)
+	else if (value < MAX_DOWN_PWM)
 	{
-		MotorSet(MOTOR_LIFT_FRONTRIGHT,  -100, immediate);
-		MotorSet(MOTOR_LIFT_REARRIGHT,   -100, immediate);
-		MotorSet(MOTOR_LIFT_MIDDLERIGHT, -100, immediate);
+		MotorSet(MOTOR_LIFT_FRONTRIGHT, MAX_DOWN_PWM, immediate);
+		MotorSet(MOTOR_LIFT_REARRIGHT, MAX_DOWN_PWM, immediate);
+		MotorSet(MOTOR_LIFT_MIDDLERIGHT, MAX_DOWN_PWM, immediate);
 	}
 	else
 	{
@@ -210,6 +212,27 @@ bool LiftSetHeight(int value)
 }
 
 /**
+ * @brief Goes to intended height to completion
+ *
+ * @param value
+ *			The new goal height of the lift
+ */
+void LiftGoToHeightCompletion(int value)
+{
+	MasterSlavePIDSetGoal(&Controller, value);
+	while (!MasterSlavePIDOnTarget(&Controller)) delay(100);
+}
+
+/**
+ * @brief Returns true if the PID controller is on target
+ */
+bool LiftGoToHeightContinuous(int value)
+{
+	MasterSlavePIDSetGoal(&Controller, value);
+	return MasterSlavePIDOnTarget(&Controller);
+}
+
+/**
  * @brief Returns the difference between the IMES (right - left)
  *		  Used in the equailizer controller in the MasterSlavePIDController for the lift
  */
@@ -254,8 +277,8 @@ void LiftInitialize()
 	rightEncoder = encoderInit(DIG_LIFT_ENC_RIGHT_TOP, DIG_LIFT_ENC_RIGHT_BOT, true);
 	
 	//                                           Execute           Call			    Kp    Ki   Kd MaI  MiI  Tol
-	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  1.5, 0.01, 0, 300, -200, 2);
-	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 1.5, 0.01, 0, 300, -200, 2);
+	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  3, 0.2, 0, 400, -200, 3);
+	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 3, 0.2, 0, 400, -200, 3);
 	PIDController equalizer = PIDControllerCreate(NULL, &liftComputeQuadEncDiff,   0.85, 0.1, 0, 400, -300, 2);
 
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, false);

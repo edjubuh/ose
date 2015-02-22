@@ -29,6 +29,8 @@ int LiftGetQuadEncRight();
 // ---------------- MASTER (ALL) ---------------- //
 void LiftSet(int, bool);
 bool LiftSetHeight(int);
+void LiftGoToHeightCompletion(int);
+bool LiftGoToHeightContinuous(int);
 void LiftInitialize();
 
 PIDController LiftPIDController_l, LiftPIDController_r;

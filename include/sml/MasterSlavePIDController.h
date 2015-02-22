@@ -51,13 +51,10 @@ typedef struct
 } MasterSlavePIDController;
 
 MasterSlavePIDController CreateMasterSlavePIDController(PIDController, PIDController, PIDController, bool);
-
 TaskHandle InitializeMasterSlaveController(MasterSlavePIDController*, int);
-
 void MasterSlavePIDSetGoal(MasterSlavePIDController*, int);
-
 void MasterSlavePIDSetOutput(MasterSlavePIDController*, int);
-
 void MasterSlavePIDIncreaseGoal(MasterSlavePIDController*, int);
+bool MasterSlavePIDOnTarget(MasterSlavePIDController*);
 
 #endif

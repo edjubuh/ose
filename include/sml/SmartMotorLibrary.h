@@ -1,5 +1,5 @@
 /**
- * @file include/libsml/SmartMotorLibrary.h
+ * @file include/sml/SmartMotorLibrary.h
  * @author Elliot Berman
  * @brief Header file for SM functions <br>
  * See libsml/SmartMotorLibrary.c for details of all functions

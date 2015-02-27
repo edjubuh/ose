@@ -8,24 +8,18 @@
  ********************************************************************************/
 
 #include "main.h"
+#include "lcd/LCDFunctions.h"
+
 /**
 * @brief Sets motors in motion based on user input (from controls).
 */
 void operatorControl() 
 {
-	for (int i = 0; i <= 12; i++)
-		pinMode(i, OUTPUT);
+	lcdInitialize();
 	while (true)
 	{
-		motorSet(2,  joystickGetAnalog(1, 3)); // Middle Right
-		motorSet(3,  joystickGetAnalog(1, 3)); // Middle Left
-		motorSet(4,  joystickGetAnalog(1, 3)); // Front Left
-		motorSet(5,  joystickGetAnalog(1, 3)); // Front Right
-		motorSet(8,  joystickGetAnalog(1, 3)); // Rear Right
-		motorSet(9,  joystickGetAnalog(1, 3)); // Rear Left
-
-		for (int i = 0; i <= 12; i++)
-			digitalWrite(i, joystickGetDigital(1, 7, JOY_UP));
+		lcdprintf(Centered, 1, "%d", (analogRead(1)/10));
+		lcdprintf(Centered, 2, "%d", (analogRead(2)/10));
 
 		delay(20);
 	}

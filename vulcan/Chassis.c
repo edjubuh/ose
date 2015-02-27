@@ -84,8 +84,8 @@ int ChassisGetIMERight()
 }
 
 /**
-* @brief Returns the value of the right side line follower
-*/
+ * @brief Returns the value of the right side line follower
+ */
 int ChassisGetIRRight()
 {
 	return analogRead(ANA_IR_RIGHT);

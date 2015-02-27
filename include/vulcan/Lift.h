@@ -19,12 +19,16 @@ void LiftSetLeft(int, bool);
 int LiftGetCalibIMELeft();
 int LiftGetRawIMELeft();
 int LiftGetQuadEncLeft();
+int LiftGetCalibPotLeft();
+int LiftGetRawPotLeft();
 
 // ---------------- RIGHT SIDE ---------------- //
 void LiftSetRight(int, bool);
 int LiftGetCalibIMERight();
 int LiftGetRawIMERight();
 int LiftGetQuadEncRight();
+int LiftGetCalibPotRight();
+int LiftGetRawPotRight();
 
 // ---------------- MASTER (ALL) ---------------- //
 void LiftSet(int, bool);

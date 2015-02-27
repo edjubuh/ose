@@ -13,7 +13,7 @@
 #define SMARTPIDLIBRARY_H_
 
 #define DEFAULT_SKEW 0.5 // default SkewPerMsec
-#define MUTEX_TAKE_TIMEOUT	2000 // default timeout when attempting to take a mutex
+#define MUTEX_TAKE_TIMEOUT	100 // default timeout when attempting to take a mutex
 
 /**
  * @struct PIDController
@@ -126,12 +126,14 @@ typedef struct
 	long lastUpdate;
 } Motor;
 
+/// Initializes the motor manager
 void InitializeMotorManager();
 
 void StopMotorManager();
 
 void MotorManagerTask(void *);
 
+/// Herp derp i'm a comment
 void MotorConfigure(int, bool, double);
 
 void MotorChangeRecalculateCommanded(int, int(*foo)(int));

@@ -15,7 +15,7 @@
 /* --- MOTOR DEFINITIONS --- */
 // 6: A		7: B		8: C		9: D
 #define MOTOR_CHASSIS_REARRIGHT			1
-#define MOTOR_LIFT_MIDDLELEFT			2//may need to invert this
+#define MOTOR_LIFT_MIDDLELEFT			2
 #define MOTOR_LIFT_FRONTRIGHT			3
 #define MOTOR_LIFT_FRONTLEFT			4
 #define MOTOR_LIFT_MIDDLERIGHT			5
@@ -42,6 +42,8 @@
 #define ANA_POWEREXP					1
 #define ANA_IR_RIGHT					2
 #define ANA_IR_LEFT						3
+#define ANA_POT_LIFT_LEFT				4
+#define ANA_POT_LIFT_RIGHT				5
 
 
 /* --- UART DEFINITIONS --- */

@@ -20,8 +20,9 @@
 #include "vulcan/CortexDefinitions.h"
 
 #define IME_RESET_THRESHOLD		100
-#define QUAD_ENC_MAX_DIF		5
+#define QUAD_ENC_MAX_DIF		10
 #define MAX_DOWN_PWM			-80
+#define LIFT_SKEW_RATE			0.75
 
 static Encoder rightEncoder, leftEncoder;
 // ---------------- LEFT  SIDE ---------------- //
@@ -94,10 +95,36 @@ int LiftGetRawIMELeft()
  */
 int LiftGetQuadEncLeft()
 {
-	if (digitalRead(DIG_LIFT_BOTLIM) == LOW && encoderGet(leftEncoder) != 0)
+	if (digitalRead(DIG_LIFT_BOTLIM) == LOW)
 		encoderReset(leftEncoder);
 
 	return encoderGet(leftEncoder);
+}
+
+int LiftGetCalibPotLeft()
+{
+	static int zeroValue = 0;
+	static int prevValues[10];
+	for (int i = 0; i < 9; i++)
+		prevValues[i] = prevValues[i+1];
+	prevValues[9] = LiftGetRawPotLeft() - zeroValue;
+
+	if (digitalRead(DIG_LIFT_BOTLIM) == LOW)
+	{
+		zeroValue = LiftGetRawPotLeft();
+		memset(prevValues, 0, sizeof(prevValues));
+		return 0;
+	}
+
+	int sum = 0;
+	for (int i = 0; i < 10; i++)
+		sum += prevValues[i];
+	return (int)(sum / 10.0);
+}
+
+int LiftGetRawPotLeft()
+{
+	return analogRead(ANA_POT_LIFT_LEFT)/10;
 }
 
 // ---------------- RIGHT SIDE ---------------- //
@@ -170,10 +197,36 @@ int LiftGetRawIMERight()
 */
 int LiftGetQuadEncRight()
 {
-	if (digitalRead(DIG_LIFT_BOTLIM) == LOW && encoderGet(rightEncoder) != 0)
+	if (digitalRead(DIG_LIFT_BOTLIM) == LOW)
 		encoderReset(rightEncoder);
 
 	return encoderGet(rightEncoder);
+}
+
+int LiftGetCalibPotRight()
+{
+	static int zeroValue = 0;
+	static int prevValues[10];
+	for (int i = 0; i < 9; i++)
+		prevValues[i] = prevValues[i+1];
+	prevValues[9] = LiftGetRawPotRight() - zeroValue;
+
+	if (digitalRead(DIG_LIFT_BOTLIM) == LOW)
+	{
+		zeroValue = LiftGetRawPotRight();
+		memset(prevValues, 0, sizeof(prevValues));
+		return 0;
+	}
+
+	int sum = 0;
+	for (int i = 0; i < 10; i++)
+		sum += prevValues[i];
+	return (int)(sum / 10.0);
+}
+
+int LiftGetRawPotRight()
+{
+	return analogRead(ANA_POT_LIFT_RIGHT)/10;
 }
 
 
@@ -207,7 +260,9 @@ void LiftSet(int value, bool immediate)
  */
 bool LiftSetHeight(int value)
 {
-	MasterSlavePIDSetGoal(&Controller, value);
+	if (value == 0)
+		MasterSlavePIDSetOutput(&Controller, -100);
+	else MasterSlavePIDSetGoal(&Controller, value);
 	return false;
 }
 
@@ -219,8 +274,17 @@ bool LiftSetHeight(int value)
  */
 void LiftGoToHeightCompletion(int value)
 {
-	MasterSlavePIDSetGoal(&Controller, value);
-	while (!MasterSlavePIDOnTarget(&Controller)) delay(100);
+	if (value == 0)
+	{
+		LiftSet(-100, false);
+		while (digitalRead(DIG_LIFT_BOTLIM) == HIGH) delay(10);
+		LiftSet(0, false);;
+	}
+	else
+	{
+		MasterSlavePIDSetGoal(&Controller, value);
+		while (!MasterSlavePIDOnTarget(&Controller)) delay(100);
+	}
 }
 
 /**
@@ -257,8 +321,17 @@ static int liftComputeQuadEncDiff()
 	if (abs(LiftGetQuadEncRight() - LiftGetQuadEncLeft()) > QUAD_ENC_MAX_DIF) return 0;
 
 	// If we're both on top, don't fix
-	if (digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW && digitalRead(DIG_LIFT_TOPLIM_RIGHT)) return 0;;
+	if ((digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW || digitalRead(DIG_LIFT_TOPLIM_RIGHT) == LOW) || digitalRead(DIG_LIFT_BOTLIM) == LOW) return 0;;
 	return LiftGetQuadEncRight() - LiftGetQuadEncLeft();
+}
+
+/**
+ * @brief Returns the difference between the potentiometers (right - left)
+ *		  Used in the equalizer controller in the MasterSlavePIDController for the lift
+ */
+static int liftComputePotDiff()
+{
+	return 0;
 }
 
 /**
@@ -266,22 +339,22 @@ static int liftComputeQuadEncDiff()
  */
 void LiftInitialize()
 {
-	MotorConfigure(MOTOR_LIFT_FRONTLEFT, true, 0.25);
-	MotorConfigure(MOTOR_LIFT_FRONTRIGHT, false, 0.25);
-	MotorConfigure(MOTOR_LIFT_MIDDLELEFT, true, 0.25);
-	MotorConfigure(MOTOR_LIFT_MIDDLERIGHT, false, 0.25);
-	MotorConfigure(MOTOR_LIFT_REARLEFT, false, 0.25);
-	MotorConfigure(MOTOR_LIFT_REARRIGHT, false, 0.25);
+	MotorConfigure(MOTOR_LIFT_FRONTLEFT,	true, LIFT_SKEW_RATE);
+	MotorConfigure(MOTOR_LIFT_FRONTRIGHT,	false, LIFT_SKEW_RATE);
+	MotorConfigure(MOTOR_LIFT_MIDDLELEFT,	true, LIFT_SKEW_RATE);
+	MotorConfigure(MOTOR_LIFT_MIDDLERIGHT,	false, LIFT_SKEW_RATE);
+	MotorConfigure(MOTOR_LIFT_REARLEFT,		false, LIFT_SKEW_RATE);
+	MotorConfigure(MOTOR_LIFT_REARRIGHT,	false, LIFT_SKEW_RATE);
 		
 	leftEncoder = encoderInit(DIG_LIFT_ENC_LEFT_TOP, DIG_LIFT_ENC_LEFT_BOT, false);
 	rightEncoder = encoderInit(DIG_LIFT_ENC_RIGHT_TOP, DIG_LIFT_ENC_RIGHT_BOT, true);
 	
 	//                                           Execute           Call			    Kp    Ki   Kd MaI  MiI  Tol
-	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  3, 0.2, 0, 400, -200, 3);
-	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 3, 0.2, 0, 400, -200, 3);
-	PIDController equalizer = PIDControllerCreate(NULL, &liftComputeQuadEncDiff,   0.85, 0.1, 0, 400, -300, 2);
+	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  2.25, 0.4, 0, 100, -75, 4);
+	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 2.25, 0.4, 0, 100, -75, 4);
+	PIDController equalizer = PIDControllerCreate(NULL, &liftComputeQuadEncDiff,   0.85, 0.3, 0, 100, -75, 3);
 
-	Controller = CreateMasterSlavePIDController(master, slave, equalizer, false);
+	Controller = CreateMasterSlavePIDController(master, slave, equalizer, 105, -100, false);
 
 	LiftControllerTask = InitializeMasterSlaveController(&Controller, 0);
 }

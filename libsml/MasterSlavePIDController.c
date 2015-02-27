@@ -32,35 +32,42 @@ static void MasterSlavePIDControllerTask(void *c)
 	int masterOutput, slaveOutput;
 	while(true)
 	{
-		// Can't take mutex this round. Skip loop and try again.
-		if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT)) continue;
+		delay(30);
 
 		masterOutput = controller->enabledPrimaryPID ? PIDControllerCompute(master) : controller->manualPrimaryOutput;
 		slaveOutput = controller->enabledPrimaryPID ? PIDControllerCompute(slave) : controller->manualPrimaryOutput;
 		
 		slaveOutput += PIDControllerCompute(equalizer);
 		masterOutput -= PIDControllerCompute(equalizer);
+		
+		if (masterOutput < controller->minSpeed || slaveOutput < controller->minSpeed)
+		{
+			double max = abs(controller->minSpeed);
+			if (abs(masterOutput) > max)
+				max = abs(masterOutput);
+			if (abs(slaveOutput) > max)
+				max = abs(slaveOutput);
+			double scale = abs(controller->minSpeed) / max;
 
-		//lcdprintf(Centered, 1, "eq:%d", PIDControllerCompute(equalizer));
-		
-		int max = 127;
-		if(abs(masterOutput) > max)
-			max = abs(masterOutput);
-		if(abs(slaveOutput) > max)
-			max = abs(slaveOutput);
-		
-		double scale = 127.0 / max;
-		
-		masterOutput = (int)(masterOutput * scale);
-		slaveOutput  = (int)(slaveOutput * scale);
+			masterOutput = (int)(masterOutput * scale);
+			slaveOutput = (int)(slaveOutput * scale);
+		}
+		else if (masterOutput > controller->maxSpeed || slaveOutput > controller->maxSpeed)
+		{
+			double max = abs(controller->maxSpeed);
+			if (abs(masterOutput) > max)
+				max = abs(masterOutput);
+			if (abs(slaveOutput) > max)
+				max = abs(slaveOutput);
+			double scale = abs(controller->maxSpeed) / max;
+
+			masterOutput = (int)(masterOutput * scale);
+			slaveOutput = (int)(slaveOutput * scale);
+		}
 		
 		lcdprintf(Centered, 1, "%03d,%03d|%03d,%03d", masterOutput, master->Call(), slaveOutput, slave->Call());
 		master->Execute(masterOutput, false);
 		slave->Execute(slaveOutput, false);
-		
-		mutexGive(controller->mutex);
-
-		delay(50);
 	}
 }
 
@@ -82,12 +89,14 @@ static void MasterSlavePIDControllerTask(void *c)
  *
  * @returns Returns a MasterSlavePIDController struct representing the arguments.
  */
-MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave, PIDController equalizer, bool enabledPrimaryPID)
+MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PIDController slave, PIDController equalizer, int max, int min, bool enabledPrimaryPID)
 {
 	MasterSlavePIDController controller;
 	controller.master = master;
 	controller.slave = slave;
 	controller.equalizer = equalizer;
+	controller.maxSpeed = max;
+	controller.minSpeed = min;
 	controller.enabledPrimaryPID = enabledPrimaryPID;
 	return controller;
 }
@@ -105,12 +114,9 @@ MasterSlavePIDController CreateMasterSlavePIDController(PIDController master, PI
 */
 TaskHandle InitializeMasterSlaveController(MasterSlavePIDController *controller, int primaryGoal)
 {
-	controller->mutex = mutexCreate();
-	mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT);
 	controller->slave.Goal = primaryGoal;
 	controller->master.Goal = primaryGoal;
 	controller->manualPrimaryOutput = 0;
-	mutexGive(controller->mutex);
 	return taskCreate(MasterSlavePIDControllerTask, TASK_DEFAULT_STACK_SIZE, controller, TASK_PRIORITY_DEFAULT);
 }
 
@@ -125,15 +131,10 @@ TaskHandle InitializeMasterSlaveController(MasterSlavePIDController *controller,
  */
 void MasterSlavePIDSetGoal(MasterSlavePIDController *controller, int primaryPIDGoal)
 {
-	if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
-		return;
-	
 	controller->enabledPrimaryPID = true;
 
 	PIDControllerSetGoal(&(controller->master), primaryPIDGoal);
 	PIDControllerSetGoal(&(controller->slave), primaryPIDGoal);
-	
-	mutexGive(controller->mutex);
 }
 
 /**
@@ -148,10 +149,6 @@ void MasterSlavePIDSetGoal(MasterSlavePIDController *controller, int primaryPIDG
  */
 void MasterSlavePIDIncreaseGoal(MasterSlavePIDController *controller, int deltaGoal)
 {
-	//if we don't have enough resources at the current time, exit the function
-	if (!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
-		return;
-
 	if (!controller->enabledPrimaryPID)
 	{
 		controller->enabledPrimaryPID = true;
@@ -165,8 +162,6 @@ void MasterSlavePIDIncreaseGoal(MasterSlavePIDController *controller, int deltaG
 	//static int c = 0;
 	//lcdPrint(uart1, 1, "C: %d", c++);
 	//lcdPrint(uart1, 2, "V: %d", controller->slave.Goal);
-
-	mutexGive(controller->mutex);
 }
 
 /**
@@ -180,15 +175,8 @@ void MasterSlavePIDIncreaseGoal(MasterSlavePIDController *controller, int deltaG
  */
 void MasterSlavePIDSetOutput(MasterSlavePIDController *controller, int output)
 {
-	//if we don't have enough resources at the current time, exit the function
-	if(!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT))
-		return;
-		
 	controller->enabledPrimaryPID = false;
-	
 	controller->manualPrimaryOutput = output;
-	
-	mutexGive(controller->mutex);
 }
 
 /**
@@ -196,15 +184,9 @@ void MasterSlavePIDSetOutput(MasterSlavePIDController *controller, int output)
  */
 bool MasterSlavePIDOnTarget(MasterSlavePIDController *controller)
 {
-	if (!mutexTake(controller->mutex, MUTEX_TAKE_TIMEOUT)) return false;
-
-	bool out = 
+	return
 		((abs(controller->master.Goal - controller->master.Call()) < controller->master.AcceptableTolerance) &&
 		(abs(controller->slave.Goal - controller->slave.Call()) < controller->slave.AcceptableTolerance));
-
-	mutexGive(controller->mutex);
-
-	return out;
 }
 
 /**

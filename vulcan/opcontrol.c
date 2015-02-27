@@ -75,7 +75,7 @@ void operatorControl()
 		}
 		if (!mode && buttonIsNewPress(JOY1_8U))
 		{
-			LiftSetHeight(40);
+			LiftSetHeight(15);
 			pidEnabled = true;
 		}
 
@@ -107,12 +107,13 @@ void operatorControl()
 		// ------------ LCD PRINTERS ----------- //
 		//lcdprint(Centered, 1, "Vulcan aae5f23");
 
+		lcdprintf(Centered, 2, "l: %d r: %d", LiftGetCalibPotLeft(), LiftGetCalibPotRight());
 		//lcdprintf(Centered, 2, "el:%02d r:%02d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
 		//lcdprintf(Centered, 2, "l:%04d r: %04d", ChassisGetIRLeft(), ChassisGetIRRight());
-		/*int ir = ChassisGetIRLeft();
+		/*int ir = ChassisGetIRRight();
 		lcdprintf(Centered, 1, "g:%d  v:%04d", (ir < 600) ? 1 : 0, ir);
 		lcdprintf(Centered, 2, "r:%d  b:%d", (ir < 450) ? 1 : 0, (ir < 300) ? 1 : 0);*/
 
-		delay(100);
+		delay(25);
 	}
 }

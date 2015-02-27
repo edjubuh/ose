@@ -36,10 +36,13 @@ typedef struct
 	 */
 	PIDController equalizer;
 	/**
-	 * @brief FOR INTERNAL USE ONLY <br>
-	 * A mutual exclusion control that prevents multiple threads/tasks from accessing the same data
+	 * @brief The maximum positive speed of the controller
 	 */
-	Mutex mutex;
+	int maxSpeed;
+	/**
+	 * @brief The maximum negative speed of the controller
+	 */
+	int minSpeed;
 	/**
 	 * @brief A boolean representing whether or not the the master/slave PID control is enabled (synchronization will still apply).
 	 */
@@ -50,7 +53,7 @@ typedef struct
 	int manualPrimaryOutput;
 } MasterSlavePIDController;
 
-MasterSlavePIDController CreateMasterSlavePIDController(PIDController, PIDController, PIDController, bool);
+MasterSlavePIDController CreateMasterSlavePIDController(PIDController, PIDController, PIDController, int, int, bool);
 TaskHandle InitializeMasterSlaveController(MasterSlavePIDController*, int);
 void MasterSlavePIDSetGoal(MasterSlavePIDController*, int);
 void MasterSlavePIDSetOutput(MasterSlavePIDController*, int);

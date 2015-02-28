@@ -15,8 +15,6 @@
 #include "main.h"
 #include "sml/SmartMotorLibrary.h"
 
-#define DEBUG 1
-
 /**
  * @struct MasterSlavePIDController
  * Represents two related controllers that need to be synchronized for output.
@@ -52,12 +50,12 @@ typedef struct
 	 */
 	int manualPrimaryOutput;
 } MasterSlavePIDController;
-
+///@cond
 MasterSlavePIDController CreateMasterSlavePIDController(PIDController, PIDController, PIDController, int, int, bool);
 TaskHandle InitializeMasterSlaveController(MasterSlavePIDController*, int);
 void MasterSlavePIDSetGoal(MasterSlavePIDController*, int);
 void MasterSlavePIDSetOutput(MasterSlavePIDController*, int);
 void MasterSlavePIDIncreaseGoal(MasterSlavePIDController*, int);
 bool MasterSlavePIDOnTarget(MasterSlavePIDController*);
-
+///@endcond
 #endif

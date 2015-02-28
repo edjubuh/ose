@@ -1,5 +1,6 @@
 /**
- * @file vulcan/lift.c		
+ * @file vulcan/lift.c	
+ * @author Elliot Berman and Rob Shrote
  * @brief Source file for lift functions.
  *
  * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
@@ -101,6 +102,11 @@ int LiftGetQuadEncLeft()
 	return encoderGet(leftEncoder);
 }
 
+/**
+* @brief Returns the calibrated potentiometer left value.
+*		  The value is calibrated by taking the average of relative readings to the ground over the previous 20 calls
+* @deprecated Potentiometers not currently installed.
+*/
 int LiftGetCalibPotLeft()
 {
 	static int zeroValue = 0;
@@ -122,6 +128,10 @@ int LiftGetCalibPotLeft()
 	return (int)(sum / 10.0);
 }
 
+/**
+* @brief Returns the raw potentioemter value (chopped off single digit for reduced noise)
+* @deprecated Potentiometers not currently installed.
+*/
 int LiftGetRawPotLeft()
 {
 	return analogRead(ANA_POT_LIFT_LEFT)/10;
@@ -204,8 +214,9 @@ int LiftGetQuadEncRight()
 }
 
 /**
- * @brief Returns a calibrated
- * @deprecated
+ * @brief Returns the calibrated potentiometer right value. 
+ *		  The value is calibrated by taking the average of relative readings to the ground over the previous 20 calls
+ * @deprecated Potentiometers not currently installed.
  */
 int LiftGetCalibPotRight()
 {
@@ -228,6 +239,10 @@ int LiftGetCalibPotRight()
 	return (int)(sum / 10.0);
 }
 
+/**
+ * @brief Returns the raw potentioemter value (chopped off single digit for reduced noise)
+ * @deprecated Potentiometers not currently installed.
+ */
 int LiftGetRawPotRight()
 {
 	return analogRead(ANA_POT_LIFT_RIGHT)/10;

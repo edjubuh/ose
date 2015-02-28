@@ -1,6 +1,5 @@
 /**
 * @file include/lcd/LCDManager.h
-* @author Elliot Berman
 * @brief Header file for LCD Manager functions <br>
 * See liblcd/LCDManager.c for details of all functions
 *
@@ -20,9 +19,9 @@ typedef struct
 
 	textJustifications justification;
 } DisplayText;
-
+///@cond
 void initLCDManager();
 void addCycleText(DisplayText, int);
 void replaceCycleText(DisplayText, int, int);
-
+///@endcond
 #endif

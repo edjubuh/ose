@@ -1,7 +1,12 @@
 /**
  * @file liblcd/LCDManager.c
  * @author Elliot Berman
- * @brief Source for the LCD Manager
+ * @brief Source for the LCD Manager. LCD Manager is a background task that cycles
+ *	      through user defined text displays when not being overriden by another
+ *        display.
+ *
+ * @todo Work out bugs in LCDManager. LCD Manager is not ready for prime production 
+ *		 code
  *
  * @copyright Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
  * Portions of this file may contain elements from the PROS API. <br>
@@ -14,7 +19,14 @@
 
 #define NUM_CYCLE_TEXT_DISPLAYS 8
 
+/**
+ * @brief Array of cycle text structs for usage on line 1.
+ */
 static DisplayText cycleText_l1[NUM_CYCLE_TEXT_DISPLAYS];
+
+/**
+* @brief Array of cycle text structs for usage on line 2.
+*/
 static DisplayText cycleText_l2[NUM_CYCLE_TEXT_DISPLAYS];
 static Mutex m_l1, m_l2, m_cT;
 static TaskHandle handle;
@@ -40,6 +52,9 @@ static void lcdManagerTask()
 	}
 }
 
+/**
+ * @brief Initializes the LCD Manager and creates the LCDManager Task. Invokes lcdInitialze()
+ */
 void initLCDManager()
 {
 	lcdInitialize();
@@ -49,6 +64,15 @@ void initLCDManager()
 	handle = taskCreate(&lcdManagerTask, 85, NULL, 2);
 }
 
+/**
+ * @brief Adds a cycle text struct to the line in the next available position
+ *
+ * @param text
+ *		  Struct to add to LCD Manager
+ *
+ * @param line
+ *		  The LCD line number to display on
+ */
 void addCycleText(DisplayText text, int line)
 {
 	if (line < 0 || line > 2) return;
@@ -72,6 +96,19 @@ void addCycleText(DisplayText text, int line)
 	mutexGive(m_cT);
 }
 
+/**
+ * @brief Places a DisplayText struct at the given position, overwriting anything that was
+ *        previously on that location
+ *
+ * @param text
+ *		  Struct to add to LCD Manager
+ *
+ * @param line
+ *		  The LCD line number to display on
+ *
+ * @param pos
+ *		  The position in the array to place it in (will safely return if invalid position)
+ */
 void replaceCycleText(DisplayText text, int line, int pos)
 {
 	if (pos < 0 || pos >= NUM_CYCLE_TEXT_DISPLAYS) return;

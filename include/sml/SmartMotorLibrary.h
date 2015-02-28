@@ -95,6 +95,7 @@ typedef struct
 	 * @brief This pointer will recalculate the commanded speed <br>
 	 * This method's signature takes the motor's commanded and returns a new goal speed. <br>
 	 * This method is usually NULL, but if not null, will be run
+	 * @deprecated RecalculatedCommanded is no longer implemented to increase computational load
 	 */
 	int(*RecalculateCommanded)(int);
 	/**
@@ -104,7 +105,7 @@ typedef struct
 	unsigned char channel;
 
 	/**
-	 * @brief If set to true, commanded values will be flipped to be -1 * commanded. Used to flip motors
+	 * @brief If set to true in MotorConfigure(), commanded values will be flipped to be -1 * commanded. Used to flip motors
 	 */
 	int inverted;
 
@@ -125,21 +126,13 @@ typedef struct
 	*/
 	long lastUpdate;
 } Motor;
-
-/// Initializes the motor manager
+///@cond
 void InitializeMotorManager();
-
 void StopMotorManager();
-
 void MotorManagerTask(void *);
-
-/// Herp derp i'm a comment
 void MotorConfigure(int, bool, double);
-
 void MotorChangeRecalculateCommanded(int, int(*foo)(int));
-
 bool MotorSet(int, int, bool);
-
 int MotorGet(int);
-
+///@endcond
 #endif

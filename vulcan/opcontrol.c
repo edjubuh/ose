@@ -12,7 +12,6 @@
 #include "sml/SmartMotorLibrary.h"
 #include "lcd/LCDFunctions.h"
 
-//#include "sml/recorder.h"
 #include "vulcan/buttons.h"
 #include "vulcan/mechop.h"
 #include "vulcan/CortexDefinitions.h"
@@ -21,36 +20,17 @@
 #include "vulcan/ScoringMechanism.h"
 #include "vulcan/LCDDisplays.h"
 
-//#include "sml/recorder.h"
 
 bool mode = false; // true: skyrise, false: cubes
 bool pidEnabled = false;
 
 /**
- * Returns a string representing the current robot state
- */
-/*
-char * getRobotState()
-{
-	if (!isAutonomous()) return;
-	if (pidEnabled && mode)
-		return "   PID | Skyrise";
-	if (pidEnabled && !mode)
-		return "   PID | Cube   ";
-	if (!pidEnabled && mode)
-		return " NoPID | Skyrise";
-	if (!pidEnabled && !mode)
-		return " NoPID | Cube   ";
-}
-*/
-
-/**
- * Sets motors in motion based on user input (from controls).
+ * @brief Sets motors in motion based on user input (from controls).
+ * 
+ * @todo Work with Sam to implement driver control
  */
 void operatorControl()
 {
-	//fdelete("trial.cvs");
-	//start = millis();
 	//recorderUser specific commands above
 	while (true)
 	{
@@ -64,9 +44,6 @@ void operatorControl()
 		// Mecanum Control
 		JoystickControl((mode ? -joystickGetAnalog(1, 4) : joystickGetAnalog(1, 1)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), (mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 1) : joystickGetAnalog(1, 4)));
 
-		// Recorded Control
-		//recorderUser((mode ? -joystickGetAnalog(1, 4) : joystickGetAnalog(1, 1)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), (mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 1) : joystickGetAnalog(1, 4)));
-		
 		// ------------ LIFT CONTROL ------------ //
 		if (mode && buttonIsNewPress(JOY1_8U))
 		{
@@ -107,7 +84,6 @@ void operatorControl()
 		// ------------ LCD PRINTERS ----------- //
 		//lcdprint(Centered, 1, "Vulcan aae5f23");
 
-		//lcdprintf(Centered, 2, "l: %d r: %d", LiftGetCalibPotLeft(), LiftGetCalibPotRight());
 		//lcdprintf(Centered, 2, "el:%02d r:%02d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
 		//lcdprintf(Centered, 2, "l:%04d r: %04d", ChassisGetIRLeft(), ChassisGetIRRight());
 		/*int ir = ChassisGetIRRight();

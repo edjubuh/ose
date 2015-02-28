@@ -19,7 +19,7 @@ typedef enum
 	Right,
 	Centered
 } textJustifications;
-
+///@cond
 void lcdInitialize();
 bool lcdprint(textJustifications, unsigned char, char *);
 bool lcdprintv(textJustifications, unsigned char, char *, va_list);
@@ -27,5 +27,5 @@ bool lcdprintf(textJustifications, unsigned char, char *, ...);
 bool lcdprint_d(textJustifications, unsigned char, unsigned long, char *);
 bool lcdprint_dv(textJustifications, unsigned char, unsigned long, char *, va_list);
 bool lcdprint_df(textJustifications, unsigned char, unsigned long, char *, ...);
-
+///@endcond
 #endif

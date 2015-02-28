@@ -1,6 +1,5 @@
 ﻿/**
- * @file include/vulcan/Lift.h		
- * @author Elliot Berman and Robert Shrote
+ * @file include/vulcan/Lift.h	
  * @brief Header file for Lift functions <br>
  * See vulcan/Lift.c for details of all functions
  *
@@ -13,7 +12,7 @@
 #define LIFT_H_
 
 #include "sml/SmartMotorLibrary.h"
-
+///@cond
 // ---------------- LEFT  SIDE ---------------- //
 void LiftSetLeft(int, bool);
 int LiftGetCalibIMELeft();
@@ -38,5 +37,5 @@ bool LiftGoToHeightContinuous(int);
 void LiftInitialize();
 
 PIDController LiftPIDController_l, LiftPIDController_r;
-
+///@endcond
 #endif

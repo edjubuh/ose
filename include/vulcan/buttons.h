@@ -45,9 +45,8 @@ typedef enum
 	LCD_CENT = 25,
 	LCD_RIGHT = 26
 } buttons;
-
-/** @cond */
+///@cond
 void initButtons();
 bool buttonIsNewPress(buttons);
-/** @endcond */
+///@endcond
 #endif 

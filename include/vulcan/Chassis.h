@@ -11,7 +11,7 @@
 
 #ifndef CHASSIS_H_
 #define CHASSIS_H_
-
+///@cond
 // ---------------- LEFT  SIDE ---------------- //
 void ChassisSetLeft(int, bool);
 int ChassisGetIMELeft();
@@ -28,5 +28,5 @@ void ChassisSetMecanum(double, int, int, bool);
 bool ChassisGotToGoalContinuous(int, int);
 void ChassisGoToGoalCompletion(int, int);
 void ChassisInitialize();
-
+///@endcond
 #endif

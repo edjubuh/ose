@@ -43,8 +43,8 @@
 #define ANA_POWEREXP					1
 #define ANA_IR_RIGHT					2
 #define ANA_IR_LEFT						3
-#define ANA_POT_LIFT_LEFT				4
-#define ANA_POT_LIFT_RIGHT				5
+#define ANA_POT_LIFT_LEFT				4 // not installed
+#define ANA_POT_LIFT_RIGHT				5 // not installed
 
 
 /* --- UART DEFINITIONS --- */

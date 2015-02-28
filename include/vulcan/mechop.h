@@ -1,6 +1,5 @@
 /**
  * @file include/vulcan/mechop.h
- * @author Robert Shrote
  * @brief Header file for advanced mecanum control <br>
  * See vulcan/mechop.c for details of all functions
  *
@@ -11,17 +10,14 @@
 
 #ifndef MECHOP_H
 #define MECHOP_H
-/**
- * @brief Constants
- */
 #define STRAFE_CONST	254
 #define THRESHOLD		25
-
+///@cond
 double getJoyTheta(int, int);
 int thetaSector(double);
 int aJoy(int, int);
 double cHypo(int, int);
 int aHypo(double, double);
 void JoystickControl(int, int, int, int);
-
+///@endcond
 #endif /*MECHOP_H*/

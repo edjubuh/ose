@@ -1,5 +1,6 @@
 /**
  * @file vulcan/mechop.c
+ * @author Rob Shrote
  * @brief Source file for mecanum functions
  *
  * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
@@ -15,6 +16,7 @@
 #include "vulcan/mechop.h"
 #include "vulcan/Chassis.h"
 
+#define MECHOP_DEBUG false
 
 /**
  * @brief Returns theta, determined from function parameters.
@@ -147,7 +149,9 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		(abs(right) == 3 || abs(right) == 4))
 	{
 		ChassisSet(l3, r2, MOTOROPTION);
-		//lcdprint(Centered, 1, "tank");
+#if MECHOP_DEBUG
+		lcdprint(Centered, 1, "tank");
+#endif
 	}
     //Left / Right
 	else if (((abs(left) == 0) || (abs(left) == 1)) &&
@@ -156,7 +160,9 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		ChassisSetMecanum(M_PI_2,
 			aJoy(l4, r1),
 			0, MOTOROPTION);
-		//lcdprint(Centered, 1, "strafe right");
+#if MECHOP_DEBUG
+		lcdprint(Centered, 1, "strafe right");
+#endif
 	}
 	else if (((abs(left)  == 7) || (abs(left) == 6)) &&
 		     ((abs(right) == 7) || (abs(right) == 6)))
@@ -164,7 +170,9 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		ChassisSetMecanum(-M_PI_2,
 			aJoy(l4, r1),
 			0, MOTOROPTION);
-		//lcdprint(Centered, 1, "strafe left");
+#if MECHOP_DEBUG
+		lcdprint(Centered, 1, "strafe left");
+#endif
 	}
 
 	
@@ -176,7 +184,9 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		ChassisSetMecanum(M_PI_4,
 			h,
 			0, MOTOROPTION);
-		//lcdprintf(Centered, 1, "northeast%d",h);
+#if MECHOP_DEBUG
+		lcdprintf(Centered, 1, "northeast%d",h);
+#endif
 	}
 	else if ((left  == 5 || left  == 6) &&
 		(right == 5 || right == 6))
@@ -184,7 +194,9 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		ChassisSetMecanum(-M_PI_4,
 			aHypo(cHypo(l4, l3), cHypo(r1, r2)),
 			0, MOTOROPTION);
-		//lcdprint(Centered, 1, "northwest");
+#if MECHOP_DEBUG
+		lcdprint(Centered, 1, "northwest");
+#endif
 	}
 
 	
@@ -195,7 +207,9 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		ChassisSetMecanum(-3.0 * M_PI_4,
 			aHypo(cHypo(l4, l3), cHypo(r1, r2)),
 			0, MOTOROPTION);
-		//lcdprint(Centered, 1, "southeast");
+#if MECHOP_DEBUG
+		lcdprint(Centered, 1, "southeast");
+#endif
 	}
 	else if ((left  == -5 || left  == -6) &&
 		(right == -5 || right == -6))
@@ -203,7 +217,9 @@ void JoystickControl(int r1, int r2, int l3, int l4)
 		ChassisSetMecanum(3.0 * M_PI_4,
 			aHypo(cHypo(l4, l3), cHypo(r1, r2)),
 			0, MOTOROPTION);
-		//lcdprint(Centered, 1, "southwest");
+#if MECHOP_DEBUG
+		lcdprint(Centered, 1, "southwest");
+#endif 
 	}
 
 	/*

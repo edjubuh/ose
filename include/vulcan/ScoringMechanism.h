@@ -1,6 +1,5 @@
 /**
  * @file include/vulcan/ScoringMechanism.h
- * @author Elliot Berman
  * @brief Header file for ScoringMech functions <br>
  * See vulcan/ScoringMechanism.c for details of all functions
  *
@@ -11,10 +10,11 @@
 
 #ifndef SCORINGMECHANISM_H_
 #define SCORINGMECHANISM_H_
-
+///@cond
 void ScoringMechNeedleSet(bool);
 void ScoringMechNeedleSwitch();
 
 void ScoringMechClawSet(bool);
 void ScoringMechClawSwitch();
+///@endcond
 #endif

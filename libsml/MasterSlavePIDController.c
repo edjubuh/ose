@@ -100,6 +100,12 @@ static void MasterSlavePIDControllerTask(void *c)
  *			The controller for the equalizer. The call/execute methods are not used. Only constants need to be tuned. <br>
  *			The equalizer will determine how much to change the slave's velocity in order to match the master.
  *
+ * @param max
+ *			An artificial maximimum PWM value for both the master and slave. If the values are greater than value, master output and slave output will be scaled proportionally back
+ *
+ * @param min
+ *			An artificial minimum PWM value for bothe the master and slave.
+ *
  * @param enabledPrimaryPID
  *			Enables the master/slave controllers. May be changed later by using MasterSlavePIDChangeGoal(), MasterSlavePIDIncreaseGoal(), or MasterSlavePIDSetOutput()
  *

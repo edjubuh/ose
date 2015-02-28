@@ -15,20 +15,13 @@
 #include "sml/SmartMotorLibrary.h"
 
 #define DEFAULT_INTERVAL 20
-
-// Creates a PID Controller struct
+///@cond
 PIDController PIDControllerCreate(void(*e)(int, bool), int(*c)(void), double, double, double, int, int, int);
-
 void PIDControllerReset(PIDController *);
-
 int PIDControllerCompute(PIDController *);
-
 int PIDControllerComputer(PIDController *, int);
-
 bool PIDControllerExecuteContinuous(PIDController *);
-
 void PIDControllerExecuteCompletion(PIDController *controller);
-
 void PIDControllerSetGoal(PIDController *controller, int goal);
-
+///@endcond
 #endif

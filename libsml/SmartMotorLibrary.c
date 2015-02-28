@@ -8,10 +8,11 @@
  ********************************************************************/
 
 #include "main.h"
+#include <math.h>
 #include "sml/SmartMotorLibrary.h"
 #include "lcd/LCDFunctions.h"
 
-#define MOTOR_SKEWER_DELTAT	50
+#define MOTOR_SKEWER_DELTAT	15
 
 static Motor Motors[10];
 static Mutex Mutexes[10];
@@ -39,7 +40,7 @@ void InitializeMotorManager()
 		Mutexes[i] = mutexCreate();
 		Motors[i].RecalculateCommanded = &DefaultRecalculate;
 	}
-	MotorManagerTaskHandle = taskCreate(MotorManagerTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT+1);
+	MotorManagerTaskHandle = taskCreate(MotorManagerTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_HIGHEST-1);
 }
 
 /**
@@ -61,27 +62,25 @@ void MotorManagerTask(void *none)
 	{
 		for (int i = 0; i < 10; i++)
 		{
-			if (!mutexTake(Mutexes[i], MUTEX_TAKE_TIMEOUT)) // Grab mutex if possible, if it's not available (being changed by MotorSet()), skip the motor check.
-				continue;
-
-			if (motorGet(i+1) != Motors[i].RecalculateCommanded(Motors[i].commanded)) // Motor has not been set to target
+			if (motorGet(i+1) != Motors[i].commanded) // Motor has not been set to target
 			{
 				int current = motorGet(i+1);
-				int command = Motors[i].RecalculateCommanded(Motors[i].commanded);
+				int command = Motors[i].commanded;
 				double skew = Motors[i].skewPerMsec;
-
+				int out = 0;
 				if (abs(command - current) < (skew * (millis() - Motors[i].lastUpdate))) // If skew is less than required delta-PWM, set commanded to output
-					motorSet(i+1, command);
-
-				
-
-				// Add appropriate motor skew value to current speed
+					out = command;
 				else
-					motorSet(i+1, (current + (int)(skew * (millis() - Motors[i].lastUpdate) * (command - current > 0 ? 1 : -1))));
+					out = (current + (int)(skew * (millis() - Motors[i].lastUpdate) * (command - current > 0 ? 1 : -1)));
 
+				if (!mutexTake(Mutexes[i], 5)) // Grab mutex if possible, if it's not available (being changed by MotorSet()), skip the motor check.
+					continue;
+
+				motorSet(i+1, out);
+
+				mutexGive(Mutexes[i]);
 			}
 			Motors[i].lastUpdate = millis();
-			mutexGive(Mutexes[i]);
 		}
 		delay(MOTOR_SKEWER_DELTAT);
 	}
@@ -105,18 +104,25 @@ bool MotorSet(int channel, int set, bool immediate)
 {
 	if (channel > 10 || channel < 1)
 		return false;
-	if (abs(set) > 127)
-		set = 127 * (set / abs(set));
+	if (set > 127)
+		set = 127;
+	else if (set < -127)
+		set = -127;
 
 	channel--;
 
-	if (!mutexTake(Mutexes[channel], MUTEX_TAKE_TIMEOUT))
-		return false;
-	Motors[channel].commanded = set * (Motors[channel].inverted ? 1 : -1);
-
 	if (immediate)
-		motorSet(channel + 1, set * (Motors[channel].inverted ? 1 : -1));
-	mutexGive(Mutexes[channel]);
+	{
+		if (!mutexTake(Mutexes[channel], MUTEX_TAKE_TIMEOUT)) return false;
+
+		motorSet(channel + 1, set * Motors[channel].inverted);
+		mutexGive(Mutexes[channel]);
+	}
+
+	if (Motors[channel].commanded == set) return true;
+
+	Motors[channel].commanded = set * Motors[channel].inverted;
+
 	return true;
 }
 
@@ -134,13 +140,7 @@ int MotorGet(int channel)
 		return 0;
 	channel--;
 
-	if (!mutexTake(Mutexes[channel], MUTEX_TAKE_TIMEOUT))
-		return 0;
-
-	int ret = Motors[channel].commanded * (Motors[channel].inverted ? 1 : -1);
-
-	mutexGive(Mutexes[channel]);
-	return ret;
+	return Motors[channel].commanded * (Motors[channel].inverted ? 1 : -1);
 }
 
 /**
@@ -171,15 +171,10 @@ void MotorConfigure(int channel, bool inverted, double skewPerMsec)
 
 	channel--;
 
-	if (!mutexTake(Mutexes[channel], MUTEX_TAKE_TIMEOUT))
-		return;
-
 	Motors[channel].channel = channel + 1;
-	Motors[channel].inverted = inverted;
+	Motors[channel].inverted = inverted ? 1 : -1;
 	Motors[channel].skewPerMsec = skewPerMsec;
 	Motors[channel].RecalculateCommanded = &DefaultRecalculate;
-
-	mutexGive(Mutexes[channel]);
 }
 
 /**
@@ -228,10 +223,5 @@ void MotorChangeRecalculateCommanded(int channel, int(*func)(int))
 
 	channel--;
 
-	if (!mutexTake(Mutexes[channel], MUTEX_TAKE_TIMEOUT))
-		return;
-
 	Motors[channel].RecalculateCommanded = func;
-
-	mutexGive(Mutexes[channel]);
 }

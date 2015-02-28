@@ -32,7 +32,7 @@ static void MasterSlavePIDControllerTask(void *c)
 	int masterOutput, slaveOutput;
 	while(true)
 	{
-		delay(30);
+		delay(15);
 
 		masterOutput = controller->enabledPrimaryPID ? PIDControllerCompute(master) : controller->manualPrimaryOutput;
 		slaveOutput = controller->enabledPrimaryPID ? PIDControllerCompute(slave) : controller->manualPrimaryOutput;
@@ -42,30 +42,46 @@ static void MasterSlavePIDControllerTask(void *c)
 		
 		if (masterOutput < controller->minSpeed || slaveOutput < controller->minSpeed)
 		{
-			double max = abs(controller->minSpeed);
-			if (abs(masterOutput) > max)
-				max = abs(masterOutput);
-			if (abs(slaveOutput) > max)
-				max = abs(slaveOutput);
-			double scale = abs(controller->minSpeed) / max;
+			if (masterOutput == slaveOutput)
+			{
+				masterOutput = controller->minSpeed;
+				slaveOutput = controller->minSpeed;
+			}
+			else
+			{
+				double max = abs(controller->minSpeed);
+				if (abs(masterOutput) > max)
+					max = abs(masterOutput);
+				if (abs(slaveOutput) > max)
+					max = abs(slaveOutput);
+				double scale = abs(controller->minSpeed) / max;
 
-			masterOutput = (int)(masterOutput * scale);
-			slaveOutput = (int)(slaveOutput * scale);
+				masterOutput = (int)(masterOutput * scale);
+				slaveOutput = (int)(slaveOutput * scale);
+			}
 		}
 		else if (masterOutput > controller->maxSpeed || slaveOutput > controller->maxSpeed)
 		{
-			double max = abs(controller->maxSpeed);
-			if (abs(masterOutput) > max)
-				max = abs(masterOutput);
-			if (abs(slaveOutput) > max)
-				max = abs(slaveOutput);
-			double scale = abs(controller->maxSpeed) / max;
+			if (masterOutput == slaveOutput)
+			{
+				masterOutput = controller->maxSpeed;
+				slaveOutput = controller->maxSpeed;
+			}
+			else
+			{
+				double max = abs(controller->maxSpeed);
+				if (abs(masterOutput) > max)
+					max = abs(masterOutput);
+				if (abs(slaveOutput) > max)
+					max = abs(slaveOutput);
+				double scale = abs(controller->maxSpeed) / max;
 
-			masterOutput = (int)(masterOutput * scale);
-			slaveOutput = (int)(slaveOutput * scale);
+				masterOutput = (int)(masterOutput * scale);
+				slaveOutput = (int)(slaveOutput * scale);
+			}
 		}
 		
-		lcdprintf(Centered, 1, "%03d,%03d|%03d,%03d", masterOutput, master->Call(), slaveOutput, slave->Call());
+		lcdprintf(Centered, 1, "%03d | %03d", master->Call(), slave->Call());
 		master->Execute(masterOutput, false);
 		slave->Execute(slaveOutput, false);
 	}

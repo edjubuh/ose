@@ -21,8 +21,8 @@
 
 #define IME_RESET_THRESHOLD		100
 #define QUAD_ENC_MAX_DIF		10
-#define MAX_DOWN_PWM			-80
-#define LIFT_SKEW_RATE			0.75
+#define MAX_DOWN_PWM			-100
+#define LIFT_SKEW_RATE			10
 
 static Encoder rightEncoder, leftEncoder;
 // ---------------- LEFT  SIDE ---------------- //
@@ -37,7 +37,7 @@ static Encoder rightEncoder, leftEncoder;
  */
 void LiftSetLeft(int value, bool immediate)
 {
-	if ((digitalRead(DIG_LIFT_BOTLIM) == LOW && value < 0) || (digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW && value > 0))
+	if ((value < 0 && digitalRead(DIG_LIFT_BOTLIM) == LOW) || (value > 0 && digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW))
 	{
 		MotorSet(MOTOR_LIFT_FRONTLEFT, 0, true);
 		MotorSet(MOTOR_LIFT_REARLEFT, 0, true);
@@ -139,7 +139,7 @@ int LiftGetRawPotLeft()
  */
 void LiftSetRight(int value, bool immediate)
 {
-	if ((digitalRead(DIG_LIFT_BOTLIM) == LOW && value < 0) || (digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW && value > 0))
+	if ((value < 0 && digitalRead(DIG_LIFT_BOTLIM) == LOW) || (value > 0 && digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW))
 	{
 		MotorSet(MOTOR_LIFT_FRONTRIGHT,  0, true);
 		MotorSet(MOTOR_LIFT_REARRIGHT,   0, true);
@@ -352,7 +352,7 @@ void LiftInitialize()
 	//                                           Execute           Call			    Kp    Ki   Kd MaI  MiI  Tol
 	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  2.25, 0.4, 0, 100, -75, 4);
 	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 2.25, 0.4, 0, 100, -75, 4);
-	PIDController equalizer = PIDControllerCreate(NULL, &liftComputeQuadEncDiff,   0.85, 0.3, 0, 100, -75, 3);
+	PIDController equalizer = PIDControllerCreate(NULL, &liftComputeQuadEncDiff,   0.95, 0.4, 0, 100, -75, 3);
 
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, 105, -100, false);
 

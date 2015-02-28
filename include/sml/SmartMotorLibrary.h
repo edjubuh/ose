@@ -106,7 +106,7 @@ typedef struct
 	/**
 	 * @brief If set to true, commanded values will be flipped to be -1 * commanded. Used to flip motors
 	 */
-	bool inverted;
+	int inverted;
 
 	/**
 	 * @brief The goal speed PWM setting. <br>

@@ -37,7 +37,7 @@ static Encoder rightEncoder, leftEncoder;
  */
 void LiftSetLeft(int value, bool immediate)
 {
-	if ((value < 0 && digitalRead(DIG_LIFT_BOTLIM) == LOW) || (value > 0 && digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW))
+	if ((value < 0 && digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW) || (value > 0 && digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW))
 	{
 		MotorSet(MOTOR_LIFT_FRONTLEFT, 0, true);
 		MotorSet(MOTOR_LIFT_REARLEFT, 0, true);
@@ -67,7 +67,7 @@ int LiftGetCalibIMELeft()
 		prevValues[i] = prevValues[i+1];
 	prevValues[9] = LiftGetRawIMELeft();
 
-	if (digitalRead(DIG_LIFT_BOTLIM) == LOW)
+	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW)
 	{
 		imeReset(I2C_MOTOR_LIFT_LEFT);
 		memset(prevValues, 0, sizeof(prevValues));
@@ -95,7 +95,7 @@ int LiftGetRawIMELeft()
  */
 int LiftGetQuadEncLeft()
 {
-	if (digitalRead(DIG_LIFT_BOTLIM) == LOW)
+	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW)
 		encoderReset(leftEncoder);
 
 	return encoderGet(leftEncoder);
@@ -109,7 +109,7 @@ int LiftGetCalibPotLeft()
 		prevValues[i] = prevValues[i+1];
 	prevValues[9] = LiftGetRawPotLeft() - zeroValue;
 
-	if (digitalRead(DIG_LIFT_BOTLIM) == LOW)
+	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW)
 	{
 		zeroValue = LiftGetRawPotLeft();
 		memset(prevValues, 0, sizeof(prevValues));
@@ -139,7 +139,7 @@ int LiftGetRawPotLeft()
  */
 void LiftSetRight(int value, bool immediate)
 {
-	if ((value < 0 && digitalRead(DIG_LIFT_BOTLIM) == LOW) || (value > 0 && digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW))
+	if ((value < 0 && digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW) || (value > 0 && digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW))
 	{
 		MotorSet(MOTOR_LIFT_FRONTRIGHT,  0, true);
 		MotorSet(MOTOR_LIFT_REARRIGHT,   0, true);
@@ -169,7 +169,7 @@ int LiftGetCalibIMERight()
 		prevValues[i] = prevValues[i+1];
 	prevValues[9] = LiftGetRawIMERight();
 
-	if (digitalRead(DIG_LIFT_BOTLIM) == LOW)
+	if (digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW)
 	{
 		imeReset(I2C_MOTOR_LIFT_RIGHT);
 		memset(prevValues, 0, sizeof(prevValues));
@@ -197,12 +197,16 @@ int LiftGetRawIMERight()
 */
 int LiftGetQuadEncRight()
 {
-	if (digitalRead(DIG_LIFT_BOTLIM) == LOW)
+	if (digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW)
 		encoderReset(rightEncoder);
 
 	return encoderGet(rightEncoder);
 }
 
+/**
+ * @brief Returns a calibrated
+ * @deprecated
+ */
 int LiftGetCalibPotRight()
 {
 	static int zeroValue = 0;
@@ -211,7 +215,7 @@ int LiftGetCalibPotRight()
 		prevValues[i] = prevValues[i+1];
 	prevValues[9] = LiftGetRawPotRight() - zeroValue;
 
-	if (digitalRead(DIG_LIFT_BOTLIM) == LOW)
+	if (digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW)
 	{
 		zeroValue = LiftGetRawPotRight();
 		memset(prevValues, 0, sizeof(prevValues));
@@ -277,7 +281,7 @@ void LiftGoToHeightCompletion(int value)
 	if (value == 0)
 	{
 		LiftSet(-100, false);
-		while (digitalRead(DIG_LIFT_BOTLIM) == HIGH) delay(10);
+		while (digitalRead(DIG_LIFT_BOTLIM_LEFT) == HIGH) delay(10);
 		LiftSet(0, false);;
 	}
 	else
@@ -313,7 +317,7 @@ static int liftComputeQuadEncDiff()
 {
 	// Only compute difference if lift has hit bottom at soem point
 	static bool encCorrect = false;
-	if (digitalRead(DIG_LIFT_BOTLIM) == LOW) encCorrect = true;
+	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW) encCorrect = true;
 	if (!encCorrect) return 0;
 
 	// If the difference between the two is greater than the maximum difference
@@ -321,7 +325,7 @@ static int liftComputeQuadEncDiff()
 	if (abs(LiftGetQuadEncRight() - LiftGetQuadEncLeft()) > QUAD_ENC_MAX_DIF) return 0;
 
 	// If we're both on top, don't fix
-	if ((digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW || digitalRead(DIG_LIFT_TOPLIM_RIGHT) == LOW) || digitalRead(DIG_LIFT_BOTLIM) == LOW) return 0;;
+	if ((digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW || digitalRead(DIG_LIFT_TOPLIM_RIGHT) == LOW) || digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW) return 0;;
 	return LiftGetQuadEncRight() - LiftGetQuadEncLeft();
 }
 

@@ -23,7 +23,8 @@
 #define IME_RESET_THRESHOLD		100
 #define QUAD_ENC_MAX_DIF		10
 #define MAX_DOWN_PWM			-100
-#define LIFT_SKEW_RATE			10
+#define LIFT_SKEW_RATE			1.75
+#define QUAD_ENC_MIN_THRESH		10
 
 static Encoder rightEncoder, leftEncoder;
 // ---------------- LEFT  SIDE ---------------- //
@@ -330,23 +331,34 @@ static int liftComputeIMEDiff()
  */
 static int liftComputeQuadEncDiff()
 {
-	// Only compute difference if lift has hit bottom at soem point
+	// Only compute difference if lift has hit bottom at some point
 	static bool encCorrect = false;
-	if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW) encCorrect = true;
-	if (!encCorrect) return 0;
+	if (!encCorrect)
+	{
+		if (digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW && digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW) encCorrect = true;
+		else return 0;
+	}
 
 	// If the difference between the two is greater than the maximum difference
 	//		pretend that we're on target because something is going massively wrong (i.e. hitting guidance bars)
 	if (abs(LiftGetQuadEncRight() - LiftGetQuadEncLeft()) > QUAD_ENC_MAX_DIF) return 0;
 
-	// If we're both on top, don't fix
-	if ((digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW || digitalRead(DIG_LIFT_TOPLIM_RIGHT) == LOW) || digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW) return 0;;
+	// If any limit switch is pressed, don't correct heights
+	if (digitalRead(DIG_LIFT_TOPLIM_LEFT) == LOW || digitalRead(DIG_LIFT_TOPLIM_RIGHT) == LOW || 
+		digitalRead(DIG_LIFT_BOTLIM_LEFT) == LOW || digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW) 
+		return 0;
+
+	// Don't correct if too low to get reliable data from encoders
+	if (LiftGetQuadEncRight() < QUAD_ENC_MIN_THRESH || LiftGetQuadEncLeft() < QUAD_ENC_MIN_THRESH)
+		return 0;
+
 	return LiftGetQuadEncRight() - LiftGetQuadEncLeft();
 }
 
 /**
  * @brief Returns the difference between the potentiometers (right - left)
  *		  Used in the equalizer controller in the MasterSlavePIDController for the lift
+ * @deprecated Potentiometers not installed.
  */
 static int liftComputePotDiff()
 {
@@ -369,9 +381,9 @@ void LiftInitialize()
 	rightEncoder = encoderInit(DIG_LIFT_ENC_RIGHT_TOP, DIG_LIFT_ENC_RIGHT_BOT, true);
 	
 	//                                           Execute           Call			    Kp    Ki   Kd MaI  MiI  Tol
-	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  2.25, 0.4, 0, 100, -75, 4);
-	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 2.25, 0.4, 0, 100, -75, 4);
-	PIDController equalizer = PIDControllerCreate(NULL, &liftComputeQuadEncDiff,   0.95, 0.4, 0, 100, -75, 3);
+	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  4.00, 0.2, 0.15, 100, -75, 4);
+	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 4.00, 0.2, 0.15, 100, -75, 4);
+	PIDController equalizer = PIDControllerCreate(NULL, &liftComputeQuadEncDiff,   0.90, 0.5, 0.01, 100, -75, 3);
 
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, 105, -100, false);
 

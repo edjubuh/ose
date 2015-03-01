@@ -34,7 +34,7 @@ void operatorControl()
 	//recorderUser specific commands above
 	while (true)
 	{
-		if (buttonIsNewPress(JOY1_7L)) autonomous();
+		if (buttonIsNewPress(JOY1_7L)) ChassisAlignToLine(-20,-20, Grey);
 		if (buttonIsNewPress(JOY1_8D)) mode = !mode;
 
 		// ---------- CHASSIS CONTROL ---------- //
@@ -84,8 +84,8 @@ void operatorControl()
 		// ------------ LCD PRINTERS ----------- //
 		//lcdprint(Centered, 1, "Vulcan aae5f23");
 
-		//lcdprintf(Centered, 2, "el:%02d r:%02d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
-		//lcdprintf(Centered, 2, "l:%04d r: %04d", ChassisGetIRLeft(), ChassisGetIRRight());
+		lcdprintf(Centered, 1, "el:%02d r:%02d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
+		lcdprintf(Centered, 2, "il:%04d r: %04d", ChassisGetIRRight(), ChassisGetIRLeft());
 		/*int ir = ChassisGetIRRight();
 		lcdprintf(Centered, 1, "g:%d  v:%04d", (ir < 600) ? 1 : 0, ir);
 		lcdprintf(Centered, 2, "r:%d  b:%d", (ir < 450) ? 1 : 0, (ir < 300) ? 1 : 0);*/

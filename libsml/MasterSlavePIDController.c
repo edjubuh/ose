@@ -81,7 +81,6 @@ static void MasterSlavePIDControllerTask(void *c)
 			}
 		}
 		
-		lcdprintf(Centered, 1, "%03d | %03d", master->Call(), slave->Call());
 		master->Execute(masterOutput, false);
 		slave->Execute(slaveOutput, false);
 	}

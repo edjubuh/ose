@@ -19,6 +19,36 @@
 #define RED_WHITE_LINE_THRESH	300
 
 static int skyriseBuilt = 0;
+
+/**
+* @brief Deploys the Scoring Mechanism by lifting the lift to 15 ticks, and then lowers back to 0
+*/
+void DeployScoringMech()
+{
+	LiftGoToHeightCompletion(15);
+	delay(50); 
+	ScoringMechClawSet(false);
+	LiftGoToHeightCompletion(0);
+}
+
+/**
+* @brief Builds the next skyrise
+*/
+void BuildSkyrise()
+{
+	ChassisSet(127, 127, false);
+	delay(25);
+	ChassisSet(0, 0, false);
+	ScoringMechClawSet(true);
+	LiftGoToHeightCompletion(15);
+	delay(25);
+	ChassisSet(-127, -127, false);
+	delay(150);
+	LiftGoToHeightContinuous(0);
+	delay(500);
+	ChassisAlignToLine(-20, -20, Grey);
+}
+
 /**
  * @brief Runs a sequence of commands during the competition "autonomous period." (15 seconds)
  */
@@ -26,6 +56,9 @@ void autonomous()
 {
 	lcdprint(Centered, 2, "Running auton");
 	long start = millis();
+	DeployScoringMech();
+	BuildSkyrise();
+	/*
 	LiftGoToHeightCompletion(8);
 	delay(50);
 	ScoringMechClawSet(false);
@@ -46,13 +79,6 @@ void autonomous()
 	while (ChassisGetIRRight() > GREY_WHITE_LINE_THRESH && ChassisGetIRLeft() > 900) delay(10);
 	ChassisSet(0, 0, false);
 	ScoringMechClawSet(false);
-	lcdprintf(Centered, 2, "Finished %.2f", (millis() - start)/1000.0);
-}
-
-/**
- * @brief Builds the next skyrise
- */
-void BuildSkyrise()
-{
-
+	*/
+	lcdprint_df(Centered, 2, 1000, "Finished %.2f", (millis() - start)/1000.0);
 }

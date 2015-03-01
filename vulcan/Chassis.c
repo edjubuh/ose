@@ -15,7 +15,10 @@
 
 #include "sml/SmartMotorLibrary.h"
 #include "sml/SingleThreadPIDController.h"
+#include "lcd/LCDFunctions.h"
 #include "vulcan/CortexDefinitions.h"
+
+#define CHASSIS_SKEW_PROFILE	3.0
 
 // ---------------- LEFT  SIDE ---------------- //
 static PIDController leftController;
@@ -54,6 +57,27 @@ int ChassisGetIRLeft()
 	return analogRead(ANA_IR_LEFT);
 }
 
+/**
+ * @brief Returns true if a line is detected, false otherwise on the left IR sensor
+ *
+ * @param tile
+ *			The tile color the line will be on (different thresholds for different tiles)
+ *
+ * @returns Booleanr representing whether or not a line is detected
+ */
+bool ChassisHasIRLineLeft(kTiles tile)
+{
+	switch (tile)
+	{
+		case Red:
+			return ChassisGetIRLeft() < CHASSIS_IR_LEFT_RED_THRESH;
+		case Blue:
+			return ChassisGetIRLeft() < CHASSIS_IR_LEFT_BLUE_THRESH;
+		default:
+			return ChassisGetIRLeft() < CHASSIS_IR_LEFT_GREY_THRESH;
+	}
+}
+
 // ---------------- RIGHT  SIDE ---------------- //
 static PIDController rightController;
 /**
@@ -89,6 +113,27 @@ int ChassisGetIMERight()
 int ChassisGetIRRight()
 {
 	return analogRead(ANA_IR_RIGHT);
+}
+
+/**
+ * @brief Returns true if a line is detected, false otherwise on the right IR sensor
+ *
+ * @param tile
+ *			The tile color the line will be on (different thresholds for different tiles)
+ *
+ * @returns Booleanr representing whether or not a line is detected
+ */
+bool ChassisHasIRLineRight(kTiles tile)
+{
+	switch (tile)
+	{
+		case Red:
+			return ChassisGetIRRight() < CHASSIS_IR_RIGHT_RED_THRESH;
+		case Blue:
+			return ChassisGetIRRight() < CHASSIS_IR_RIGHT_BLUE_THRESH;
+		default:
+			return ChassisGetIRRight() < CHASSIS_IR_RIGHT_GREY_THRESH;
+	}
 }
 
 // ---------------- MASTER (ALL) ---------------- //
@@ -210,15 +255,66 @@ void ChassisGoToGoalCompletion(int left, int right)
 }
 
 /**
+ * @brief Aligns robot to a kTile tile intially going provided speeds.
+ *
+ * @param left
+ *			The initial motor speed for the left side of the chassis
+ *
+ * @param right
+ *			The intial motor speed for the right side of the chassis
+ *
+ * @param tile
+ *			The tile that the line is detected on
+ */
+void ChassisAlignToLine(int left, int right, kTiles tile)
+{
+	bool hasPassedLeft = false, hasPassedRight = false;
+	bool hasHadLeft = false, hasHadRight = false;
+	while (!ChassisHasIRLineRight(tile) && !ChassisHasIRLineLeft(tile))
+	{
+		if (ChassisHasIRLineRight(tile) && !hasHadRight)
+		{
+			hasPassedRight = !hasPassedRight;
+			lcdprintf(Centered, 1, "%d %d", hasPassedLeft, hasPassedRight);
+			hasHadRight = true;
+		}
+		else if (!ChassisHasIRLineRight(tile)) hasHadRight = false;
+
+		if (ChassisHasIRLineLeft(tile) && !hasHadLeft)
+		{
+			hasPassedLeft = !hasPassedLeft;
+			lcdprintf(Centered, 1, "%d %d", hasPassedLeft, hasPassedRight);
+			hasHadLeft = true;
+		}
+		else if (!ChassisHasIRLineLeft(tile)) hasHadLeft = false;
+
+		if (ChassisHasIRLineLeft(tile))
+			ChassisSetLeft(0, false);
+		else
+			ChassisSetLeft(left * (hasPassedLeft ? -1 : 1), false);
+		
+		if (ChassisHasIRLineRight(tile))
+			ChassisSetRight(0, false);
+		else
+			ChassisSetRight(right * (hasPassedRight ? -1 : 1), false);
+
+
+		lcdprintf(Centered, 2, "il:%04d r: %04d", ChassisGetIRRight(), ChassisGetIRLeft());
+		delay(2);
+	}
+	ChassisSet(0, 0, false);
+}
+
+/**
 * @brief Initializes the chassis motors with the SML and creates the PID controllers for the
 *        chassis.
 */
 void ChassisInitialize()
 {
-	MotorConfigure(MOTOR_CHASSIS_FRONTLEFT,		true,	2.5);
-	MotorConfigure(MOTOR_CHASSIS_FRONTRIGHT,	false,	2.5);
-	MotorConfigure(MOTOR_CHASSIS_REARLEFT,		false,  2.5);
-	MotorConfigure(MOTOR_CHASSIS_REARRIGHT,		false,	2.5);
+	MotorConfigure(MOTOR_CHASSIS_FRONTLEFT, true, CHASSIS_SKEW_PROFILE);
+	MotorConfigure(MOTOR_CHASSIS_FRONTRIGHT, false, CHASSIS_SKEW_PROFILE);
+	MotorConfigure(MOTOR_CHASSIS_REARLEFT, false, CHASSIS_SKEW_PROFILE);
+	MotorConfigure(MOTOR_CHASSIS_REARRIGHT, false, CHASSIS_SKEW_PROFILE);
 
 	//										Execute			Get					Kp Ki Kd MaxI MinI Tol
 	leftController = PIDControllerCreate(&ChassisSetLeft, &ChassisGetIMELeft,	 1, 0, 0, 100, 100, 20);

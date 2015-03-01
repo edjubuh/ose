@@ -24,7 +24,7 @@
 #define QUAD_ENC_MAX_DIF		10
 #define MAX_DOWN_PWM			-100
 #define LIFT_SKEW_RATE			1.75
-#define QUAD_ENC_MIN_THRESH		10
+#define QUAD_ENC_MIN_THRESH		8
 
 static Encoder rightEncoder, leftEncoder;
 // ---------------- LEFT  SIDE ---------------- //
@@ -381,8 +381,8 @@ void LiftInitialize()
 	rightEncoder = encoderInit(DIG_LIFT_ENC_RIGHT_TOP, DIG_LIFT_ENC_RIGHT_BOT, true);
 	
 	//                                           Execute           Call			    Kp    Ki   Kd MaI  MiI  Tol
-	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  4.00, 0.2, 0.15, 100, -75, 4);
-	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 4.00, 0.2, 0.15, 100, -75, 4);
+	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  3.75, 0.2, 0.15, 100, -75, 4);
+	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 3.75, 0.2, 0.15, 100, -75, 4);
 	PIDController equalizer = PIDControllerCreate(NULL, &liftComputeQuadEncDiff,   0.90, 0.5, 0.01, 100, -75, 3);
 
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, 105, -100, false);

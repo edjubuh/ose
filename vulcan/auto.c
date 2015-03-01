@@ -1,5 +1,5 @@
 /**
- * @file vulcan/auto.c		
+ * @file vulcan/auto.c
  * @brief Source file for autonomous functions.
  *
  * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
@@ -26,7 +26,7 @@ static int skyriseBuilt = 0;
 void DeployScoringMech()
 {
 	LiftGoToHeightCompletion(15);
-	delay(50); 
+	delay(50);
 	ScoringMechClawSet(false);
 	LiftGoToHeightCompletion(0);
 }
@@ -36,17 +36,43 @@ void DeployScoringMech()
 */
 void BuildSkyrise()
 {
-	ChassisSet(127, 127, false);
-	delay(25);
-	ChassisSet(0, 0, false);
+	ChassisResetIMEs();
+	if (skyriseBuilt == 0)
+	{
+		ChassisSet(127, 127, false);
+		delay(60);
+		ChassisSet(0, 0, false);
+	}
 	ScoringMechClawSet(true);
 	LiftGoToHeightCompletion(15);
 	delay(25);
-	ChassisSet(-127, -127, false);
+	ChassisSet(-60, -60, false);
 	delay(150);
+	int height = 0;
+	switch (skyriseBuilt)
+	{
+		case 0:
+			height = 0;
+			break;
+		case 1:
+			height = 20;
+			break;
+	}
+	while (!LiftGoToHeightContinuous(height) || !ChassisGoToGoalContinuous(-750, -750)) delay(10);
+	ChassisAlignToLine(-30, -30, Grey);
+	delay(25);
+	ChassisSetMecanum(-HALFPI, 127, 0, false);
+	delay(110);
+	ChassisSet(0, 0, false);
+	delay(600);
+	ScoringMechClawSet(false);
+	delay(200);
+	ChassisSet(127, 127, false);
+	delay(250);
 	LiftGoToHeightContinuous(0);
-	delay(500);
-	ChassisAlignToLine(-20, -20, Grey);
+	ChassisGoToGoalCompletion(15, 30);
+	ScoringMechClawSet(true);
+	skyriseBuilt++;
 }
 
 /**
@@ -57,6 +83,7 @@ void autonomous()
 	lcdprint(Centered, 2, "Running auton");
 	long start = millis();
 	DeployScoringMech();
+	BuildSkyrise();
 	BuildSkyrise();
 	/*
 	LiftGoToHeightCompletion(8);

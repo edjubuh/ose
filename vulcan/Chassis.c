@@ -18,7 +18,7 @@
 #include "lcd/LCDFunctions.h"
 #include "vulcan/CortexDefinitions.h"
 
-#define CHASSIS_SKEW_PROFILE	3.0
+#define CHASSIS_SKEW_PROFILE	2.0
 
 // ---------------- LEFT  SIDE ---------------- //
 static PIDController leftController;
@@ -104,7 +104,7 @@ int ChassisGetIMERight()
 {
 	int val;
 	imeGet(I2C_MOTOR_CHASSIS_RIGHT, &val);
-	return val;
+	return -val;
 }
 
 /**
@@ -226,7 +226,7 @@ void ChassisSetMecanum(double heading, int speed, int rotation, bool immediate)
  *
  * @returns Returns true if BOTH sides are on target
  */
-bool ChassisGoToGoalContiniuous(int left, int right)
+bool ChassisGoToGoalContinuous(int left, int right)
 {
 	PIDControllerSetGoal(&leftController, left);
 	PIDControllerSetGoal(&rightController, right);
@@ -250,8 +250,23 @@ void ChassisGoToGoalCompletion(int left, int right)
 	PIDControllerSetGoal(&leftController, left);
 	PIDControllerSetGoal(&rightController, right);
 
+	int goodCount = 0;
 	// Use 1 '&' instead of 2 to force execution of both sides (both right and left side will run) because short-circuiting
-	while (!(PIDControllerExecuteContinuous(&leftController) & PIDControllerExecuteContinuous(&rightController))) delay(20);
+	while (goodCount < 50)
+	{
+		if (PIDControllerExecuteContinuous(&leftController) & PIDControllerExecuteContinuous(&rightController))
+			goodCount++;
+		delay(5);
+	}
+}
+
+/**
+ * @brief Resets the chassis IMEs
+ */
+void ChassisResetIMEs()
+{
+	imeReset(I2C_MOTOR_CHASSIS_LEFT);
+	imeReset(I2C_MOTOR_CHASSIS_RIGHT);
 }
 
 /**
@@ -270,12 +285,17 @@ void ChassisAlignToLine(int left, int right, kTiles tile)
 {
 	bool hasPassedLeft = false, hasPassedRight = false;
 	bool hasHadLeft = false, hasHadRight = false;
-	while (!ChassisHasIRLineRight(tile) && !ChassisHasIRLineLeft(tile))
+	int goodCount = 0;
+	/*
+	ChassisSet(left, right, false);
+	while (!ChassisHasIRLineRight(tile) && !ChassisHasIRLineLeft(tile)) 
+		lcdprintf(Centered, 2, "%d %d", ChassisHasIRLineRight(tile), ChasssisHasIRLineLeft(tile));
+	*/
+	while (goodCount < 20)
 	{
 		if (ChassisHasIRLineRight(tile) && !hasHadRight)
 		{
 			hasPassedRight = !hasPassedRight;
-			lcdprintf(Centered, 1, "%d %d", hasPassedLeft, hasPassedRight);
 			hasHadRight = true;
 		}
 		else if (!ChassisHasIRLineRight(tile)) hasHadRight = false;
@@ -283,7 +303,6 @@ void ChassisAlignToLine(int left, int right, kTiles tile)
 		if (ChassisHasIRLineLeft(tile) && !hasHadLeft)
 		{
 			hasPassedLeft = !hasPassedLeft;
-			lcdprintf(Centered, 1, "%d %d", hasPassedLeft, hasPassedRight);
 			hasHadLeft = true;
 		}
 		else if (!ChassisHasIRLineLeft(tile)) hasHadLeft = false;
@@ -298,9 +317,10 @@ void ChassisAlignToLine(int left, int right, kTiles tile)
 		else
 			ChassisSetRight(right * (hasPassedRight ? -1 : 1), false);
 
+		if (ChassisHasIRLineLeft(tile) && ChassisHasIRLineRight(tile)) goodCount++;
 
 		lcdprintf(Centered, 2, "il:%04d r: %04d", ChassisGetIRRight(), ChassisGetIRLeft());
-		delay(2);
+		delay(5);
 	}
 	ChassisSet(0, 0, false);
 }
@@ -316,9 +336,9 @@ void ChassisInitialize()
 	MotorConfigure(MOTOR_CHASSIS_REARLEFT, false, CHASSIS_SKEW_PROFILE);
 	MotorConfigure(MOTOR_CHASSIS_REARRIGHT, false, CHASSIS_SKEW_PROFILE);
 
-	//										Execute			Get					Kp Ki Kd MaxI MinI Tol
-	leftController = PIDControllerCreate(&ChassisSetLeft, &ChassisGetIMELeft,	 1, 0, 0, 100, 100, 20);
-	rightController = PIDControllerCreate(&ChassisSetRight, &ChassisGetIMERight, 1, 0, 0, 100, 100, 20);
+	//										Execute			Get					  Kp   Ki     Kd   MaxI MinI Tol
+	leftController = PIDControllerCreate(&ChassisSetLeft, &ChassisGetIMELeft,	 0.07, 0.25, 0, 100, -100, 15);
+	rightController = PIDControllerCreate(&ChassisSetRight, &ChassisGetIMERight, 0.07, 0.25, 0, 100, -100, 15);
 
 	//gyro = gyroInit(ANA_GYROSCOPE, 196);
 }

@@ -14,10 +14,13 @@
 
 #define CHASSIS_IR_RIGHT_RED_THRESH		200
 #define CHASSIS_IR_LEFT_RED_THRESH		200
-#define CHASSIS_IR_RIGHT_GREY_THRESH	400
-#define CHASSIS_IR_LEFT_GREY_THRESH		500
+#define CHASSIS_IR_RIGHT_GREY_THRESH	700
+#define CHASSIS_IR_LEFT_GREY_THRESH		700
 #define CHASSIS_IR_RIGHT_BLUE_THRESH	200 //!@todo: Find this value
 #define CHASSIS_IR_LEFT_BLUE_THRESH		200 //!@todo: Find this value
+
+
+#define HALFPI					1.570796326794896619231321691639751442098584
 
 typedef enum
 {
@@ -42,6 +45,7 @@ bool ChassisHasIRLineRight(kTiles);
 // ---------------- MASTER (ALL) ---------------- //
 void ChassisSet(int, int, bool);
 void ChassisSetMecanum(double, int, int, bool);
+void ChassisResetIMEs();
 bool ChassisGoToGoalContinuous(int, int);
 void ChassisGoToGoalCompletion(int, int);
 void ChassisAlignToLine(int, int, kTiles);

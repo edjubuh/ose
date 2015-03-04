@@ -47,12 +47,12 @@ void operatorControl()
 		// ------------ LIFT CONTROL ------------ //
 		if (mode && buttonIsNewPress(JOY1_8U))
 		{
-			LiftSetHeight(80);
+			LiftSetHeight(35);
 			pidEnabled = true;
 		}
 		if (!mode && buttonIsNewPress(JOY1_8U))
 		{
-			LiftSetHeight(15);
+			LiftSetHeight(17);
 			pidEnabled = true;
 		}
 

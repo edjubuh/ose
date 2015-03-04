@@ -256,6 +256,7 @@ void ChassisGoToGoalCompletion(int left, int right)
 	{
 		if (PIDControllerExecuteContinuous(&leftController) & PIDControllerExecuteContinuous(&rightController))
 			goodCount++;
+		lcdprintf(Centered, 1, "cl:%04d r:%04d", ChassisGetIMELeft(), ChassisGetIMERight());
 		delay(5);
 	}
 }
@@ -336,9 +337,9 @@ void ChassisInitialize()
 	MotorConfigure(MOTOR_CHASSIS_REARLEFT, false, CHASSIS_SKEW_PROFILE);
 	MotorConfigure(MOTOR_CHASSIS_REARRIGHT, false, CHASSIS_SKEW_PROFILE);
 
-	//										Execute			Get					  Kp   Ki     Kd   MaxI MinI Tol
-	leftController = PIDControllerCreate(&ChassisSetLeft, &ChassisGetIMELeft,	 0.07, 0.25, 0, 100, -100, 15);
-	rightController = PIDControllerCreate(&ChassisSetRight, &ChassisGetIMERight, 0.07, 0.25, 0, 100, -100, 15);
+	//										Execute			Get					    Kp    Ki     Kd   MaxI MinI Tol
+	leftController = PIDControllerCreate(&ChassisSetLeft, &ChassisGetIMELeft,	 0.0925, 0.17, 0.001, 100, -100, 20);
+	rightController = PIDControllerCreate(&ChassisSetRight, &ChassisGetIMERight, 0.0925, 0.17, 0.001, 100, -100, 20);
 
 	//gyro = gyroInit(ANA_GYROSCOPE, 196);
 }

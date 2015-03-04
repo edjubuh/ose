@@ -16,6 +16,7 @@
 #include "vulcan/CortexDefinitions.h"
 #include "vulcan/Chassis.h"
 #include "vulcan/Lift.h"
+#include "vulcan/ScoringMechanism.h"
 #include "vulcan/LCDDisplays.h"
 
 
@@ -25,6 +26,8 @@
 void initializeIO() {
 	pinMode(DIG_SCORINGMECH_NEEDLE, OUTPUT);
 	pinMode(DIG_SCORINGMECH_CLAW, OUTPUT);
+	ScoringMechClawSet(false);
+	ScoringMechNeedleSet(true);
 	setTeamName("7701");
 }
 

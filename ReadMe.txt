@@ -1,7 +1,7 @@
 This repository contains all source code for the Olympic Steel Eagles during the 2014-2015 school year.
 
 Two robot bases are contained in this repository:
-	- Team 7701 / Olympic Steel Eagle I / Icarus
+	- Team 7701 / Olympic Steel Eagle I / Vulcan
 	- Team 7702 / Olympic Steel Eagle II / Dios
 	- Dummy Project - motor test bed
 
@@ -16,9 +16,10 @@ Before compiling any base, use make clean to clean the bin.
 |-----------|---------------------------|-----------------------------------|
 |   dios	|     make SUBDIRS=dios     | Makes the Dios Project			|
 |   dios	| make SUBDIRS=dios upload	| Makes and uploads Dios			|
-|  icarus	| 	 make SUBDIRS=icarus	| Makes the Icarus project			|
-|  icarus 	| make SUBDIRS=icarus upload| Makes and uploads Icarus			|
-| 	SML		| 	make SUBDIRS=libsml		| Makes and creates .a for libsml	|
+|  vulcan	| 	 make SUBDIRS=vulcan	| Makes the vulcan project			|
+|  vulcan 	| make SUBDIRS=vulcan upload| Makes and uploads vulcan			|
+| 	SML		| 			make			| Navigate to */libsml				|
+|			|							|   Makes and creates .a for libsml	|
 |  dummy1	|	make SUBDIRS=dummy		| Makes the dummy project			|
 |  dummy1	| make SUBDIRS=dummy upload | Makes and uploads dummy1			|
 |  dummy2	| 			make			| Makes the base contained in /src	|

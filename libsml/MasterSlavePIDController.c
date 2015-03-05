@@ -5,9 +5,11 @@
  *        a multitasked Master/Slave PID Controller.
  *        See addendum documentation for more details.
  *
- * Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved.
- * Portions of this file may contain elements from the PROS API.
- * See include/API.h for additional notice.
+ * @htmlonly
+ * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
+ * Portions of this file may contain elements from the PROS API. <br>
+ * See ReadMe.md (Main Page) for additional notice.
+ * @endhtmlonly
  **********************************************************************/
 
 #include "main.h"

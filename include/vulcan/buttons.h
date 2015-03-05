@@ -1,12 +1,14 @@
 /**
  * @file include/vulcan/buttons.h
  * @author Elliot Berman
- * @brief Header file for buttons API <br>
- * @sa vulcan/buttons.c
+ * @brief Header file for buttons API
+ * @sa vulcan/buttons.c @link vulcan/buttons.c
  *
- * @copyright Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
- *		Portions of this file may contain elements from the PROS API. <br>
- *		See include/API.h for additional notice.
+ * @htmlonly
+ * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
+ * Portions of this file may contain elements from the PROS API. <br>
+ * See ReadMe.md (Main Page) for additional notice.
+ * @endhtmlonly
  ********************************************************************************/
 
 #ifndef BUTTONS_H_

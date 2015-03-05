@@ -1,11 +1,13 @@
 ﻿/**
  * @file include/vulcan/Lift.h	
  * @brief Header file for Lift functions <br>
- * See vulcan/Lift.c for details of all functions
+ * @sa vulcan/Lift.c @link vulcan/Lift.c
  *
- * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
+ * @htmlonly
+ * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
  * Portions of this file may contain elements from the PROS API. <br>
- * See include/API.h for additional notice.
+ * See ReadMe.md (Main Page) for additional notice.
+ * @endhtmlonly
  ********************************************************************************/
 
 #ifndef LIFT_H_

@@ -1,5 +1,6 @@
 /**
  * @file vulcan/buttons.c
+ * @author Elliot Berman
  * @brief Source file for buttons API
  *
  * The Buttons API enables press-once to trigger control, allowing button pressed to be made which act like taps.
@@ -9,10 +10,12 @@
  * This is useful in applications where the operator needs to press a button to change a state, but does not want 
  * the state to to change the state every time the button is checked. For example, toggling a solenoid on/off with
  * a single button. <br>
- * <br>
- * Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
+ * 
+ * @htmlonly
+ * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
  * Portions of this file may contain elements from the PROS API. <br>
- * See include/API.h for additional notice.
+ * See ReadMe.md (Main Page) for additional notice.
+ * @endhtmlonly
  ********************************************************************************/
 
 #include "main.h"

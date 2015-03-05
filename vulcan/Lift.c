@@ -107,7 +107,8 @@ int LiftGetQuadEncLeft()
 
 /**
 * @brief Returns the calibrated potentiometer left value.
-*		  The value is calibrated by taking the average of relative readings to the ground over the previous 20 calls
+*		  The value is calibrated by taking the average of relative readings to the ground over the previous 20 calls 
+* @note This functions is deprecated as the potentiometers are not currently installed. Code kept for quicker switching if necessary.
 * @deprecated Potentiometers not currently installed.
 */
 int LiftGetCalibPotLeft()
@@ -133,6 +134,7 @@ int LiftGetCalibPotLeft()
 
 /**
 * @brief Returns the raw potentioemter value (chopped off single digit for reduced noise)
+ * @note This functions is deprecated as the potentiometers are not currently installed. Code kept for quicker switching if necessary.
 * @deprecated Potentiometers not currently installed.
 */
 int LiftGetRawPotLeft()
@@ -219,6 +221,7 @@ int LiftGetQuadEncRight()
 /**
  * @brief Returns the calibrated potentiometer right value. 
  *		  The value is calibrated by taking the average of relative readings to the ground over the previous 20 calls
+ * @note This functions is deprecated as the potentiometers are not currently installed. Code kept for quicker switching if necessary.
  * @deprecated Potentiometers not currently installed.
  */
 int LiftGetCalibPotRight()
@@ -244,6 +247,7 @@ int LiftGetCalibPotRight()
 
 /**
  * @brief Returns the raw potentioemter value (chopped off single digit for reduced noise)
+ * @note This functions is deprecated as the potentiometers are not currently installed. Code kept for quicker switching if necessary.
  * @deprecated Potentiometers not currently installed.
  */
 int LiftGetRawPotRight()
@@ -359,7 +363,8 @@ static int liftComputeQuadEncDiff()
 
 /**
  * @brief Returns the difference between the potentiometers (right - left)
- *		  Used in the equalizer controller in the MasterSlavePIDController for the lift
+ *		  Used in the equalizer controller in the MasterSlavePIDController for the lift.
+ * @note This functions is deprecated as the potentiometers are not currently installed. Code kept for quicker switching if necessary.
  * @deprecated Potentiometers not installed.
  */
 static int liftComputePotDiff()

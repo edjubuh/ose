@@ -18,7 +18,7 @@
 #include "vulcan/mechop.h"
 #include "vulcan/Chassis.h"
 
-#define MECHOP_DEBUG false
+#define MECHOP_DEBUG false // If set to true, JoystickControl() will print debugging information to the LCD Screen on line 1
 
 /**
  * @brief Returns theta, determined from function parameters.

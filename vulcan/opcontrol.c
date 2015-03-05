@@ -23,44 +23,43 @@
 #include "vulcan/LCDDisplays.h"
 
 
-bool mode = false; // true: skyrise, false: cubes
 bool pidEnabled = false;
 
 /**
  * @brief Sets motors in motion based on user input (from controls).
- * 
- * @todo Work with Sam to implement driver control
  */
 void operatorControl()
 {
-	//recorderUser specific commands above
 	while (true)
 	{
 		if (buttonIsNewPress(JOY1_7L)) autonomous();
-		if (buttonIsNewPress(JOY1_8D)) mode = !mode;
 
 		// ---------- CHASSIS CONTROL ---------- //
 		// Tank Control
 		//ChassisSet((mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), false); 
 
 		// Mecanum Control
-		JoystickControl((mode ? -joystickGetAnalog(1, 4) : joystickGetAnalog(1, 1)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), (mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 1) : joystickGetAnalog(1, 4)));
+		JoystickControl(joystickGetAnalog(1, 1), joystickGetAnalog(1, 2), joystickGetAnalog(1, 3), joystickGetAnalog(1, 4));
 
 		// ------------ LIFT CONTROL ------------ //
-		if (mode && buttonIsNewPress(JOY1_8U))
-		{
+		if (buttonIsNewPress(JOY1_8U))
+		{ // Ground
+			LiftSetHeight(0);
+			pidEnabled = true;
+		}
+		else if (buttonIsNewPress(JOY1_8R))
+		{ // Medium Post 
 			LiftSetHeight(35);
 			pidEnabled = true;
 		}
-		if (!mode && buttonIsNewPress(JOY1_8U))
-		{
-			LiftSetHeight(17);
+		else if (buttonIsNewPress(JOY1_8L))
+		{ // Low Post
+			LiftSetHeight(20);
 			pidEnabled = true;
 		}
-
-		if (buttonIsNewPress(JOY1_8R))
-		{
-			LiftSetHeight(0);
+		else if (buttonIsNewPress(JOY1_8D))
+		{ // High Post
+			LiftSetHeight(85);
 			pidEnabled = true;
 		}
 

@@ -3,7 +3,7 @@
  * @author Elliot Berman
  * @brief Source file for buttons API
  *
- * The Buttons API enables press-once to trigger control, allowing button pressed to be made which act like taps.
+ * @details The Buttons API enables press-once to trigger control, allowing button pressed to be made which act like taps.
  * The API works by holding a boolean "wasPressed" for each button and when buttonIsNewPress() is called, 
  * the method compares whether the press is a new press that has not previously been detected. <br>
  * <br>

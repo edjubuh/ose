@@ -26,7 +26,7 @@ Before compiling any base, use <code>make clean</code> to clean the bin.
 |  dummy2	| 		<code>make upload</code>			| Makes and upload /src											|
 
 ## License
-Copyright &copy 2014-2015 Elliot Berman and Robert Shrote
+Copyright (c) 2014-2015 Elliot Berman and Robert Shrote
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +50,7 @@ SOFTWARE.
 *For compactness, main.h and API.h have been excluded from the printed documentation for compactness.
 Below is a copy of the PROS License:*
 
-Copyright &copy 2011-2014, Purdue University ACM SIG BOTS.
+Copyright (c) 2011-2014, Purdue University ACM SIG BOTS.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

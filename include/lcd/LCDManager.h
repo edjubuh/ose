@@ -1,11 +1,13 @@
 /**
 * @file include/lcd/LCDManager.h
 * @brief Header file for LCD Manager functions <br>
-* See liblcd/LCDManager.c for details of all functions
+* @sa liblcd/LCDManager.c @link liblcd/LCDManager.c
 *
-* @copyright Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
+* @htmlonly
+* @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
 * Portions of this file may contain elements from the PROS API. <br>
-* See include/main.h for additional notice.
+* See ReadMe.md (Main Page) for additional notice.
+* @endhtmlonly
 ********************************************************************************/
 
 #ifndef LCD_MANAGER_H_

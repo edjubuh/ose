@@ -1,11 +1,13 @@
 /**
  * @file include/vulcan/mechop.h
  * @brief Header file for advanced mecanum control <br>
- * See vulcan/mechop.c for details of all functions
+ * @sa vulcan/mechop.c @link vulcan/mechop.c
  *
+ * @htmlonly
  * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
  * Portions of this file may contain elements from the PROS API. <br>
- * See include/main.h for additional notice.
+ * See ReadMe.md (Main Page) for additional notice.
+ * @endhtmlonly
  ********************************************************************************/
 
 #ifndef MECHOP_H

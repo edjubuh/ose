@@ -2,11 +2,13 @@
  * @file vulcan/Chassis.h
  * @author Elliot Berman and Robert Shrote
  * @brief Header file for Chassis functions <br>
- * See vulcan/Chassis.c for details of all functions
+ * @sa vulcan/Chassis.c @link vulcan/Chassis.c
  *
- * Copyright(c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
+ * @htmlonly
+ * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
  * Portions of this file may contain elements from the PROS API. <br>
- * See include/API.h for additional notice.
+ * See ReadMe.md (Main Page) for additional notice.
+ * @endhtmlonly
  ********************************************************************************/
 
 #ifndef CHASSIS_H_

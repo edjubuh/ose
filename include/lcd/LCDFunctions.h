@@ -1,11 +1,13 @@
 /**
  * @file include/lcd/LCDFunctions.h
  * @brief Header file for primary LCD functions
- * See liblcd/liblcd.c for details of all functions
+ * @sa liblcd/LCDFunctions.c @link liblcd/LCDFunctions.c
  *
- * @copyright Copyright(c) 2014-2015 Olympic Steel Eagles.All rights reserved. <br>
- *		Portions of this file may contain elements from the PROS API. <br>
- *		See include/main.h for additional notice.
+ * @htmlonly
+ * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
+ * Portions of this file may contain elements from the PROS API. <br>
+ * See ReadMe.md (Main Page) for additional notice.
+ * @endhtmlonly
  ********************************************************************************/
 
 #ifndef LCDFUNC_H_

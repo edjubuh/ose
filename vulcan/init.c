@@ -15,6 +15,7 @@
 #include "lcd/LCDFunctions.h"
 #include "lcd/LCDManager.h"
 
+#include "vulcan/AutonomousHelper.h"
 #include "vulcan/CortexDefinitions.h"
 #include "vulcan/Chassis.h"
 #include "vulcan/Lift.h"
@@ -57,5 +58,11 @@ void initialize()
 	lcdprint(Left, 2, "LCD Display...");
 	//DisplayText o = { &getRobotState, Left };
 	//addCycleText(o, 1);
+	lcdprintf(Centered, 1, "M:%1.1V E:%1.1V", (double)powerLevelMain()/1000.0, (double)analogRead(ANA_POWEREXP)/70.0); // @todo: double check power expander reading is correct
 	lcdprint_d(Left, 2, 500, "....complete....");
+	if (!isEnabled() && isOnline())
+	{
+		lcdprint_dCentered, 1, 500, "Competition");
+		// @todo: Implement autonomous selection code here
+	}
 }

@@ -12,6 +12,8 @@
 #include "main.h"
 #include "lcd/LCDFunctions.h"
 
+
+#include "vulcan/AutonomousHelper.h"
 #include "vulcan/Chassis.h"
 #include "vulcan/Lift.h"
 #include "vulcan/ScoringMechanism.h"
@@ -19,8 +21,6 @@
 #define GREY_WHITE_LINE_THRESH	600
 #define BLUE_WHITE_LINE_THRESH	450
 #define RED_WHITE_LINE_THRESH	300
-
-static int skyriseBuilt = 0;
 
 /**
 * @brief Deploys the Scoring Mechanism by lifting the lift to 15 ticks, and then lowers back to 0

@@ -63,7 +63,7 @@ void lcdInitialize()
 }
 
 /**
- s* @brief Prints a string on the LCD Screen. If the length of the string is greater than 16 (the max number of character spaces), the text will scroll across the screen.
+ * @brief Prints a string on the LCD Screen. If the length of the string is greater than 16 (the max number of character spaces), the text will scroll across the screen.
  *
  * @param justification
  *        A text justification strategy to use to print if the number of characters is less than 16

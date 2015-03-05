@@ -2,7 +2,7 @@
 * @file include/vulcan/AutonomousHelper.h
 * @brief Header file containing miscelanous functions and variable to assist in execution and set up of autonomous
 * @sa vulcan/auto.c @link vulcan/auto.c
-* @sa vulcan/init.c @link vulan/init.c
+* @sa vulcan/init.c @link vulcan/init.c
 *
 * @htmlonly
 * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
@@ -20,8 +20,10 @@
 #define SKYRISE_STARTING_TILE	true
 #define POST_STARTING_TILE		false
 
+bool runAutonomous = false;
 bool alliance;
 bool startingTile;
+bool runPSkills = false;
 
 int skyriseBuilt = 0;
 

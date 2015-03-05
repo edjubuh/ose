@@ -1,4 +1,18 @@
+/**
+* @file liblcd/LCDFunctions.c
+* @author Rob Shrote
+* @brief Source file the LCD Menu.
+*
+* @htmlonly
+* @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
+* Portions of this file may contain elements from the PROS API. <br>
+* See ReadMe.md (Main Page) for additional notice.
+* @endhtmlonly
+********************************************************************************/
+
+
 #include "lcd/lcdmenu.h"
+#include "lcd/LCDFunctions.h"
 
 /**
  * @brief Creates an LCDMenu struct for use in rotating through menus
@@ -41,7 +55,7 @@ LCDMenu lcdmenuCreate(int numTitles, char *titles[] , void (**function)())
  */
 void lcdmenuDisplay(LCDMenu *menu)
 {
-    lcdprintf(Left, 1, "%s", menu->titles[display]);
+    lcdprintf(Left, 1, "%s", menu->titles[menu->display]);
     return;
 }
 

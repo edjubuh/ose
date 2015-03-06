@@ -41,7 +41,6 @@ void initializeIO() {
  */
 char *titles[NUMTITLES] = { "No auton", "Blue Sky", "Blue Cube", "Red Sky" , "Red Cube", "P. skills" };
 void (*exec[NUMTITLES])() = { SelectNoAuto, SelectBlueSky, SelectBlueCube, SelectRedSky, SelectRedCube, SelectPSkills };
-unsigned char numTitles = NUMTITLES;
 LCDMenu main_menu;
 
 /**
@@ -73,7 +72,7 @@ void initialize()
 	{
 		lcdprint_d(Left, 1, 500, "Competition mode");
 	}
-	main_menu = lcdmenuCreate(numTitles, titles, exec);
+	main_menu = lcdmenuCreate(NUMTITLES, titles, exec);
 	bool quit = false;
 	lcdprint(Centered, 1, "Select auton");
 	lcdmenuDisplay(&main_menu);

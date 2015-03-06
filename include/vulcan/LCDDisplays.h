@@ -12,7 +12,6 @@ char * getRobotState();
 //external variable for the lcd menus
 extern char *titles[NUMTITLES];
 extern void (*exec[NUMTITLES])();
-extern unsigned char numTitles;
 extern LCDMenu main_menu;
 
 #endif

@@ -15,6 +15,7 @@
 
 #include "vulcan/AutonomousHelper.h"
 #include "vulcan/Chassis.h"
+#include "vulcan/LCDDisplays.h"
 #include "vulcan/Lift.h"
 #include "vulcan/ScoringMechanism.h"
 
@@ -25,10 +26,6 @@
 #define RED_WHITE_LINE_THRESH	300
 
 
-bool runAutonomous;
-bool alliance;
-bool startingTile;
-bool runPSkills;
 
 int skyriseBuilt = 0;
 
@@ -53,11 +50,20 @@ void BuildSkyrise()
 	delay(65);
 	ChassisSet(0, 0, true);
 	delay(80);
+    
+    //Reset the IMEs
 	ChassisResetIMEs();
+    //extend claw
 	ScoringMechClawSet(true);
+    
 	// Go up to avoid skyrise base
 	LiftGoToHeightCompletion(15);
-	delay(25); 
+	delay(25);
+    
+    /**
+     * @note Go to specified height at specified speed to build the next
+     * Skyrise section. skyriseBuilt is an extern variable.
+     */
 	int height = 0;
 	int speed = -127;
 	switch (skyriseBuilt)
@@ -77,6 +83,7 @@ void BuildSkyrise()
 	}
 	ChassisSet(speed, speed, false);
 	delay(100);
+    
 	long start = millis();
 	while (!LiftGoToHeightContinuous(height))
 	{
@@ -85,23 +92,31 @@ void BuildSkyrise()
 			ChassisSet(0, 0, false);
 		delay(10);
 	}
-	if (millis() - start < 600) delay(600 - (millis() - start)); // Finish up remaining 600 milliseconds if necessary
+	if (millis() - start < 600)
+        delay(600 - (millis() - start)); // Finish up remaining 600 milliseconds if necessary
+    
 	ChassisSet(0, 0, false);
 	delay(100);
 	ChassisAlignToLine(-30, -30, Grey); // Align self to line to ready for drop
 	delay(25);
 	ChassisSetMecanum(-M_PI_2, 127, 1, false);
 	//delay(150);
-	if(skyriseBuilt == 0) delay(135);
-	else if (skyriseBuilt == 1) delay(260);
-	else delay(280);
+    
+	if(skyriseBuilt == 0)
+        delay(135);
+	else if (skyriseBuilt == 1)
+        delay(260);
+	else
+        delay(280);
+    
 	ChassisSet(0, 0, true);
-	if (skyriseBuilt > 1)
-	{ // Once we build one skyrise, need to go forward a little to align correctly
+	if (skyriseBuilt > 1) {
+        // Once we build one skyrise, need to go forward a little to align correctly
 		ChassisSet(127, 127, false);
 		delay(40);
 		ChassisSet(0, 0, true);
 	}
+	
 	delay(550); // Wait for robot to settle
 	ScoringMechClawSet(false);
 	delay(300); // Wait for skyrise to drop far enough for robot to begin driving forward
@@ -138,7 +153,8 @@ void autonomous()
 }
 
 /**
- * @brief Runs "no autonomous" autonomous for use when requested by teams or autonomous should not function. Will deploy scoring mechanism anyway
+ * @brief Runs "no autonomous" autonomous for use when requested by teams or autonomous
+ *        should not function. Will deploy scoring mechanism anyway.
  */
 void RunNoAutonomous()
 {

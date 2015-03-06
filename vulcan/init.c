@@ -20,9 +20,9 @@
 #include "vulcan/buttons.h"
 #include "vulcan/CortexDefinitions.h"
 #include "vulcan/Chassis.h"
+#include "vulcan/LCDDisplays.h"
 #include "vulcan/Lift.h"
 #include "vulcan/ScoringMechanism.h"
-#include "vulcan/LCDDisplays.h"
 
 
 /**
@@ -38,7 +38,9 @@ void initializeIO()
 }
 
 /**
- * Declare global variables.
+ * @brief Declare global variables needed for the LCDMenu.
+ * 
+ * @note GLOBAL VARIABLES DECLARED IN LCDDisplays.h!!!
  */
 char *titles[NUMTITLES] = { "No auton", "Blue Sky", "Blue Cube", "Red Sky", "Red Cube", "P. skills" };
 void(*exec[NUMTITLES])() = { RunNoAutonomous, RunBlueSky, RunBlueCube, RunRedSky, RunRedCube, RunPSkills };
@@ -96,6 +98,8 @@ void initialize()
 				delay(100);
 			}
 			lcdprint(Centered, 1, "Selected");
+            //print the selected autonomous
+            lcdprintf(Centered, 2, "%s", main_menu.titles[main_menu.execute]);
 			delay(750);
 		}
 	}

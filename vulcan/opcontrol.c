@@ -32,7 +32,7 @@ void operatorControl()
 {
 	while (true)
 	{
-		if (buttonIsNewPress(JOY1_7L)) autonomous();
+		//if (buttonIsNewPress(JOY1_7L)) autonomous();
 
 		// ---------- CHASSIS CONTROL ---------- //
 		// Tank Control

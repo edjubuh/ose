@@ -18,6 +18,8 @@
 #include "vulcan/Lift.h"
 #include "vulcan/ScoringMechanism.h"
 
+#define AUTO_DEBUG
+
 #define GREY_WHITE_LINE_THRESH	600
 #define BLUE_WHITE_LINE_THRESH	450
 #define RED_WHITE_LINE_THRESH	300
@@ -91,12 +93,13 @@ void BuildSkyrise()
 	ChassisSetMecanum(-HALFPI, 127, 1, false);
 	//delay(150);
 	if(skyriseBuilt == 0) delay(135);
-	else delay(250);
+	else if (skyriseBuilt == 1) delay(260);
+	else delay(280);
 	ChassisSet(0, 0, true);
 	if (skyriseBuilt > 1)
 	{ // Once we build one skyrise, need to go forward a little to align correctly
 		ChassisSet(127, 127, false);
-		delay(50);
+		delay(40);
 		ChassisSet(0, 0, true);
 	}
 	delay(550); // Wait for robot to settle
@@ -104,7 +107,7 @@ void BuildSkyrise()
 	delay(300); // Wait for skyrise to drop far enough for robot to begin driving forward
 	ChassisSetMecanum(HALFPI, 127, 0, false);
 	if(skyriseBuilt == 0) delay(45);
-	else delay(75);
+	else delay(80);
 	ChassisSet(0, 0, true);
 	delay(50);
 	//delay(1000);
@@ -124,10 +127,9 @@ void BuildSkyrise()
 void autonomous()
 {
 	lcdprint(Centered, 2, "Running auton");
-#if AUTO_DEBUG
+#ifdef AUTO_DEBUG
 	long start = millis();
 #endif
-	
 	skyriseBuilt = 0;
 	if (!runAutonomous) return;
 	if (runPSkills)
@@ -183,7 +185,7 @@ void autonomous()
 	{
 		DeployScoringMech();
 	}
-#if AUTO_DEBUG
+#ifdef AUTO_DEBUG
 	lcdprint_df(Centered, 2, 2000, "Finished %.2f", (millis() - start)/1000.0);
 #endif
 }

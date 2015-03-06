@@ -1,7 +1,6 @@
 /**
  * @file vulcan/lift.c	
  * @author Elliot Berman and Rob Shrote
- * @brief Source file for lift functions.
  *
  * @htmlonly
  * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>

@@ -1,7 +1,6 @@
 /**
  * @file libsml/SingleThreadPIDController.c
  * @author Elliot Berman
- * @brief Source file for single-threaded PIDController functions.	
  *
  * @htmlonly
  * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>

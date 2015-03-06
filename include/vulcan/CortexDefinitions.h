@@ -1,6 +1,5 @@
 /**
 * @file include/vulcan/CortexDefinitions.h
-* @brief Header file containing Cortex wiring constants
 *
 * @htmlonly
 * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>

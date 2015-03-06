@@ -1,6 +1,5 @@
 /**
 * @file include/vulcan/AutonomousHelper.h
-* @brief Header file containing miscelanous functions and variable to assist in execution and set up of autonomous
 * @sa vulcan/auto.c @link vulcan/auto.c
 * @sa vulcan/init.c @link vulcan/init.c
 *

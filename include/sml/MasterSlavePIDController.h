@@ -1,7 +1,6 @@
 /**
  * @file include/sml/MasterSlavePIDController.h
  * @author Elliot Berman
- * @brief Header file for master/slave PID controller functions <br>
  * @sa libsml/MasterSlavePIDController.c @link libsml/MasterSlavePIDController.c
  *
  * @htmlonly

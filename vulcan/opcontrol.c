@@ -1,7 +1,6 @@
 /**
  * @file vulcan/opcontrol.c
  * @author Elliot Berman and Robert Shrote
- * @brief Source file for operator control.
  *
  * @htmlonly
  * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>

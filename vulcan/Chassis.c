@@ -1,7 +1,6 @@
 /**
  * @file vulcan/Chassis.c
  * @author Elliot Berman and Robert Shrote
- * @brief Source file for Chassis functions
  *
  * @htmlonly
  * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
@@ -28,9 +27,10 @@ static PIDController leftController;
  * @brief Sets the speed of the left motors on the chassis as specified by the parameters
  *
  * @param speed
- *		  [-127,127] The speed of the left side of the chassis
+ *		  The speed of the left side of the chassis
  * @param immediate
  *		  Determins if speed input change is immediate or ramped according to SML
+ * @pre Speed must be within bounds [-127,127]
  */
 void ChassisSetLeft(int speed, bool immediate)
 {
@@ -86,9 +86,10 @@ static PIDController rightController;
 * @brief Sets the speed of the right motors on the chassis as specified by the parameters
 *
 * @param speed
-*		  [-127,127] The speed of the right side of the chassis
+*		The speed of the right side of the chassis
 * @param immediate
 *		  Determins if speed input change is immediate or ramped according to SML
+* @pre Speed must be within bounds [-127,127]
 */
 void ChassisSetRight(int speed, bool immediate)
 {
@@ -123,7 +124,7 @@ int ChassisGetIRRight()
  * @param tile
  *			The tile color the line will be on (different thresholds for different tiles)
  *
- * @returns Booleanr representing whether or not a line is detected
+ * @returns Boolean representing whether or not a line is detected
  */
 bool ChassisHasIRLineRight(kTiles tile)
 {
@@ -150,16 +151,22 @@ bool ChassisHasIRLineRight(kTiles tile)
  *        [-127,127] The speed of the right side of the chassis.
  * @param immediate
  *        Determines if speed input change is immediate or ramped according to SML
+ * @pre Left and right must be within bounds [-127,127] or will be scaled back accordingly
  */
 void ChassisSet(int left, int right, bool immediate)
 {
 	//statements below catch speeds out of range
-	//catches left
-	if (abs(left) > 127)
-		left = signbit(left) ? -127 : 127;
-	//catches right
-	if (abs(right) > 127)
-		right = signbit(right) ? -127 : 127;
+	if (abs(left) > 127 || abs(right) > 127)
+	{
+		int max = 127;
+		if (abs(left) > max)
+			max = abs(left);
+		if (abs(right) > max)
+			max = abs(right);
+
+		left *= (127.0/max);
+		right *= (127.0/max);
+	}
 
 	//set left and right wheel speeds according to parameters above.
 	MotorSet(MOTOR_CHASSIS_FRONTLEFT, left, immediate);

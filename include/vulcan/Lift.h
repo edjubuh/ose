@@ -1,6 +1,5 @@
 ﻿/**
- * @file include/vulcan/Lift.h	
- * @brief Header file for Lift functions <br>
+ * @file include/vulcan/Lift.h
  * @sa vulcan/Lift.c @link vulcan/Lift.c
  *
  * @htmlonly

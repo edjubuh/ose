@@ -1,6 +1,5 @@
 /**
 * @file include/lcd/lcdmenu.h
-* @brief Header fiel for the LCD menu functionality of liblcd
 * @sa liblcd/lcdmenu.c @link liblcd/lcdmenu.c
 *
 * @htmlonly

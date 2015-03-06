@@ -1,6 +1,5 @@
 /**
 * @file include/lcd/LCDManager.h
-* @brief Header file for LCD Manager functions <br>
 * @sa liblcd/LCDManager.c @link liblcd/LCDManager.c
 *
 * @htmlonly

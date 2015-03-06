@@ -1,7 +1,6 @@
 /**
  * @file vulcan/buttons.c
  * @author Elliot Berman
- * @brief Source file for buttons API
  *
  * @details The Buttons API enables press-once to trigger control, allowing button pressed to be made which act like taps.
  * The API works by holding a boolean "wasPressed" for each button and when buttonIsNewPress() is called, 

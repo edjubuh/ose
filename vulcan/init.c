@@ -41,7 +41,7 @@ void initializeIO()
  * Declare global variables.
  */
 char *titles[NUMTITLES] = { "No auton", "Blue Sky", "Blue Cube", "Red Sky", "Red Cube", "P. skills" };
-void(*exec[NUMTITLES])() = { SelectNoAuto, SelectBlueSky, SelectBlueCube, SelectRedSky, SelectRedCube, SelectPSkills };
+void(*exec[NUMTITLES])() = { RunNoAutonomous, RunBlueSky, RunBlueCube, RunRedSky, RunRedCube, RunPSkills };
 LCDMenu main_menu;
 
 /**
@@ -72,7 +72,7 @@ void initialize()
 	if (!isEnabled() && isOnline())
 	{
 		lcdprint_d(Left, 1, 500, "Competition mode");
-		main_menu = lcdmenuCreate(numTitles, titles, exec);
+		main_menu = lcdmenuCreate(NUMTITLES, titles, exec);
 		bool quit = false;
 		lcdprint(Centered, 1, "Select auton");
 		lcdmenuDisplay(&main_menu);
@@ -96,7 +96,6 @@ void initialize()
 				delay(100);
 			}
 			lcdprint(Centered, 1, "Selected");
-			lcdmenuExecute(&main_menu);
 			delay(750);
 		}
 	}

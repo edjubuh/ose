@@ -1,3 +1,6 @@
+#ifndef LCDMENU_H_
+#define LCDMENU_H_
+
 /**
  * @struct lcd_menu
  *         A struct representing a menu. Contains pointers to titles
@@ -15,6 +18,12 @@ struct lcd_menu {
 typedef struct lcd_menu LCDMenu;
 
 /**
+ * Constants
+ */
+#define LCD_SHIFT_LEFT -1
+#define LCD_SHIFT_RIGHT 1
+
+/**
  * Function declarations
  */
 LCDMenu lcdmenuCreate(int numTitles, char *titles[] , void (**function)());
@@ -22,3 +31,5 @@ void lcdmenuDisplay(LCDMenu *menu);
 void lcdmenuShift(LCDMenu *menu, signed char shift);
 void lcdmenuDecide(LCDMenu *menu);
 void lcdmenuExecute(LCDMenu *menu);
+
+#endif /*LCDMENU_H_*/

@@ -11,7 +11,7 @@
 
 #include "main.h"
 #include "lcd/LCDFunctions.h"
-
+#include <math.h>
 
 #include "vulcan/AutonomousHelper.h"
 #include "vulcan/Chassis.h"
@@ -21,6 +21,14 @@
 #define GREY_WHITE_LINE_THRESH	600
 #define BLUE_WHITE_LINE_THRESH	450
 #define RED_WHITE_LINE_THRESH	300
+
+
+bool runAutonomous;
+bool alliance;
+bool startingTile;
+bool runPSkills;
+
+int skyriseBuilt = 0;
 
 /**
 * @brief Deploys the Scoring Mechanism by lifting the lift to 15 ticks, and then lowers back to 0
@@ -83,7 +91,7 @@ void BuildSkyrise()
 	ChassisSetMecanum(-HALFPI, 127, 1, false);
 	//delay(150);
 	if(skyriseBuilt == 0) delay(135);
-	else delay(230);
+	else delay(250);
 	ChassisSet(0, 0, true);
 	if (skyriseBuilt > 1)
 	{ // Once we build one skyrise, need to go forward a little to align correctly
@@ -95,7 +103,8 @@ void BuildSkyrise()
 	ScoringMechClawSet(false);
 	delay(300); // Wait for skyrise to drop far enough for robot to begin driving forward
 	ChassisSetMecanum(HALFPI, 127, 0, false);
-	delay(45);
+	if(skyriseBuilt == 0) delay(45);
+	else delay(75);
 	ChassisSet(0, 0, true);
 	delay(50);
 	//delay(1000);
@@ -115,11 +124,66 @@ void BuildSkyrise()
 void autonomous()
 {
 	lcdprint(Centered, 2, "Running auton");
+#if AUTO_DEBUG
 	long start = millis();
+#endif
+	
 	skyriseBuilt = 0;
-	DeployScoringMech();
-	BuildSkyrise();
-	BuildSkyrise();
-	//BuildSkyrise();
+	if (!runAutonomous) return;
+	if (runPSkills)
+	{
+		DeployScoringMech();
+		BuildSkyrise();
+		BuildSkyrise();
+		BuildSkyrise();
+		ChassisSet(127, -127, false);
+		delay(1750);
+		ChassisSet(0, 0, false);
+		delay(9000);
+		ChassisResetIMEs();
+		while (!ChassisGoToGoalContinuous(1700, 1700) | !LiftGoToHeightContinuous(15))
+			delay(10);
+		LiftGoToHeightContinuous(0);
+		ChassisSet(0, 0, false);
+	}
+	else if (alliance == RED_ALLIANCE && startingTile == SKYRISE_STARTING_TILE)
+	{
+		DeployScoringMech();
+		BuildSkyrise();
+		BuildSkyrise();
+	}
+	else if (alliance == RED_ALLIANCE && startingTile == POST_STARTING_TILE)
+	{
+		LiftGoToHeightCompletion(45);
+		//ChassisSet(127, 127, false);
+		//delay(50);
+		ChassisSetMecanum(M_PI_2, 127, 2, false);
+		delay(1400);
+		ChassisSet(0, 0, false);
+		ScoringMechNeedleSet(false);
+		delay(400);
+		ScoringMechNeedleSet(true);
+		ChassisSetMecanum(-M_PI_2, 127, -3, false);
+		delay(2000);
+		LiftGoToHeightContinuous(0);
+		ChassisSet(-127, 127, false);
+		delay(1000);
+		ChassisSet(0, 0, false);
+
+	}
+	else if (alliance == BLUE_ALLIANCE && startingTile == SKYRISE_STARTING_TILE)
+	{
+
+	}
+	else if (alliance == BLUE_ALLIANCE && startingTile == POST_STARTING_TILE)
+	{
+
+	}
+	else
+	{
+		DeployScoringMech();
+	}
+#if AUTO_DEBUG
 	lcdprint_df(Centered, 2, 2000, "Finished %.2f", (millis() - start)/1000.0);
+#endif
 }

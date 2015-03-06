@@ -14,8 +14,10 @@
 #include "sml/SmartMotorLibrary.h"
 #include "lcd/LCDFunctions.h"
 #include "lcd/LCDManager.h"
+#include "lcd/lcdmenu.h"
 
 #include "vulcan/AutonomousHelper.h"
+#include "vulcan/buttons.h"
 #include "vulcan/CortexDefinitions.h"
 #include "vulcan/Chassis.h"
 #include "vulcan/Lift.h"
@@ -34,6 +36,13 @@ void initializeIO() {
 	setTeamName("7701");
 }
 
+/**
+ * Declare global variables.
+ */
+char *titles[NUMTITLES] = { "No auton", "Blue Sky", "Blue Cube", "Red Sky" , "Red Cube", "P. skills" };
+void (*exec[NUMTITLES])() = { SelectNoAuto, SelectBlueSky, SelectBlueCube, SelectRedSky, SelectRedCube, SelectPSkills };
+unsigned char numTitles = NUMTITLES;
+LCDMenu main_menu;
 
 /**
  * @brief Initializes the robot. Displays graphics depicting process in initialization
@@ -58,11 +67,73 @@ void initialize()
 	lcdprint(Left, 2, "LCD Display...");
 	//DisplayText o = { &getRobotState, Left };
 	//addCycleText(o, 1);
-	lcdprintf(Centered, 1, "M:%1.1V E:%1.1V", (double)powerLevelMain()/1000.0, (double)analogRead(ANA_POWEREXP)/70.0); /// @todo double check power expander reading is correct
+	lcdprintf(Centered, 1, "E:%1.1fV M:%1.1fV", (double)analogRead(ANA_POWEREXP)/70.0, (double)powerLevelMain()/1000.0); /// @todo double check power expander reading is correct
 	lcdprint_d(Left, 2, 500, "....complete....");
 	if (!isEnabled() && isOnline())
 	{
-		lcdprint_dCentered, 1, 500, "Competition");
-		/// @todo Implement autonomous selection code here
+		lcdprint_d(Left, 1, 500, "Competition mode");
 	}
+	main_menu = lcdmenuCreate(numTitles, titles, exec);
+	bool quit = false;
+	lcdprint(Centered, 1, "Select auton");
+	lcdmenuDisplay(&main_menu);
+	while (!quit)
+	{
+		if (buttonIsNewPress(LCD_LEFT))
+			lcdmenuShift(&main_menu, LCD_SHIFT_LEFT);
+		else if (buttonIsNewPress(LCD_CENT))
+		{
+			lcdmenuDecide(&main_menu);
+			quit = true;
+			continue;
+		}
+		else if (buttonIsNewPress(LCD_RIGHT))
+			lcdmenuShift(&main_menu, LCD_SHIFT_RIGHT);
+		//delay and allow for other tasks to take place
+		delay(100);
+	}
+	lcdprint(Centered, 1, "Selected");
+	lcdmenuExecute(&main_menu);
+	delay(750);
+}
+
+
+void SelectNoAuto()
+{
+	runAutonomous = false;
+	lcdprint(Centered, 2, "No auton");
+}
+void SelectBlueSky()
+{
+	runAutonomous = true;
+	alliance = BLUE_ALLIANCE;
+	startingTile = SKYRISE_STARTING_TILE;
+	lcdprint(Centered, 2, "Blue Sky");
+}
+void SelectBlueCube()
+{
+	runAutonomous = true;
+	alliance = BLUE_ALLIANCE;
+	startingTile = POST_STARTING_TILE;
+	lcdprint(Centered, 2, "Blue cube");
+}
+void SelectRedSky()
+{
+	runAutonomous = true;
+	alliance = RED_ALLIANCE;
+	startingTile = SKYRISE_STARTING_TILE;
+	lcdprint(Centered, 2, "Red Sky");
+}
+void SelectRedCube()
+{
+	runAutonomous = true;
+	alliance = RED_ALLIANCE;
+	startingTile = POST_STARTING_TILE;
+	lcdprint(Centered, 2, "Red Cube");
+}
+void SelectPSkills()
+{
+	runAutonomous = true;
+	runPSkills = true;
+	lcdprint(Centered, 2, "P. Skills");
 }

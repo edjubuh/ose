@@ -21,9 +21,6 @@
 #define CHASSIS_IR_RIGHT_BLUE_THRESH	200 //!@todo: Find this value
 #define CHASSIS_IR_LEFT_BLUE_THRESH		200 //!@todo: Find this value
 
-
-#define HALFPI					1.570796326794896619231321691639751442098584
-
 typedef enum
 {
 	Red,

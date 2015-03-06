@@ -35,6 +35,7 @@ typedef struct lcd_menu LCDMenu;
 #define LCD_SHIFT_LEFT -1
 #define LCD_SHIFT_RIGHT 1
 
+///@cond
 /**
  * Function declarations
  */
@@ -43,5 +44,5 @@ void lcdmenuDisplay(LCDMenu *menu);
 void lcdmenuShift(LCDMenu *menu, signed char shift);
 void lcdmenuDecide(LCDMenu *menu);
 void lcdmenuExecute(LCDMenu *menu);
-
+///@endcond
 #endif /*LCDMENU_H_*/

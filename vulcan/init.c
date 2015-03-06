@@ -72,29 +72,29 @@ void initialize()
 	if (!isEnabled() && isOnline())
 	{
 		lcdprint_d(Left, 1, 500, "Competition mode");
-	}
-	main_menu = lcdmenuCreate(numTitles, titles, exec);
-	bool quit = false;
-	lcdprint(Centered, 1, "Select auton");
-	lcdmenuDisplay(&main_menu);
-	while (!quit)
-	{
-		if (buttonIsNewPress(LCD_LEFT))
-			lcdmenuShift(&main_menu, LCD_SHIFT_LEFT);
-		else if (buttonIsNewPress(LCD_CENT))
+		main_menu = lcdmenuCreate(numTitles, titles, exec);
+		bool quit = false;
+		lcdprint(Centered, 1, "Select auton");
+		lcdmenuDisplay(&main_menu);
+		while (!quit)
 		{
-			lcdmenuDecide(&main_menu);
-			quit = true;
-			continue;
+			if (buttonIsNewPress(LCD_LEFT))
+				lcdmenuShift(&main_menu, LCD_SHIFT_LEFT);
+			else if (buttonIsNewPress(LCD_CENT))
+			{
+				lcdmenuDecide(&main_menu);
+				quit = true;
+				continue;
+			}
+			else if (buttonIsNewPress(LCD_RIGHT))
+				lcdmenuShift(&main_menu, LCD_SHIFT_RIGHT);
+			//delay and allow for other tasks to take place
+			delay(100);
 		}
-		else if (buttonIsNewPress(LCD_RIGHT))
-			lcdmenuShift(&main_menu, LCD_SHIFT_RIGHT);
-		//delay and allow for other tasks to take place
-		delay(100);
+		lcdprint(Centered, 1, "Selected");
+		lcdmenuExecute(&main_menu);
+		delay(750);
 	}
-	lcdprint(Centered, 1, "Selected");
-	lcdmenuExecute(&main_menu);
-	delay(750);
 }
 
 

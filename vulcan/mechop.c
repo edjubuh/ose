@@ -23,7 +23,7 @@
 /**
  * @brief Returns theta, determined from function parameters.
  *
- * NOTE: Helpful constants defined in math.h: <br>
+ * @note Helpful constants defined in math.h: <br>
  *		  MACRO   |  Equivalent 
  *		 -------- | -----------
  *        M_PI    |  \f[\pi\f]
@@ -64,7 +64,7 @@ double getJoyTheta(int x, int y)
  *
  * @param theta
  *        Angle to be rounded (in radians) and its sector determined.<br>
- *        NOTE: The double 'theta' will be rounded to three decimal places and converted to
+ *        @note The double 'theta' will be rounded to three decimal places and converted to
  *              an int in order to prevent error in comparisons. <br>
  *              EXAMPLE: double 1.526312 r  ------> int 1526
  *
@@ -132,6 +132,15 @@ int aHypo(double h1, double h2)
 #define MOTOROPTION false // used for the function below
 /**
 * @brief Controls robot wheels.
+* 
+* @param r1
+*        Right joystick, channel 1 input
+* @param r2
+*        Right joystick, channel 2 input
+* @param l3
+*        Left joystick, channel 3 input
+* @param l4
+*        Left joystick, channel 4 input
 */
 void JoystickControl(int r1, int r2, int l3, int l4)
 {

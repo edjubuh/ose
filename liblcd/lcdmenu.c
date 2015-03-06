@@ -55,7 +55,7 @@ LCDMenu lcdmenuCreate(int numTitles, char *titles[] , void (**function)())
  */
 void lcdmenuDisplay(LCDMenu *menu)
 {
-    lcdprintf(Left, 1, "%s", menu->titles[menu->display]);
+    lcdprintf(Centered, 2, "< %s >", menu->titles[menu->display]);
     return;
 }
 
@@ -71,8 +71,6 @@ void lcdmenuDisplay(LCDMenu *menu)
  *              char value) inclusive.
  *        @note For safety use the #defined values of LCD_LEFT & LCD_RIGHT
  */
-#define LCD_LEFT -1
-#define LCD_RIGHT 1
 //only use defined LCD_LEFT and LCD_RIGHT
 void lcdmenuShift(LCDMenu *menu, signed char shift)
 {

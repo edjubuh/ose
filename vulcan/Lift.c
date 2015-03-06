@@ -388,8 +388,8 @@ void LiftInitialize()
 	rightEncoder = encoderInit(DIG_LIFT_ENC_RIGHT_TOP, DIG_LIFT_ENC_RIGHT_BOT, true);
 	
 	//                                           Execute           Call			    Kp    Ki   Kd   MaI  MiI  Tol
-	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  3.16, 0.18, 0.15, 150, -75, 3);
-	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 3.16, 0.18, 0.15, 150, -75, 3);
+	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  3.20, 0.18, 0.16, 150, -75, 3);
+	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 3.20, 0.18, 0.16, 150, -75, 3);
 	PIDController equalizer = PIDControllerCreate(NULL, &liftComputeQuadEncDiff,   0.90, 0.45, 0.01, 100, -75, 3);
 
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, 105, -100, false);

@@ -15,20 +15,26 @@
 #define AUTON_HELPER_H_
 
 #define RED_ALLIANCE		true
-#define BLUE_ALLIANCe		false
+#define BLUE_ALLIANCE		false
 
 #define SKYRISE_STARTING_TILE	true
 #define POST_STARTING_TILE		false
 
-bool runAutonomous = false;
-bool alliance;
-bool startingTile;
-bool runPSkills = false;
+extern bool runAutonomous;
+extern bool alliance;
+extern bool startingTile;
+extern bool runPSkills;
 
-int skyriseBuilt = 0;
+extern int skyriseBuilt;
 
 ///@cond
 void DeployScoringMech();
 void BuildSkyrise();
+void SelectNoAuto();
+void SelectBlueSky();
+void SelectBlueCube();
+void SelectRedSky();
+void SelectRedCube();
+void SelectPSkills();
 //@endcond
 #endif

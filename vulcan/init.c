@@ -1,5 +1,5 @@
 /**
- * @file vulcan/init.c		
+ * @file vulcan/init.c
  * @brief Source file for initialize functions.
  *
  * @htmlonly
@@ -28,7 +28,8 @@
 /**
  * @brief Runs pre-initialization functions.
  */
-void initializeIO() {
+void initializeIO()
+{
 	pinMode(DIG_SCORINGMECH_NEEDLE, OUTPUT);
 	pinMode(DIG_SCORINGMECH_CLAW, OUTPUT);
 	ScoringMechClawSet(false);
@@ -39,9 +40,8 @@ void initializeIO() {
 /**
  * Declare global variables.
  */
-char *titles[NUMTITLES] = { "No auton", "Blue Sky", "Blue Cube", "Red Sky" , "Red Cube", "P. skills" };
-void (*exec[NUMTITLES])() = { SelectNoAuto, SelectBlueSky, SelectBlueCube, SelectRedSky, SelectRedCube, SelectPSkills };
-unsigned char numTitles = NUMTITLES;
+char *titles[NUMTITLES] = { "No auton", "Blue Sky", "Blue Cube", "Red Sky", "Red Cube", "P. skills" };
+void(*exec[NUMTITLES])() = { SelectNoAuto, SelectBlueSky, SelectBlueCube, SelectRedSky, SelectRedCube, SelectPSkills };
 LCDMenu main_menu;
 
 /**
@@ -82,18 +82,23 @@ void initialize()
 				lcdmenuShift(&main_menu, LCD_SHIFT_LEFT);
 			else if (buttonIsNewPress(LCD_CENT))
 			{
-				lcdmenuDecide(&main_menu);
-				quit = true;
-				continue;
+				if (buttonIsNewPress(LCD_LEFT))
+					lcdmenuShift(&main_menu, LCD_SHIFT_LEFT);
+				else if (buttonIsNewPress(LCD_CENT))
+				{
+					lcdmenuDecide(&main_menu);
+					quit = true;
+					continue;
+				}
+				else if (buttonIsNewPress(LCD_RIGHT))
+					lcdmenuShift(&main_menu, LCD_SHIFT_RIGHT);
+				//delay and allow for other tasks to take place
+				delay(100);
 			}
-			else if (buttonIsNewPress(LCD_RIGHT))
-				lcdmenuShift(&main_menu, LCD_SHIFT_RIGHT);
-			//delay and allow for other tasks to take place
-			delay(100);
+			lcdprint(Centered, 1, "Selected");
+			lcdmenuExecute(&main_menu);
+			delay(750);
 		}
-		lcdprint(Centered, 1, "Selected");
-		lcdmenuExecute(&main_menu);
-		delay(750);
 	}
 }
 

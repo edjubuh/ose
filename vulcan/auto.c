@@ -15,6 +15,7 @@
 
 #include "vulcan/AutonomousHelper.h"
 #include "vulcan/Chassis.h"
+#include "vulcan/LCDDisplays.h"
 #include "vulcan/Lift.h"
 #include "vulcan/ScoringMechanism.h"
 
@@ -25,10 +26,6 @@
 #define RED_WHITE_LINE_THRESH	300
 
 
-bool runAutonomous;
-bool alliance;
-bool startingTile;
-bool runPSkills;
 
 int skyriseBuilt = 0;
 

@@ -14,7 +14,6 @@
 #ifndef AUTON_HELPER_H_
 #define AUTON_HELPER_H_
 
-#include "lcd/lcdmenu.h"
 
 #define RED_ALLIANCE		true
 #define BLUE_ALLIANCE		false
@@ -22,14 +21,8 @@
 #define SKYRISE_STARTING_TILE	true
 #define POST_STARTING_TILE		false
 
-extern bool runAutonomous;
-extern bool alliance;
-extern bool startingTile;
-extern bool runPSkills;
-
 extern int skyriseBuilt;
 
-extern LCDMenu main_menu;
 
 ///@cond
 void DeployScoringMech();

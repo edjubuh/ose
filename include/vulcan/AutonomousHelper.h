@@ -14,6 +14,8 @@
 #ifndef AUTON_HELPER_H_
 #define AUTON_HELPER_H_
 
+#include "lcd/lcdmenu.h"
+
 #define RED_ALLIANCE		true
 #define BLUE_ALLIANCE		false
 
@@ -27,14 +29,16 @@ extern bool runPSkills;
 
 extern int skyriseBuilt;
 
+extern LCDMenu main_menu;
+
 ///@cond
 void DeployScoringMech();
 void BuildSkyrise();
-void SelectNoAuto();
-void SelectBlueSky();
-void SelectBlueCube();
-void SelectRedSky();
-void SelectRedCube();
-void SelectPSkills();
+void RunNoAutonomous();
+void RunBlueSky();
+void RunBlueCube();
+void RunRedSky();
+void RunRedCube();
+void RunPSkills();
 //@endcond
 #endif

@@ -1,3 +1,15 @@
+/**
+* @file include/lcd/lcdmenu.h
+* @brief Header fiel for the LCD menu functionality of liblcd
+* @sa liblcd/lcdmenu.c @link liblcd/lcdmenu.c
+*
+* @htmlonly
+* @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>
+* Portions of this file may contain elements from the PROS API. <br>
+* See ReadMe.md (Main Page) for additional notice.
+* @endhtmlonly
+********************************************************************************/
+
 #ifndef LCDMENU_H_
 #define LCDMENU_H_
 

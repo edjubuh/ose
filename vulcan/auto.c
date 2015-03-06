@@ -131,61 +131,85 @@ void autonomous()
 	long start = millis();
 #endif
 	skyriseBuilt = 0;
-	if (!runAutonomous) return;
-	if (runPSkills)
-	{
-		DeployScoringMech();
-		BuildSkyrise();
-		BuildSkyrise();
-		BuildSkyrise();
-		ChassisSet(127, -127, false);
-		delay(1750);
-		ChassisSet(0, 0, false);
-		delay(9000);
-		ChassisResetIMEs();
-		while (!ChassisGoToGoalContinuous(1700, 1700) | !LiftGoToHeightContinuous(15))
-			delay(10);
-		LiftGoToHeightContinuous(0);
-		ChassisSet(0, 0, false);
-	}
-	else if (alliance == RED_ALLIANCE && startingTile == SKYRISE_STARTING_TILE)
-	{
-		DeployScoringMech();
-		BuildSkyrise();
-		BuildSkyrise();
-	}
-	else if (alliance == RED_ALLIANCE && startingTile == POST_STARTING_TILE)
-	{
-		LiftGoToHeightCompletion(45);
-		//ChassisSet(127, 127, false);
-		//delay(50);
-		ChassisSetMecanum(M_PI_2, 127, 2, false);
-		delay(1400);
-		ChassisSet(0, 0, false);
-		ScoringMechNeedleSet(false);
-		delay(400);
-		ScoringMechNeedleSet(true);
-		ChassisSetMecanum(-M_PI_2, 127, -3, false);
-		delay(2000);
-		LiftGoToHeightContinuous(0);
-		ChassisSet(-127, 127, false);
-		delay(1000);
-		ChassisSet(0, 0, false);
-
-	}
-	else if (alliance == BLUE_ALLIANCE && startingTile == SKYRISE_STARTING_TILE)
-	{
-
-	}
-	else if (alliance == BLUE_ALLIANCE && startingTile == POST_STARTING_TILE)
-	{
-
-	}
-	else
-	{
-		DeployScoringMech();
-	}
+	lcdmenuExecute(&main_menu);
+	
 #ifdef AUTO_DEBUG
 	lcdprint_df(Centered, 2, 2000, "Finished %.2f", (millis() - start)/1000.0);
 #endif
+}
+
+/**
+ * @brief Runs "no autonomous" autonomous for use when requested by teams or autonomous should not function. Will deploy scoring mechanism anyway
+ */
+void RunNoAutonomous()
+{
+	DeployScoringMech();
+}
+
+/**
+ * @brief Scores two Skyrise pieces from the blue starting tile next to the low post
+ */
+void RunBlueSky()
+{
+
+}
+
+/**
+ * @brief Runs the blue cube autonomous starting at the blue starting tile next to the autoloader
+ */
+void RunBlueCube()
+{
+
+}
+
+/**
+ * @brief Scores two Skyrise pieces from the red starting tile next to the autoloader
+ */
+void RunRedSky()
+{
+	DeployScoringMech();
+	BuildSkyrise();
+	BuildSkyrise();
+}
+
+/**
+ * @brief Scores one cube on the low post from the red starting tile next to the low post
+ */
+void RunRedCube()
+{
+	LiftGoToHeightCompletion(45);
+	//ChassisSet(127, 127, false);
+	//delay(50);
+	ChassisSetMecanum(M_PI_2, 127, 2, false);
+	delay(1400);
+	ChassisSet(0, 0, false);
+	ScoringMechNeedleSet(false);
+	delay(400);
+	ScoringMechNeedleSet(true);
+	ChassisSetMecanum(-M_PI_2, 127, -3, false);
+	delay(2000);
+	LiftGoToHeightContinuous(0);
+	ChassisSet(-127, 127, false);
+	delay(1000);
+	ChassisSet(0, 0, false);
+}
+
+/**
+ * @brief Runs the programming skills routine.
+ */
+void RunPSkills()
+{
+	DeployScoringMech();
+	BuildSkyrise();
+	BuildSkyrise();
+	BuildSkyrise();
+	ChassisSet(127, -127, false);
+	delay(1750);
+	ChassisSet(0, 0, false);
+	delay(9000);
+	ChassisResetIMEs();
+	while (!ChassisGoToGoalContinuous(1700, 1700) | !LiftGoToHeightContinuous(15))
+		delay(10);
+	LiftGoToHeightContinuous(0);
+	ChassisSet(0, 0, false);
 }

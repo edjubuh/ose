@@ -235,7 +235,7 @@ void JoystickControl(int r1, int r2, int l3, int l4)
               ( (right == 3 || right == 4) || (right == -3 || right == -4) ) )
         ChassisSet( (int)(r2 * (1.0 - abs( ((double)l4) / STRAFE_CONST ) ) ),
                     r2,
-					MOTOROPTION);
+					MOTOROPTION);*/
 
 
     /// @TODO Strafe up / down

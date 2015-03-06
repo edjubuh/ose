@@ -13,10 +13,14 @@
 #ifndef SCORINGMECHANISM_H_
 #define SCORINGMECHANISM_H_
 ///@cond
+//------- SCORING NEEDLE ------ //
 void ScoringMechNeedleSet(bool);
 void ScoringMechNeedleSwitch();
+bool ScoringMechNeedleGet();
 
+//-------- SCORING CLAW ------- //
 void ScoringMechClawSet(bool);
 void ScoringMechClawSwitch();
+bool ScoringMechClawGet();
 ///@endcond
 #endif

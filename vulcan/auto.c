@@ -90,7 +90,7 @@ void BuildSkyrise()
 	delay(100);
 	ChassisAlignToLine(-30, -30, Grey); // Align self to line to ready for drop
 	delay(25);
-	ChassisSetMecanum(-HALFPI, 127, 1, false);
+	ChassisSetMecanum(-M_PI_2, 127, 1, false);
 	//delay(150);
 	if(skyriseBuilt == 0) delay(135);
 	else if (skyriseBuilt == 1) delay(260);
@@ -105,7 +105,7 @@ void BuildSkyrise()
 	delay(550); // Wait for robot to settle
 	ScoringMechClawSet(false);
 	delay(300); // Wait for skyrise to drop far enough for robot to begin driving forward
-	ChassisSetMecanum(HALFPI, 127, 0, false);
+	ChassisSetMecanum(M_PI_2, 127, 0, false);
 	if(skyriseBuilt == 0) delay(45);
 	else delay(80);
 	ChassisSet(0, 0, true);
@@ -132,7 +132,6 @@ void autonomous()
 #endif
 	skyriseBuilt = 0;
 	lcdmenuExecute(&main_menu);
-	
 #ifdef AUTO_DEBUG
 	lcdprint_df(Centered, 2, 2000, "Finished %.2f", (millis() - start)/1000.0);
 #endif

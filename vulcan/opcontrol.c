@@ -22,6 +22,7 @@
 #include "vulcan/ScoringMechanism.h"
 #include "vulcan/LCDDisplays.h"
 
+#define NEEDLE_DEPLOY_DURATION			2000
 
 bool pidEnabled = false;
 
@@ -30,6 +31,7 @@ bool pidEnabled = false;
  */
 void operatorControl()
 {
+	long startNeedleDeploy = -NEEDLE_DEPLOY_DURATION;
 	while (true)
 	{
 		//if (buttonIsNewPress(JOY1_7L)) autonomous();
@@ -77,10 +79,23 @@ void operatorControl()
 			LiftSet(0, false);
 
 		// --------- SCORE MECH CONTROL --------- //
-		ScoringMechNeedleSet(!(joystickGetDigital(1, 7, JOY_UP) || joystickGetDigital(1,5,JOY_DOWN)));
+		if (joystickGetDigital(1, 7, JOY_UP))
+			startNeedleDeploy = millis();
 
-		if (buttonIsNewPress(JOY1_7D) || buttonIsNewPress(JOY1_5U))
+		if (milis() - startNeedleDeploy > NEEDLE_DEPLOY_DURATION)
+			ScoringMechNeedleSet(false);
+		else
+			ScoringMechNeedleSet(true);
+
+		if (buttonIsNewPress(JOY1_7D))
+		{
+			if (LiftGetQuadEncLeft() < 5)
+			{
+				LiftSetHeight(15);
+				pidEnabled = true;
+			}
 			ScoringMechClawSwitch();
+		}
 		
 		// ------------ LCD PRINTERS ----------- //
 		//lcdprint(Centered, 1, "Vulcan aae5f23");

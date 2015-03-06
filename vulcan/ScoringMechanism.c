@@ -14,10 +14,11 @@
 
 #include "vulcan/CortexDefinitions.h"
 
+//------- SCORING NEEDLE ------ //
 /**
  * Sets the scoring claw to the desired state 
  * @param value
- *			The output mode of the solenoid true is RELEASE/OUT false is ACTIVE/IN
+ *			The output mode of the solenoid true is RELEASE/OUT and false is ACTIVE/IN
  */
 void ScoringMechClawSet(bool value)
 {
@@ -32,11 +33,21 @@ void ScoringMechClawSwitch()
 	digitalWrite(DIG_SCORINGMECH_CLAW, !digitalRead(DIG_SCORINGMECH_CLAW));
 }
 
+/**
+ * @brief Gets the current state of the scoring claw
+ * @returns 
+ *			The output mode of the solenoid: true is RELEASE/OUT and false is ACTIVE/IN
+ */
+bool ScoringMechClawGet()
+{
+	return digitalRead(DIG_SCORINGMECH_CLAW);
+}
 
+//-------- SCORING CLAW ------- //
 /**
 * Sets the scoring mechanism to the desired state
 * @param value
-*			The output mode of the solenoid true is RELEASE/OUT false is ACTIVE/IN
+*			The output mode of the solenoid true is RELEASE/OUT and false is ACTIVE/IN
 */
 void ScoringMechNeedleSet(bool value)
 {
@@ -49,4 +60,14 @@ void ScoringMechNeedleSet(bool value)
 void ScoringMechNeedleSwitch()
 {
 	digitalWrite(DIG_SCORINGMECH_NEEDLE, !digitalRead(DIG_SCORINGMECH_NEEDLE));
+}
+
+/**
+* @brief Gets the current state of the scoring needle
+* @returns
+*			The output mode of the solenoid: true is RELEASE/OUT and false is ACTIVE/IN
+*/
+bool ScoringMechNeedleGet()
+{
+	return digitalRead(DIG_SCORINGMECH_NEEDLE);
 }

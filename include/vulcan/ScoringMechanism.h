@@ -1,6 +1,5 @@
 /**
  * @file include/vulcan/ScoringMechanism.h
- * @brief Header file for ScoringMech functions <br>
  * @sa vulcan/ScoringMechanism.c @link vulcan/ScoringMechanism.c
  *
  * @htmlonly

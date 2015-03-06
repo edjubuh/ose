@@ -1,6 +1,5 @@
 /**
  * @file vulcan/init.c
- * @brief Source file for initialize functions.
  *
  * @htmlonly
  * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>

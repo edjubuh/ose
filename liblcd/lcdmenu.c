@@ -1,7 +1,6 @@
 /**
 * @file liblcd/LCDFunctions.c
 * @author Rob Shrote
-* @brief Source file the LCD Menu.
 *
 * @htmlonly
 * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>

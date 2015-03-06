@@ -1,7 +1,6 @@
 /**
  * @file vulcan/mechop.c
  * @author Rob Shrote
- * @brief Source file for mecanum functions
  *
  * @htmlonly
  * @copyright Copyright (c) 2014-2015 Olympic Steel Eagles. All rights reserved. <br>

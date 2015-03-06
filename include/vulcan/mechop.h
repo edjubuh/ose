@@ -1,6 +1,5 @@
 /**
  * @file include/vulcan/mechop.h
- * @brief Header file for advanced mecanum control <br>
  * @sa vulcan/mechop.c @link vulcan/mechop.c
  *
  * @htmlonly

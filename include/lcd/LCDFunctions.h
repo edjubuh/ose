@@ -1,6 +1,5 @@
 /**
  * @file include/lcd/LCDFunctions.h
- * @brief Header file for primary LCD functions
  * @sa liblcd/LCDFunctions.c @link liblcd/LCDFunctions.c
  *
  * @htmlonly

@@ -1,7 +1,5 @@
 /**
  * @file vulcan/Chassis.h
- * @author Elliot Berman and Robert Shrote
- * @brief Header file for Chassis functions <br>
  * @sa vulcan/Chassis.c @link vulcan/Chassis.c
  *
  * @htmlonly

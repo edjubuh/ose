@@ -8,6 +8,9 @@ Two robot bases are contained in this repository:
 
 The Smart Motor Library source code is containined in this repository and implements additional functioanlity for motors utilizing IMEs and for basic acceleration profiles.
 
+To get the pretty log:
+<code>git log --graph --pretty=medium --date=local --abbrev-commit</code>
+
 ## Compilation Instructions
 
 Before compiling any base, use <code>make clean</code> to clean the bin.

@@ -18,13 +18,9 @@
 #include "vulcan/Lift.h"
 #include "vulcan/ScoringMechanism.h"
 
-#define AUTO_DEBUG
-
 #define GREY_WHITE_LINE_THRESH	600
 #define BLUE_WHITE_LINE_THRESH	450
 #define RED_WHITE_LINE_THRESH	300
-
-
 
 int skyriseBuilt = 0;
 
@@ -145,6 +141,7 @@ void autonomous()
 	long start = millis();
 #endif
 	skyriseBuilt = 0;
+	ChassisResetIMEs();
 	lcdmenuExecute(&main_menu);
 #ifdef AUTO_DEBUG
 	lcdprint_df(Centered, 2, 2000, "Finished %.2f", (millis() - start)/1000.0);
@@ -165,7 +162,29 @@ void RunNoAutonomous()
  */
 void RunBlueSky()
 {
-
+	LiftGoToHeightCompletion(15);
+	ChassisGoToGoalCompletion(1800, 1800);
+	LiftGoToHeightCompletion(0);
+	delay(500);
+	LiftGoToHeightCompletion(90);
+	ChassisResetIMEs();
+	ChassisSetMecanum(-M_PI_2, 127, -2, false);
+	delay(750);
+	ChassisSet(0, 0, false);
+	delay(50);
+	ChassisResetIMEs();
+	ChassisGoToGoalCompletion(650, -450);
+	ChassisSet(127, 127, false);
+	delay(650);
+	ChassisSet(0, 0, false);
+	LiftGoToHeightCompletion(75);
+	ScoringMechNeedleSet(false); //drop 2 cubes
+	delay(1200);
+	LiftGoToHeightCompletion(90);
+	ChassisSet(-127, -127, false);
+	delay(800);
+	ChassisSet(0, 0, false);
+	LiftGoToHeightCompletion(0);
 }
 
 /**
@@ -173,7 +192,19 @@ void RunBlueSky()
  */
 void RunBlueCube()
 {
-
+	LiftGoToHeightCompletion(45);
+	ChassisSetMecanum(-M_PI_2, 127, -2, false);
+	delay(1400);
+	ChassisSet(0, 0, false);
+	ScoringMechNeedleSet(false);
+	delay(400);
+	ScoringMechNeedleSet(true);
+	ChassisSetMecanum(M_PI_2, 127, 3, false);
+	delay(2000);
+	LiftGoToHeightContinuous(0);
+	ChassisSet(127, -127, false);
+	delay(175);
+	ChassisSet(0, 0, false);
 }
 
 /**
@@ -213,17 +244,27 @@ void RunRedCube()
  */
 void RunPSkills()
 {
-	DeployScoringMech();
-	BuildSkyrise();
-	BuildSkyrise();
-	BuildSkyrise();
-	ChassisSet(127, -127, false);
-	delay(1750);
+	//DeployScoringMech();
+	//BuildSkyrise();
+	//BuildSkyrise();
+	//BuildSkyrise();
+	//delay(9000);
+	
+	ChassisSet(-127, -127, false);
+	delay(6000);
 	ChassisSet(0, 0, false);
-	delay(9000);
-	ChassisResetIMEs();
-	while (!ChassisGoToGoalContinuous(1700, 1700) | !LiftGoToHeightContinuous(15))
-		delay(10);
-	LiftGoToHeightContinuous(0);
+	delay(500);
+	ChassisSet(127, 127, false);
+	delay(5000);
+	ChassisSet(0, 0, false);
+	delay(5000);
+	ChassisSet(-127, -127, false);
+	delay(7500);
+	ChassisSet(0, 0, false);
+	delay(500);
+	ChassisSetMecanum(M_PI_2, 127, 0, false);
+	delay(750);
+	ChassisSet(127, 127, false);
+	delay(7500);
 	ChassisSet(0, 0, false);
 }

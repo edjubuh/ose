@@ -33,7 +33,9 @@ void operatorControl()
 	long startNeedleDeploy = -NEEDLE_DEPLOY_DURATION;
 	while (true)
 	{
-		//if (buttonIsNewPress(JOY1_7L)) autonomous();
+#ifdef AUTO_DEBUG
+		if (buttonIsNewPress(JOY1_7L)) autonomous();
+#endif
 
 		// ---------- CHASSIS CONTROL ---------- //
 		// Tank Control
@@ -78,17 +80,17 @@ void operatorControl()
 			LiftSet(0, false);
 
 		// --------- SCORE MECH CONTROL --------- //
-		if (joystickGetDigital(1, 7, JOY_UP))
+		if (joystickGetDigital(1, 5, JOY_UP))
 			startNeedleDeploy = millis();
 
-		if (milis() - startNeedleDeploy > NEEDLE_DEPLOY_DURATION)
-			ScoringMechNeedleSet(false);
-		else
+		if (millis() - startNeedleDeploy > NEEDLE_DEPLOY_DURATION)
 			ScoringMechNeedleSet(true);
+		else
+			ScoringMechNeedleSet(false);
 
-		if (buttonIsNewPress(JOY1_7D))
+		if (buttonIsNewPress(JOY1_5D))
 		{
-			if (LiftGetQuadEncLeft() < 5)
+			if (LiftGetQuadEncLeft() < 5 && ScoringMechClawGet())
 			{
 				LiftSetHeight(15);
 				pidEnabled = true;

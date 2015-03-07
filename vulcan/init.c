@@ -38,7 +38,7 @@ void initializeIO()
 
 /**
  * @brief Declare global variables needed for the LCDMenu.
- * 
+ *
  * @note GLOBAL VARIABLES DECLARED IN LCDDisplays.h!!!
  */
 char *titles[NUMTITLES] = { "No auton", "Blue Sky", "Blue Cube", "Red Sky", "Red Cube", "P. skills" };
@@ -69,7 +69,33 @@ void initialize()
 	//DisplayText o = { &getRobotState, Left };
 	//addCycleText(o, 1);
 	lcdprintf(Centered, 1, "E:%1.1fV M:%1.1fV", (double)analogRead(ANA_POWEREXP)/70.0, (double)powerLevelMain()/1000.0); /// @todo double check power expander reading is correct
-	lcdprint_d(Left, 2, 500, "....complete....");
+	lcdprint_d(Left, 2, 500, "....complete...."); lcdprint_d(Left, 1, 500, "Competition mode");
+	lcdprint_d(Left, 1, 500, "Competition mode");
+#ifdef AUTO_DEBUG
+	main_menu = lcdmenuCreate(NUMTITLES, titles, exec);
+	bool quit = false;
+	lcdprint(Centered, 1, "Select auton");
+	lcdmenuDisplay(&main_menu);
+	while (!quit)
+	{
+		if (buttonIsNewPress(LCD_LEFT))
+			lcdmenuShift(&main_menu, LCD_SHIFT_LEFT);
+		else if (buttonIsNewPress(LCD_CENT))
+		{
+			lcdmenuDecide(&main_menu);
+			quit = true;
+			continue;
+		}
+		else if (buttonIsNewPress(LCD_RIGHT))
+			lcdmenuShift(&main_menu, LCD_SHIFT_RIGHT);
+		//delay and allow for other tasks to take place
+		delay(100);
+	}
+	lcdprint(Centered, 1, "Selected");
+	//print the selected autonomous
+	lcdprintf(Centered, 2, "%s", main_menu.titles[main_menu.execute]);
+	delay(750);
+#endif
 	if (!isEnabled() && isOnline())
 	{
 		lcdprint_d(Left, 1, 500, "Competition mode");
@@ -83,23 +109,18 @@ void initialize()
 				lcdmenuShift(&main_menu, LCD_SHIFT_LEFT);
 			else if (buttonIsNewPress(LCD_CENT))
 			{
-				if (buttonIsNewPress(LCD_LEFT))
-					lcdmenuShift(&main_menu, LCD_SHIFT_LEFT);
-				else if (buttonIsNewPress(LCD_CENT))
-				{
-					lcdmenuDecide(&main_menu);
-					quit = true;
-					continue;
-				}
-				else if (buttonIsNewPress(LCD_RIGHT))
-					lcdmenuShift(&main_menu, LCD_SHIFT_RIGHT);
-				//delay and allow for other tasks to take place
-				delay(100);
+				lcdmenuDecide(&main_menu);
+				quit = true;
+				continue;
 			}
-			lcdprint(Centered, 1, "Selected");
-            //print the selected autonomous
-            lcdprintf(Centered, 2, "%s", main_menu.titles[main_menu.execute]);
-			delay(750);
+			else if (buttonIsNewPress(LCD_RIGHT))
+				lcdmenuShift(&main_menu, LCD_SHIFT_RIGHT);
+			//delay and allow for other tasks to take place
+			delay(100);
 		}
+		lcdprint(Centered, 1, "Selected");
+		//print the selected autonomous
+		lcdprintf(Centered, 2, "%s", main_menu.titles[main_menu.execute]);
+		delay(750);
 	}
 }

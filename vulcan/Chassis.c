@@ -19,7 +19,7 @@
 #include "lcd/LCDFunctions.h"
 #include "vulcan/CortexDefinitions.h"
 
-#define CHASSIS_SKEW_PROFILE	2.0
+#define CHASSIS_SKEW_PROFILE	0.75
 
 // ---------------- LEFT  SIDE ---------------- //
 static PIDController leftController;
@@ -251,8 +251,6 @@ bool ChassisGoToGoalContinuous(int left, int right)
  *		  The left side goal value
  * @param right
  *		  The right side goal value
- *
- * @returns Returns true if BOTH sides are on target
  */
 void ChassisGoToGoalCompletion(int left, int right)
 {
@@ -263,7 +261,7 @@ void ChassisGoToGoalCompletion(int left, int right)
 	// Use 1 '&' instead of 2 to force execution of both sides (both right and left side will run) because short-circuiting
 	while (goodCount < 50)
 	{
-		if (PIDControllerExecuteContinuous(&leftController) & PIDControllerExecuteContinuous(&rightController))
+		if (PIDControllerExecuteContinuous(&rightController) & PIDControllerExecuteContinuous(&leftController))
 			goodCount++;
 		lcdprintf(Centered, 1, "cl:%04d r:%04d", ChassisGetIMELeft(), ChassisGetIMERight());
 		delay(5);
@@ -296,11 +294,6 @@ void ChassisAlignToLine(int left, int right, kTiles tile)
 	bool hasPassedLeft = false, hasPassedRight = false;
 	bool hasHadLeft = false, hasHadRight = false;
 	int goodCount = 0;
-	/*
-	ChassisSet(left, right, false);
-	while (!ChassisHasIRLineRight(tile) && !ChassisHasIRLineLeft(tile)) 
-		lcdprintf(Centered, 2, "%d %d", ChassisHasIRLineRight(tile), ChasssisHasIRLineLeft(tile));
-	*/
 	while (goodCount < 20)
 	{
 		if (ChassisHasIRLineRight(tile) && !hasHadRight)
@@ -329,7 +322,6 @@ void ChassisAlignToLine(int left, int right, kTiles tile)
 
 		if (ChassisHasIRLineLeft(tile) && ChassisHasIRLineRight(tile)) goodCount++;
 
-		lcdprintf(Centered, 2, "il:%04d r: %04d", ChassisGetIRRight(), ChassisGetIRLeft());
 		delay(5);
 	}
 	ChassisSet(0, 0, false);
@@ -347,8 +339,8 @@ void ChassisInitialize()
 	MotorConfigure(MOTOR_CHASSIS_REARRIGHT, false, CHASSIS_SKEW_PROFILE);
 
 	//										Execute			Get					    Kp    Ki     Kd   MaxI MinI Tol
-	leftController = PIDControllerCreate(&ChassisSetLeft, &ChassisGetIMELeft,	 0.0925, 0.17, 0.001, 100, -100, 20);
-	rightController = PIDControllerCreate(&ChassisSetRight, &ChassisGetIMERight, 0.0925, 0.17, 0.001, 100, -100, 20);
+	leftController = PIDControllerCreate(&ChassisSetLeft, &ChassisGetIMELeft,	 0.17, 0.17, 0.001, 100, -100, 20);
+	rightController = PIDControllerCreate(&ChassisSetRight, &ChassisGetIMERight, 0.17, 0.17, 0.001, 100, -100, 20);
 
 	//gyro = gyroInit(ANA_GYROSCOPE, 196);
 }

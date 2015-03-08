@@ -80,7 +80,7 @@ void operatorControl()
 			LiftSet(0, false);
 
 		// --------- SCORE MECH CONTROL --------- //
-		if (joystickGetDigital(1, 5, JOY_UP))
+		if (joystickGetDigital(1, 5, JOY_DOWN))
 			startNeedleDeploy = millis();
 
 		if (millis() - startNeedleDeploy > NEEDLE_DEPLOY_DURATION)
@@ -88,9 +88,9 @@ void operatorControl()
 		else
 			ScoringMechNeedleSet(false);
 
-		if (buttonIsNewPress(JOY1_5D))
+		if (buttonIsNewPress(JOY1_5U))
 		{
-			if (LiftGetQuadEncLeft() < 5 && ScoringMechClawGet())
+			if (LiftGetQuadEncLeft() < 5 && !ScoringMechClawGet())
 			{
 				LiftSetHeight(15);
 				pidEnabled = true;
@@ -99,11 +99,11 @@ void operatorControl()
 		}
 		
 		// ------------ LCD PRINTERS ----------- //
-		//lcdprint(Centered, 1, "Vulcan aae5f23");
-
-		lcdprintf(Centered, 1, "cl:%04d r:%04d", ChassisGetIMELeft(), ChassisGetIMERight());
-		lcdprintf(Centered, 2, "el:%02d r:%02d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
-		//lcdprintf(Centered, 2, "il:%04d r: %04d", ChassisHasIRLineRight(Grey), ChassisHasIRLineLeft(Grey));
+		lcdprint(Centered, 1, "Vulcan 52a6f61");
+		lcdprint(Centered, 2, "opcontrol");
+		//lcdprintf(Centered, 1, "cl:%04d r:%04d", ChassisGetIMELeft(), ChassisGetIMERight());
+		//lcdprintf(Centered, 2, "el:%02d r:%02d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
+		//lcdprintf(Centered, 2, "il:%04d r: %04d", ChassisGetIRRight(), ChassisGetIRLeft());
 		/*int ir = ChassisGetIRRight();
 		lcdprintf(Centered, 1, "g:%d  v:%04d", (ir < 600) ? 1 : 0, ir);
 		lcdprintf(Centered, 2, "r:%d  b:%d", (ir < 450) ? 1 : 0, (ir < 300) ? 1 : 0);*/

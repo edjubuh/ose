@@ -103,7 +103,7 @@ void initialize()
 		bool quit = false;
 		lcdprint(Centered, 1, "Select auton");
 		lcdmenuDisplay(&main_menu);
-		while (!quit)
+		while (!quit && !isEnabled() && isOnline())
 		{
 			if (buttonIsNewPress(LCD_LEFT))
 				lcdmenuShift(&main_menu, LCD_SHIFT_LEFT);

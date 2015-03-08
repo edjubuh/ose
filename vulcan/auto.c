@@ -244,11 +244,11 @@ void RunRedCube()
  */
 void RunPSkills()
 {
-	//DeployScoringMech();
-	//BuildSkyrise();
-	//BuildSkyrise();
-	//BuildSkyrise();
-	//delay(9000);
+	DeployScoringMech();
+	BuildSkyrise();
+	BuildSkyrise();
+	BuildSkyrise();
+	delay(9000);
 	
 	ChassisSet(-127, -127, false);
 	delay(6000);

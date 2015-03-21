@@ -339,8 +339,8 @@ void ChassisInitialize()
 	MotorConfigure(MOTOR_CHASSIS_REARRIGHT, false, CHASSIS_SKEW_PROFILE);
 
 	//										Execute			Get					    Kp    Ki     Kd   MaxI MinI Tol
-	leftController = PIDControllerCreate(&ChassisSetLeft, &ChassisGetIMELeft,	 0.17, 0.17, 0.001, 100, -100, 20);
-	rightController = PIDControllerCreate(&ChassisSetRight, &ChassisGetIMERight, 0.17, 0.17, 0.001, 100, -100, 20);
+	leftController = PIDControllerCreate(&ChassisSetLeft, &ChassisGetIMELeft,	 0.20, 0.17, 0.001, 100, -100, 20);
+	rightController = PIDControllerCreate(&ChassisSetRight, &ChassisGetIMERight, 0.20, 0.17, 0.001, 100, -100, 20);
 
 	//gyro = gyroInit(ANA_GYROSCOPE, 196);
 }

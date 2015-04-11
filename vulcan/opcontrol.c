@@ -100,9 +100,9 @@ void operatorControl()
 		
 		// ------------ LCD PRINTERS ----------- //
 		lcdprint(Centered, 1, "Vulcan 52a6f61");
-		lcdprint(Centered, 2, "opcontrol");
+		//lcdprint(Centered, 2, "opcontrol");
 		//lcdprintf(Centered, 1, "cl:%04d r:%04d", ChassisGetIMELeft(), ChassisGetIMERight());
-		//lcdprintf(Centered, 2, "el:%02d r:%02d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
+		lcdprintf(Centered, 2, "el:%02d r:%02d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
 		//lcdprintf(Centered, 2, "il:%04d r: %04d", ChassisGetIRRight(), ChassisGetIRLeft());
 		/*int ir = ChassisGetIRRight();
 		lcdprintf(Centered, 1, "g:%d  v:%04d", (ir < 600) ? 1 : 0, ir);

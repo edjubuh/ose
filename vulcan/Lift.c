@@ -214,7 +214,7 @@ int LiftGetQuadEncRight()
 	if (digitalRead(DIG_LIFT_BOTLIM_RIGHT) == LOW)
 		encoderReset(rightEncoder);
 
-	return encoderGet(rightEncoder);
+	return -encoderGet(rightEncoder);
 }
 
 /**
@@ -378,9 +378,9 @@ void LiftInitialize()
 {
 	MotorConfigure(MOTOR_LIFT_FRONTLEFT,	true, LIFT_SKEW_RATE);
 	MotorConfigure(MOTOR_LIFT_FRONTRIGHT,	false, LIFT_SKEW_RATE);
-	MotorConfigure(MOTOR_LIFT_MIDDLELEFT,	true, LIFT_SKEW_RATE);
+	MotorConfigure(MOTOR_LIFT_MIDDLELEFT,	false, LIFT_SKEW_RATE);
 	MotorConfigure(MOTOR_LIFT_MIDDLERIGHT,	false, LIFT_SKEW_RATE);
-	MotorConfigure(MOTOR_LIFT_REARLEFT,		false, LIFT_SKEW_RATE);
+	MotorConfigure(MOTOR_LIFT_REARLEFT,		true, LIFT_SKEW_RATE);
 	MotorConfigure(MOTOR_LIFT_REARRIGHT,	false, LIFT_SKEW_RATE);
 		
 	leftEncoder = encoderInit(DIG_LIFT_ENC_LEFT_TOP, DIG_LIFT_ENC_LEFT_BOT, false);

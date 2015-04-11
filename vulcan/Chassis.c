@@ -334,7 +334,7 @@ void ChassisAlignToLine(int left, int right, kTiles tile)
 void ChassisInitialize()
 {
 	MotorConfigure(MOTOR_CHASSIS_FRONTLEFT, true, CHASSIS_SKEW_PROFILE);
-	MotorConfigure(MOTOR_CHASSIS_FRONTRIGHT, false, CHASSIS_SKEW_PROFILE);
+	MotorConfigure(MOTOR_CHASSIS_FRONTRIGHT, true, CHASSIS_SKEW_PROFILE);
 	MotorConfigure(MOTOR_CHASSIS_REARLEFT, false, CHASSIS_SKEW_PROFILE);
 	MotorConfigure(MOTOR_CHASSIS_REARRIGHT, false, CHASSIS_SKEW_PROFILE);
 

@@ -25,10 +25,104 @@
 
 bool pidEnabled = false;
 
+
 /**
- * @brief Sets motors in motion based on user input (from controls).
- */
-void operatorControl()
+* @brief Control schema for Josh's driving preferences
+*/
+void JoshControl()
+{
+	long startNeedleDeploy = -NEEDLE_DEPLOY_DURATION;
+	while (true)
+	{
+#ifdef AUTO_DEBUG
+		if (buttonIsNewPress(JOY1_7L)) autonomous();
+#endif
+
+		// ---------- CHASSIS CONTROL ---------- //
+		// Tank Control
+		//ChassisSet((mode ? -joystickGetAnalog(1, 2) : joystickGetAnalog(1, 3)), (mode ? -joystickGetAnalog(1, 3) : joystickGetAnalog(1, 2)), false); 
+
+		// Mecanum Control
+		JoystickControl(joystickGetAnalog(1, 1), joystickGetAnalog(1, 2), joystickGetAnalog(1, 3), joystickGetAnalog(1, 4));
+
+		// ------------ LIFT CONTROL ------------ //
+		if (buttonIsNewPress(JOY1_8U))
+		{ // High Post
+			LiftSetHeight(85);
+			pidEnabled = true;
+		}
+		else if (buttonIsNewPress(JOY1_8R))
+		{ // Medium Post 
+			LiftSetHeight(35);
+			pidEnabled = true;
+		}
+		else if (buttonIsNewPress(JOY1_8L))
+		{ // Low Post
+			LiftSetHeight(20);
+			pidEnabled = true;
+		}
+		else if (buttonIsNewPress(JOY1_8D))
+		{ // Groudn
+			LiftSetHeight(0);
+			pidEnabled = true;
+		}
+
+		if (joystickGetDigital(1, 6, JOY_UP))
+		{
+			LiftSet(127, false);
+			pidEnabled = false;
+		}
+		else if (joystickGetDigital(1, 6, JOY_DOWN))
+		{
+			LiftSet(-100, false);
+			pidEnabled = false;
+		}
+		else if (!pidEnabled)
+			LiftSet(0, false);
+
+		// --------- SCORE MECH CONTROL --------- //
+		if (joystickGetDigital(1, 5, JOY_DOWN))
+			startNeedleDeploy = millis();
+
+		if (millis() - startNeedleDeploy > NEEDLE_DEPLOY_DURATION)
+			ScoringMechNeedleSet(true);
+		else
+			ScoringMechNeedleSet(false);
+
+		if (buttonIsNewPress(JOY1_5U))
+		{
+			/*
+			if (LiftGetQuadEncLeft() < 5 && !ScoringMechClawGet())
+			{
+			LiftSetHeight(15);
+			pidEnabled = true;
+			}
+			*/
+			ScoringMechClawSwitch();
+		}
+
+		// ----------- DRIVER SWITCH ----------- //
+		if (buttonIsNewPress(JOY1_7D))
+			SamControl();
+
+		// ------------ LCD PRINTERS ----------- //
+		lcdprintf(Centered, 1, "J Vulcan %s", VERSION);
+		//lcdprint(Centered, 2, "opcontrol");
+		lcdprintf(Centered, 2, "cl:%04d r:%04d", ChassisGetIMELeft(), ChassisGetIMERight());
+		//cdprintf(Centered, 2, "el:%02d r:%02d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
+		//lcdprintf(Centered, 2, "il:%04d r: %04d", ChassisGetIRRight(), ChassisGetIRLeft());
+		/*int ir = ChassisGetIRRight();
+		lcdprintf(Centered, 1, "g:%d  v:%04d", (ir < 600) ? 1 : 0, ir);
+		lcdprintf(Centered, 2, "r:%d  b:%d", (ir < 450) ? 1 : 0, (ir < 300) ? 1 : 0);*/
+
+		delay(15);
+	}
+}
+
+/**
+* @brief Control schema for Sam's driving preferences
+*/
+void SamControl()
 {
 	long startNeedleDeploy = -NEEDLE_DEPLOY_DURATION;
 	while (true)
@@ -61,8 +155,8 @@ void operatorControl()
 			pidEnabled = true;
 		}
 		else if (buttonIsNewPress(JOY1_8D))
-		{ // High Post
-			LiftSetHeight(85);
+		{ // High post
+			LiftSetHeight(90);
 			pidEnabled = true;
 		}
 
@@ -90,16 +184,22 @@ void operatorControl()
 
 		if (buttonIsNewPress(JOY1_5U))
 		{
+			// If lift is on ground and we're grabbing a skyrise, automatically go up above the autoloader
 			if (LiftGetQuadEncLeft() < 5 && !ScoringMechClawGet())
 			{
 				LiftSetHeight(15);
 				pidEnabled = true;
 			}
+
 			ScoringMechClawSwitch();
 		}
-		
+
+		// ----------- DRIVER SWITCH ----------- //
+		if (buttonIsNewPress(JOY1_7D))
+			JoshControl();
+
 		// ------------ LCD PRINTERS ----------- //
-		lcdprint(Centered, 1, "Vulcan 52a6f61");
+		lcdprintf(Centered, 1, "S Vulcan %s", VERSION);
 		//lcdprint(Centered, 2, "opcontrol");
 		//lcdprintf(Centered, 1, "cl:%04d r:%04d", ChassisGetIMELeft(), ChassisGetIMERight());
 		lcdprintf(Centered, 2, "el:%02d r:%02d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
@@ -110,4 +210,15 @@ void operatorControl()
 
 		delay(15);
 	}
+}
+
+/**
+ * @brief Sets motors in motion based on user input (from controls).
+ */
+void operatorControl()
+{
+	if (digitalRead(DIG_DRIVER_JUMPER)) // Jumper out: Josh is driver
+		JoshControl();
+	else
+		SamControl();
 }

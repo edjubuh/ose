@@ -38,6 +38,7 @@
 #define DIG_LIFT_ENC_LEFT_BOT			8
 #define DIG_LIFT_TOPLIM_RIGHT			9
 #define DIG_LIFT_BOTLIM_RIGHT			10
+#define DIG_DRIVER_JUMPER				11
 
 /* --- ANALOG DEFINITIONS --- */
 

@@ -42,7 +42,7 @@ void BuildSkyrise()
 {
 	// Drive forward a little to ensure touching the skyrise
 	ChassisSet(127, 127, false);
-	delay(65);
+	delay(85);
 	ChassisSet(0, 0, true);
 	delay(80);
     
@@ -68,7 +68,7 @@ void BuildSkyrise()
 			speed = -127;
 			break;
 		case 1:
-			height = 14;
+			height = 16;
 			speed = -127;
 			break;
 		case 2:
@@ -97,10 +97,10 @@ void BuildSkyrise()
 	ChassisSetMecanum(-M_PI_2, 127, 1, false);
 	//delay(150);
     
-	if(skyriseBuilt == 0)
-        delay(135);
-	else if (skyriseBuilt == 1)
-        delay(260);
+	//if(skyriseBuilt == 0)
+    //    delay(260);
+	/*else*/ if (skyriseBuilt <= 1)
+        delay(300);
 	else
         delay(280);
     
@@ -116,7 +116,7 @@ void BuildSkyrise()
 	ScoringMechClawSet(false);
 	delay(300); // Wait for skyrise to drop far enough for robot to begin driving forward
 	ChassisSetMecanum(M_PI_2, 127, 0, false);
-	if(skyriseBuilt == 0) delay(45);
+	if(skyriseBuilt == 0) delay(120);
 	else delay(80);
 	ChassisSet(0, 0, true);
 	delay(50);
@@ -125,7 +125,7 @@ void BuildSkyrise()
 	ChassisSet(127, 127, false);
 	delay(250);
 	LiftGoToHeightContinuous(0);
-	ChassisGoToGoalCompletion(1035, 1035); // return to base tile
+	ChassisGoToGoalCompletion(1100, 1100); // return to base tile
 	ChassisSet(0, 0, true);
 	delay(50);
 	skyriseBuilt++;
@@ -247,7 +247,7 @@ void RunPSkills()
 	DeployScoringMech();
 	BuildSkyrise();
 	BuildSkyrise();
-	BuildSkyrise();
+	/*BuildSkyrise();
 	delay(9000);
 	
 	ChassisSet(-127, -127, false);
@@ -266,5 +266,5 @@ void RunPSkills()
 	delay(750);
 	ChassisSet(127, 127, false);
 	delay(7500);
-	ChassisSet(0, 0, false);
+	ChassisSet(0, 0, false);*/
 }

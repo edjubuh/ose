@@ -23,6 +23,7 @@ COBJ:=$(patsubst %.o,$(BINDIR)/%.o,$(CSRC:.$(CEXT)=.o))
 CPPSRC:=$(wildcard *.$(CPPEXT))
 CPPOBJ:=$(patsubst %.o,$(BINDIR)/%.o,$(CPPSRC:.$(CPPEXT)=.o))
 OUT:=$(BINDIR)/$(OUTNAME)
+GIT_VERSION := $(git rev-parse --short HEAD)
 
 .PHONY: all clean upload _force_look
 
@@ -42,6 +43,7 @@ clean:
 # Uploads program to device
 upload: all
 	$(UPLOAD)
+
 
 # Phony force-look target
 _force_look:

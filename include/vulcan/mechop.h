@@ -20,5 +20,8 @@ int aJoy(int, int);
 double cHypo(int, int);
 int aHypo(double, double);
 void JoystickControl(int, int, int, int);
+
+void JoshControl();
+void SamControl();
 ///@endcond
 #endif /*MECHOP_H*/

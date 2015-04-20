@@ -41,8 +41,9 @@ void DeployScoringMech()
 void BuildSkyrise()
 {
 	// Drive forward a little to ensure touching the skyrise
+	LiftGoToHeightContinuous(4);
 	ChassisSet(127, 127, false);
-	delay(85);
+	delay(100);
 	ChassisSet(0, 0, true);
 	delay(80);
     
@@ -68,7 +69,7 @@ void BuildSkyrise()
 			speed = -127;
 			break;
 		case 1:
-			height = 16;
+			height = 19;
 			speed = -127;
 			break;
 		case 2:
@@ -82,13 +83,13 @@ void BuildSkyrise()
 	long start = millis();
 	while (!LiftGoToHeightContinuous(height))
 	{
-		// Back up for at least 600 milliseconds to get off of red tile
-		if (millis() - start > 600)
+		// Back up for at least 700 milliseconds to get off of red tile
+		if (millis() - start > 800)
 			ChassisSet(0, 0, false);
 		delay(10);
 	}
-	if (millis() - start < 600)
-        delay(600 - (millis() - start)); // Finish up remaining 600 milliseconds if necessary
+	if (millis() - start < 800)
+        delay(800 - (millis() - start)); // Finish up remaining 600 milliseconds if necessary
     
 	ChassisSet(0, 0, false);
 	delay(100);
@@ -97,14 +98,20 @@ void BuildSkyrise()
 	ChassisSetMecanum(-M_PI_2, 127, 1, false);
 	//delay(150);
     
-	//if(skyriseBuilt == 0)
-    //    delay(260);
-	/*else*/ if (skyriseBuilt <= 1)
-        delay(300);
+	if(skyriseBuilt == 0)
+       delay(250);
+	else if (skyriseBuilt <= 1)
+        delay(285);
 	else
         delay(280);
     
 	ChassisSet(0, 0, true);
+	if (skyriseBuilt == 0)
+	{
+		ChassisSet(-127, -127, false);
+		delay(40);
+		ChassisSet(0, 0, true);
+	}
 	if (skyriseBuilt > 1) {
         // Once we build one skyrise, need to go forward a little to align correctly
 		ChassisSet(127, 127, false);
@@ -114,7 +121,17 @@ void BuildSkyrise()
 	
 	delay(550); // Wait for robot to settle
 	ScoringMechClawSet(false);
+	if (skyriseBuilt == 1)
+		LiftGoToHeightContinuous(5);
 	delay(300); // Wait for skyrise to drop far enough for robot to begin driving forward
+	if (skyriseBuilt == 1)
+		LiftGoToHeightContinuous(15);
+	if (skyriseBuilt <= 1)
+	{
+		ChassisSet(-127, -127, false);
+		delay(50);
+		ChassisSet(0, 0, false);
+	}
 	ChassisSetMecanum(M_PI_2, 127, 0, false);
 	if(skyriseBuilt == 0) delay(120);
 	else delay(80);
@@ -125,7 +142,7 @@ void BuildSkyrise()
 	ChassisSet(127, 127, false);
 	delay(250);
 	LiftGoToHeightContinuous(0);
-	ChassisGoToGoalCompletion(1100, 1100); // return to base tile
+	ChassisGoToGoalCompletion(1050, 1050); // return to base tile
 	ChassisSet(0, 0, true);
 	delay(50);
 	skyriseBuilt++;
@@ -165,7 +182,7 @@ void RunBlueSky()
 	LiftGoToHeightCompletion(15);
 	ChassisGoToGoalCompletion(1800, 1800);
 	LiftGoToHeightCompletion(0);
-	delay(500);
+	delay(300);
 	LiftGoToHeightCompletion(90);
 	ChassisResetIMEs();
 	ChassisSetMecanum(-M_PI_2, 127, -2, false);
@@ -173,7 +190,7 @@ void RunBlueSky()
 	ChassisSet(0, 0, false);
 	delay(50);
 	ChassisResetIMEs();
-	ChassisGoToGoalCompletion(650, -450);
+	ChassisGoToGoalCompletion(650, -550);
 	ChassisSet(127, 127, false);
 	delay(650);
 	ChassisSet(0, 0, false);
@@ -192,9 +209,9 @@ void RunBlueSky()
  */
 void RunBlueCube()
 {
-	LiftGoToHeightCompletion(45);
+	LiftGoToHeightCompletion(50);
 	ChassisSetMecanum(-M_PI_2, 127, -2, false);
-	delay(1400);
+	delay(1300);
 	ChassisSet(0, 0, false);
 	ScoringMechNeedleSet(false);
 	delay(400);
@@ -222,19 +239,19 @@ void RunRedSky()
  */
 void RunRedCube()
 {
-	LiftGoToHeightCompletion(45);
+	LiftGoToHeightCompletion(50);
 	//ChassisSet(127, 127, false);
 	//delay(50);
 	ChassisSetMecanum(M_PI_2, 127, 2, false);
 	delay(1400);
 	ChassisSet(0, 0, false);
 	ScoringMechNeedleSet(false);
-	delay(400);
-	ScoringMechNeedleSet(true);
+	delay(500);
 	ChassisSetMecanum(-M_PI_2, 127, -3, false);
 	delay(2000);
 	LiftGoToHeightContinuous(0);
 	ChassisSet(-127, 127, false);
+	ScoringMechNeedleSet(true);
 	delay(1000);
 	ChassisSet(0, 0, false);
 }

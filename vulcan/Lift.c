@@ -308,7 +308,11 @@ void LiftGoToHeightCompletion(int value)
 	else
 	{
 		MasterSlavePIDSetGoal(&Controller, value);
-		while (!MasterSlavePIDOnTarget(&Controller)) delay(100);
+		while (!MasterSlavePIDOnTarget(&Controller))
+		{
+			lcdprintf(Centered, 2, "l:%04d r:%04d", LiftGetQuadEncLeft(), LiftGetQuadEncRight());
+			delay(100);
+		}
 	}
 }
 
@@ -387,9 +391,9 @@ void LiftInitialize()
 	rightEncoder = encoderInit(DIG_LIFT_ENC_RIGHT_TOP, DIG_LIFT_ENC_RIGHT_BOT, true);
 	
 	//                                           Execute           Call			    Kp    Ki   Kd   MaI  MiI  Tol
-	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  3.30, 0.18, 0.20, 150, -75, 5);
-	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 3.30, 0.18, 0.20, 150, -75, 5);
-	PIDController equalizer = PIDControllerCreate(NULL, &liftComputeQuadEncDiff,   0.90, 0.45, 0.01, 100, -75, 3);
+	PIDController master = PIDControllerCreate(&LiftSetLeft, &LiftGetQuadEncLeft,  3.15, 0.18, 0.15, 125, -75, 5);
+	PIDController slave = PIDControllerCreate(&LiftSetRight, &LiftGetQuadEncRight, 3.15, 0.18, 0.15, 125, -75, 5);
+	PIDController equalizer = PIDControllerCreate(NULL, &liftComputeQuadEncDiff,   0.85, 0.37, 0.01, 90, -75, 3);
 
 	Controller = CreateMasterSlavePIDController(master, slave, equalizer, 127, -100, false);
 

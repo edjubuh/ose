@@ -38,5 +38,6 @@ bool LiftGoToHeightContinuous(int);
 void LiftInitialize();
 
 PIDController LiftPIDController_l, LiftPIDController_r;
+extern int skyriseBuilt;
 ///@endcond
 #endif
